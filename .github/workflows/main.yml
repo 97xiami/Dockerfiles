@@ -33,4 +33,4 @@ jobs:
         file: ./${{ github.event.inputs.project }}/Dockerfile
         platforms: linux/arm64,linux/amd64
         push: true
-        tags: ${{ github.event.inputs.project }}:latest
+        tags: xiami110/${{ github.event.inputs.project }}:latest
