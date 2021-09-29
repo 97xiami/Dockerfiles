@@ -15,5 +15,5 @@ WORKDIR /root
 VOLUME /etc/frp
 
 COPY --from=builder /root/frp/bin/frp* /usr/bin/
-COPY frp.ini /etc/frp/frp.ini
-CMD [ "/usr/bin/\$FRP", "-c", "/etc/frp/frp.ini" ]
+COPY frps.ini /etc/frp/frps.ini
+CMD [ "/usr/bin/\$FRP", "-c", "/etc/frp/\$FRP.ini" ]
