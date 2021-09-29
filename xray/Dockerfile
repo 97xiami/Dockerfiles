@@ -9,7 +9,7 @@ RUN set -xe \
 
 FROM alpine:latest
 MAINTAINER xiami110
-ENV TZ=Asia/Shanghai
+ENV TZ Asia/Shanghai
 WORKDIR /root
 VOLUME /etc/xray
 
