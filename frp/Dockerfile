@@ -16,4 +16,4 @@ VOLUME /etc/frp
 
 COPY --from=builder /root/frp/bin/frp* /usr/bin/
 COPY frps.ini /etc/frp/frps.ini
-CMD [ "/usr/bin/\$FRP", "-c", "/etc/frp/\$FRP.ini" ]
+CMD /usr/bin/$FRP -c /etc/frp/$FRP.ini
