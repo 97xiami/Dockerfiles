@@ -10,9 +10,10 @@ RUN set -xe \
 FROM alpine:latest
 MAINTAINER xiami110
 ENV TZ Asia/Shanghai
+ENV frp
 WORKDIR /root
 VOLUME /etc/frp
 
 COPY --from=builder /root/frp/bin/frp* /usr/bin/
 COPY frp.ini /etc/frp/frp.ini
-CMD [ "/usr/bin/frp", "-c", "/etc/frp/frp.ini" ]
+CMD [ "/usr/bin/$frp", "-c", "/etc/frp/frp.ini" ]
