@@ -30,7 +30,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: ./${{ github.event.inputs.project }}
-        file: Dockerfile
+        file: ./${{ github.event.inputs.project }}/Dockerfile
         platforms: linux/arm64,linux/amd64
         push: true
         tags: ${{ github.event.inputs.project }}:latest
