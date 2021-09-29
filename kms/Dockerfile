@@ -10,6 +10,6 @@ RUN set -xe \
 FROM alpine:latest
 MAINTAINER xiami110
 ENV TZ=Asia/Shanghai
-EXPPOSE 1688
+EXPOSE 1688
 COPY --from=builder /root/vlmcsd/bin/vlmcsd /usr/bin/vlmcsd
 CMD [ "/usr/bin/vlmcsd", "-D", "-e" ]
