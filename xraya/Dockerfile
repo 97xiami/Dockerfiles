@@ -13,7 +13,7 @@ RUN set -xe \
 
 FROM xiami110/xray:latest
 EXPOSE 2017
-COPY --from=builder /root/v2rayA/xraya /usr/bin/
+COPY --from=builder /root/v2rayA/service/xraya /usr/bin/
 RUN set -xe \
     && apk add iptables ip6tables
 ENTRYPOINT ["xraya"]
