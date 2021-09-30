@@ -5,13 +5,13 @@ RUN set -xe \
     && git clone --single-branch https://github.com/fatedier/frp.git \
     && cd frp \
     && make \
-    && chmod +x bin/frps
+    && chmod +x bin/frp*
 
 FROM alpine:latest
 MAINTAINER xiami110
-ENV TZ Asia/Shanghai
+ENV FRP frps
 VOLUME /etc/frp
 
-COPY --from=builder /root/frp/bin/frps /usr/bin
-COPY frps.ini /etc/frp/frps.ini
-CMD /usr/bin/frps -c /etc/frp/frps.ini
+COPY --from=builder /root/frp/bin/frp* /usr/bin
+COPY frp*.ini /etc/frp/frp*.ini
+CMD /usr/bin/$FRP -c /etc/frp/$FRP.ini
