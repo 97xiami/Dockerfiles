@@ -6,7 +6,8 @@ RUN set -xe \
     && cd v2rayA/gui \
     && yarn \
     && yarn build \
-    && cp -r ../web ../service/server/router \
+    && cd ../service \
+    && cp -r ../web server/router \
     && go build -ldflags="-s -w" -o xraya . \
     && chmod +x xraya
 
