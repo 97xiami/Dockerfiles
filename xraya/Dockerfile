@@ -15,5 +15,7 @@ FROM xiami110/xray:latest
 EXPOSE 2017
 COPY --from=builder /root/v2rayA/service/xraya /usr/bin/
 RUN set -xe \
-    && apk add iptables ip6tables
+    && apk add iptables ip6tables tzdata \
+    && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && apk del tzdata
 ENTRYPOINT ["xraya"]
