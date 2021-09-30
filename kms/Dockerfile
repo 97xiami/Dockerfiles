@@ -9,7 +9,6 @@ RUN set -xe \
 
 FROM alpine:latest
 MAINTAINER xiami110
-ENV TZ=Asia/Shanghai
 EXPOSE 1688
 RUN set -xe \
     && apk add tzdata \
