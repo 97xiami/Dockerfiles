@@ -12,7 +12,7 @@ RUN set -xe \
     && chmod +x v2raya
 
 FROM v2fly/v2fly-core
-COPY --from=builder /build/service/v2raya /usr/bin/
+COPY --from=builder /root/v2rayA/service/v2raya /usr/bin/
 RUN wget -O /usr/local/share/v2ray/LoyalsoldierSite.dat https://raw.githubusercontent.com/mzz2017/dist-v2ray-rules-dat/master/geosite.dat
 RUN apk add --no-cache iptables ip6tables
 EXPOSE 2017
