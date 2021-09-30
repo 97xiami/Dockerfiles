@@ -4,4 +4,5 @@ services:
     image: xiami110/xraya
     container_name: xraya
     restart: always
-    network: "host"
+    network: host
+    privileged: true
