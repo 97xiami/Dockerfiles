@@ -7,4 +7,4 @@ services:
     ports:
       - 443:443
     volumes:
-      - /root/xray:/etc/xray
+      - $PWD/xray:/etc/xray
