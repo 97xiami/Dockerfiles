@@ -1,0 +1,9 @@
+version: '3'
+services:
+  frpc:
+    image: xiami110/frpc
+    container_name: frpc
+    restart: always
+    network: host
+    volumes:
+      - /root/frpc:/etc/frpc
