@@ -4,7 +4,6 @@ services:
     image: xiami110/frps
     container_name: frps
     restart: always
-    ports:
-      - 7000:7000
+    network_mode: host
     volumes:
-      - /root/frps:/etc/frps
+      - $PWD/frps:/etc/frps
