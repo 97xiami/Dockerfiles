@@ -9,6 +9,7 @@ RUN set -xe \
 
 FROM alpine:latest
 MAINTAINER xiami110
+WORKDIR /root
 VOLUME /etc/frpc
 RUN set -xe \
     && apk add tzdata \
