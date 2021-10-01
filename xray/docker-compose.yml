@@ -1,0 +1,10 @@
+version: '3'
+services:
+  xraya:
+    image: xiami110/xray
+    container_name: xray
+    restart: always
+    ports:
+      - 443:443
+    volumes:
+      - /root/xray:/etc/xray
