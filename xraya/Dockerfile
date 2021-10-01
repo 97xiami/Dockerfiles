@@ -14,7 +14,7 @@ RUN set -xe \
 FROM xiami110/xray:latest
 MAINTAINER xiami110
 WORKDIR /root
-COPY --from=builder /root/v2rayA/service/xraya /usr/bin/
+COPY --from=builder /root/v2rayA/service/xraya /usr/bin/xraya
 RUN set -xe \
     && apk add iptables ip6tables tzdata \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
