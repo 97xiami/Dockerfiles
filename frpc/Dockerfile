@@ -9,11 +9,11 @@ RUN set -xe \
 
 FROM alpine:latest
 MAINTAINER xiami110
-VOLUME /etc/frp
+VOLUME /etc/frpc
 RUN set -xe \
     && apk add tzdata \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && apk del tzdata
 COPY --from=builder /root/frp/bin/frpc /usr/bin
-COPY frpc.ini /etc/frp/frpc.ini
-CMD [ "/usr/bin/frpc", "-c", "/etc/frp/frpc.ini" ]
+COPY frpc.ini /etc/frpc/frpc.ini
+CMD [ "/usr/bin/frpc", "-c", "/etc/frpc/frpc.ini" ]
