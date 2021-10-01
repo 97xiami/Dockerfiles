@@ -9,7 +9,7 @@ RUN set -xe \
 
 FROM alpine:latest
 MAINTAINER xiami110
-EXPOSE 7000
+WORKDIR /root
 VOLUME /etc/frps
 RUN set -xe \
     && apk add tzdata \
