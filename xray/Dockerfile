@@ -9,7 +9,6 @@ RUN set -xe \
 
 FROM alpine:latest
 MAINTAINER xiami110
-WORKDIR /root
 VOLUME /etc/xray
 
 COPY --from=builder /root/Xray-core/xray /usr/bin/xray
