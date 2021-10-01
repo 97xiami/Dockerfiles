@@ -1,6 +1,6 @@
 version: '3'
 services:
-  xraya:
+  xray:
     image: xiami110/xray
     container_name: xray
     restart: always
