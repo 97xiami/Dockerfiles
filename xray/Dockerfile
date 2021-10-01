@@ -21,4 +21,4 @@ RUN set -xe \
     && wget -O /usr/share/xray/geoip.dat https://github.com/v2fly/geoip/releases/latest/download/geoip.dat \
     && apk del tzdata ca-certificates
 COPY config.json /etc/xray/config.json
-CMD [ "/usr/bin/xray", "-config", "/etc/xray/config.json" ]
+CMD [ "/usr/bin/xray", "-c", "/etc/xray/config.json" ]
