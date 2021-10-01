@@ -12,6 +12,8 @@ RUN set -xe \
     && chmod +x xraya
 
 FROM xiami110/xray:latest
+MAINTAINER xiami110
+WORKDIR /root
 COPY --from=builder /root/v2rayA/service/xraya /usr/bin/
 RUN set -xe \
     && apk add iptables ip6tables tzdata \
