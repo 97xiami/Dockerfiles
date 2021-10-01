@@ -4,6 +4,6 @@ services:
     image: xiami110/frpc
     container_name: frpc
     restart: always
-    network: host
+    network_mode: host
     volumes:
-      - /root/frpc:/etc/frpc
+      - $PWD/frpc:/etc/frpc
