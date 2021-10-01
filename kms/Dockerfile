@@ -9,7 +9,7 @@ RUN set -xe \
 
 FROM alpine:latest
 MAINTAINER xiami110
-EXPOSE 1688
+WORKDIR /root
 RUN set -xe \
     && apk add tzdata \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
