@@ -1,0 +1,10 @@
+version: '3'
+services:
+  frps:
+    image: xiami110/frps
+    container_name: frps
+    restart: always
+    ports:
+      - 7000:7000
+    volumes:
+      - /root/frps:/etc/frps
