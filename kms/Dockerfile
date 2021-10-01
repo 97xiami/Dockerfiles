@@ -10,9 +10,9 @@ RUN set -xe \
 FROM alpine:latest
 MAINTAINER xiami110
 WORKDIR /root
+COPY --from=builder /root/vlmcsd/bin/vlmcsd /usr/bin/vlmcsd
 RUN set -xe \
     && apk add tzdata \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && apk del tzdata
-COPY --from=builder /root/vlmcsd/bin/vlmcsd /usr/bin/vlmcsd
 CMD [ "/usr/bin/vlmcsd", "-D", "-e" ]
