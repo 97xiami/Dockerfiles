@@ -4,9 +4,10 @@ RUN set -xe \
     && apk add git yarn npm \
     && git clone --recurse-submodules https://github.com/cloudreve/Cloudreve.git \
     && cd Cloudreve/assets \
+    && yarn config get registry \
+    && npm config get registry \
     && yarn install \
-    && npx -y browserslist@latest --update-db \
-    && yarn run build
+    && npx -y browserslist@latest --update-db
 RUN set -xe \
     && cd /root/Cloudreve \
     && go get github.com/rakyll/statik \
