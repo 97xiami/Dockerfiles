@@ -4,7 +4,6 @@ RUN set -xe \
     && apk add git go yarn \
     && git clone --single-branch https://github.com/v2rayA/v2rayA \
     && cd v2rayA/gui \
-    && export ver=$(git describe --abbrev=0 --tags) \
     && yarn \
     && yarn build \
     && cd ../service \
