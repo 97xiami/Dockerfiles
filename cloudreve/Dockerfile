@@ -6,11 +6,11 @@ RUN set -xe \
     && cd Cloudreve/assets \
     && yarn install \
     && npx -y browserslist@latest --update-db \
-    && yarn run build \
+    && yarn run build
 RUN set -xe \
     && cd /root/Cloudreve
     && go get github.com/rakyll/statik \
-    && statik -src=assets/build/  -include=*.html,*.js,*.json,*.css,*.png,*.svg,*.ico -f \
+    && statik -src=assets/build/  -include=*.html,*.js,*.json,*.css,*.png,*.svg,*.ico -f
 RUN set -xe \
     && cd /root/Cloudreve
     && go build -a -o cloudreve -ldflags " -X 'github.com/cloudreve/Cloudreve/v3/pkg/conf.BackendVersion=$(git describe --tags)' -X 'github.com/cloudreve/Cloudreve/v3/pkg/conf.LastCommit=$(git rev-parse --short HEAD)'" \
