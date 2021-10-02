@@ -4,6 +4,7 @@ RUN set -xe \
     && apk add git yarn \
     && git clone --recurse-submodules https://github.com/cloudreve/Cloudreve.git \
     && cd Cloudreve/assets \
+    && npx browserslist@latest --update-db \
     && yarn install \
     && yarn run build \
     && cd ../ \
