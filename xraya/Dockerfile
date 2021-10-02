@@ -8,7 +8,7 @@ RUN set -xe \
     && yarn build \
     && cd ../service \
     && cp -r ../web server/router \
-    && CGO_ENABLED=0 go build -ldflags="-s -w -X github.com/v2rayA/v2rayA/conf.Version=$(git describe --abbrev=0 --tags)" -o xraya . \
+    && CGO_ENABLED=0 go build -ldflags="-s -w -X github.com/v2rayA/v2rayA/conf.Version=latest" -o xraya . \
     && chmod +x xraya
 
 FROM xiami110/xray:latest
