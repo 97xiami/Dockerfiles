@@ -4,11 +4,12 @@ RUN set -xe \
     && apk add git go yarn \
     && git clone --single-branch https://github.com/v2rayA/v2rayA \
     && cd v2rayA/gui \
+    && export ver=$(git describe --abbrev=0 --tags) \
     && yarn \
     && yarn build \
     && cd ../service \
     && cp -r ../web server/router \
-    && CGO_ENABLED=0 go build -ldflags="-s -w -X github.com/v2rayA/v2rayA/conf.Version=${git describe --abbrev=0 --tags}" -o xraya . \
+    && CGO_ENABLED=0 go build -ldflags="-s -w -X github.com/v2rayA/v2rayA/conf.Version=$(git describe --abbrev=0 --tags)" -o xraya . \
     && chmod +x xraya
 
 FROM xiami110/xray:latest
