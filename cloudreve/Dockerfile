@@ -7,7 +7,8 @@ RUN set -xe \
     && yarn config get registry \
     && npm config get registry \
     && yarn install \
-    && npx -y browserslist@latest --update-db
+    && npx -y browserslist@latest --update-db \
+    && yarn run build
 RUN set -xe \
     && cd /root/Cloudreve \
     && go get github.com/rakyll/statik \
