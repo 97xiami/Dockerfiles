@@ -4,17 +4,12 @@ RUN set -xe \
     && apk add git yarn npm \
     && git clone --recurse-submodules https://github.com/cloudreve/Cloudreve.git \
     && cd Cloudreve/assets \
-    && yarn config get registry \
-    && npm config get registry \
     && yarn install \
     && npx -y browserslist@latest --update-db \
-    && yarn run build
-RUN set -xe \
-    && cd /root/Cloudreve \
+    && yarn run build \
+    && cd ../
     && go get github.com/rakyll/statik \
-    && statik -src=assets/build/  -include=*.html,*.js,*.json,*.css,*.png,*.svg,*.ico -f
-RUN set -xe \
-    && cd /root/Cloudreve \
+    && statik -src=assets/build/  -include=*.html,*.js,*.json,*.css,*.png,*.svg,*.ico -f \
     && go build -a -o cloudreve -ldflags " -X 'github.com/cloudreve/Cloudreve/v3/pkg/conf.BackendVersion=$(git describe --tags)' -X 'github.com/cloudreve/Cloudreve/v3/pkg/conf.LastCommit=$(git rev-parse --short HEAD)'" \
     && chmod +x cloudreve
 
