@@ -1,7 +1,7 @@
-FROM alpine:latest AS builder
+FROM golang:1.17.1-alpine AS builder
 WORKDIR /root
 RUN set -xe \
-    && apk add git yarn npm go \
+    && apk add git yarn npm \
     && git clone --recurse-submodules https://github.com/cloudreve/Cloudreve.git \
     && cd Cloudreve/assets \
     && yarn install \
@@ -9,7 +9,7 @@ RUN set -xe \
     && yarn run build \
     && cd ../ \
     && go get github.com/rakyll/statik \
-    && ../go/bin/statik -src=assets/build/  -include=*.html,*.js,*.json,*.css,*.png,*.svg,*.ico -f \
+    && statik -src=assets/build/  -include=*.html,*.js,*.json,*.css,*.png,*.svg,*.ico -f \
     && go build -a -o cloudreve -ldflags " -X 'github.com/cloudreve/Cloudreve/v3/pkg/conf.BackendVersion=$(git describe --tags)' -X 'github.com/cloudreve/Cloudreve/v3/pkg/conf.LastCommit=$(git rev-parse --short HEAD)'" \
     && chmod +x cloudreve
 
