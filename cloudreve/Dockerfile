@@ -1,11 +1,10 @@
-FROM golang:1.17.1-alpine AS builder
+FROM golang:1.17-alpine AS builder
 WORKDIR /root
 RUN set -xe \
     && apk add git yarn npm \
     && git clone --recurse-submodules https://github.com/cloudreve/Cloudreve.git \
     && cd Cloudreve/assets \
-    && yarn install \
-    && npx -y browserslist@latest --update-db \
+    && yarn install --network-timeout 1000000\
     && yarn run build \
     && cd ../ \
     && go get github.com/rakyll/statik \
