@@ -1,7 +1,7 @@
-FROM alpine:latest AS builder
+FROM golang:1.17-alpine AS builder
 WORKDIR /root
 RUN set -xe \
-    && apk add git go gcc build-base \
+    && apk add git gcc build-base \
     && git clone --single-branch https://github.com/XTLS/Xray-core.git \
     && cd Xray-core \
     && go build -o xray -trimpath -ldflags "-s -w " ./main \
