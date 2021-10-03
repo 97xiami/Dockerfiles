@@ -1,7 +1,7 @@
-FROM alpine:latest AS builder
+FROM golang:1.17-alpine AS builder
 WORKDIR /root
 RUN set -xe \
-    && apk add git go yarn \
+    && apk add git yarn \
     && git clone --single-branch https://github.com/v2rayA/v2rayA \
     && cd v2rayA/gui \
     && yarn \
