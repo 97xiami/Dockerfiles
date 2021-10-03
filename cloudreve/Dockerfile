@@ -1,7 +1,7 @@
 FROM golang:1.17-alpine AS builder
 WORKDIR /root
 RUN set -xe \
-    && apk add git yarn gcc build-base abuild binutils binutils-doc gcc-doc \
+    && apk add git yarn gcc build-base abuild binutils \
     && git clone --recurse-submodules https://github.com/cloudreve/Cloudreve.git \
     && cd Cloudreve/assets \
     && yarn install --network-timeout 1000000\
