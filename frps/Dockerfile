@@ -1,7 +1,7 @@
-FROM alpine:latest AS builder
+FROM golang:1.17-alpine AS builder
 WORKDIR /root
 RUN set -xe \
-    && apk add git go make \
+    && apk add git make \
     && git clone --single-branch https://github.com/fatedier/frp.git \
     && cd frp \
     && make \
