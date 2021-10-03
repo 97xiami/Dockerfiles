@@ -1,4 +1,4 @@
-FROM golang:1.17-alpine AS builder
+FROM golang:alpine AS builder
 WORKDIR /root
 RUN set -xe \
     && apk add git gcc build-base \
