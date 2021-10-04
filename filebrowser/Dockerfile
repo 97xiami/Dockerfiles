@@ -16,6 +16,7 @@ MAINTAINER xiami110
 WORKDIR /root
 VOLUME /mnt/data
 VOLUME /etc/filebrowser
+EXPOSE 80
 COPY --from=builder /root/filebrowser/filebrowser /usr/bin/filebrowser
 RUN set -xe \
     && filebrowser -d /etc/filebrowser/database.db config init \
