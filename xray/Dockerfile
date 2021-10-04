@@ -11,6 +11,7 @@ FROM alpine:latest
 MAINTAINER xiami110
 WORKDIR /root
 VOLUME /etc/xray
+EXPOSE 443
 COPY --from=builder /root/Xray-core/xray /usr/bin/xray
 COPY config.json /etc/xray/config.json
 RUN set -xe \
