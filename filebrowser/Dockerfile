@@ -24,6 +24,7 @@ RUN set -xe \
     && filebrowser -d /etc/filebrowser/database.db config set --port 80 \
     && filebrowser -d /etc/filebrowser/database.db config set --locale zh-cn \
     && filebrowser -d /etc/filebrowser/database.db config set --log /etc/filebrowser/log \
+    && filebrowser -d /etc/filebrowser/database.db config set --root=/mnt/data \
     && filebrowser -d /etc/filebrowser/database.db users add admin password --perm.admin \
     && filebrowser -d /etc/filebrowser/database.db config set --auth.method=noauth
 CMD ["filebrowser", "-d", "/etc/filebrowser/database.db"]
