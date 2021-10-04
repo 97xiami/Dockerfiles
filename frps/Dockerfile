@@ -11,6 +11,7 @@ FROM alpine:latest
 MAINTAINER xiami110
 WORKDIR /root
 VOLUME /etc/frp
+EXPOSE 7000
 COPY --from=builder /root/frp/bin/frps /usr/bin/frps
 COPY frps.ini /etc/frp/frps.ini
 RUN set -xe \
