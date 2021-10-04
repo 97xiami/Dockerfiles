@@ -15,7 +15,6 @@ FROM alpine:latest
 MAINTAINER xiami110
 WORKDIR /root
 VOLUME /mnt/data
-VOLUME /etc/filebrowser
 EXPOSE 80
 COPY --from=builder /root/filebrowser/filebrowser /usr/bin/filebrowser
 RUN set -xe \
