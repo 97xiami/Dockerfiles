@@ -10,6 +10,7 @@ RUN set -xe \
 FROM alpine:latest
 MAINTAINER xiami110
 WORKDIR /root
+EXPOSE 1688
 COPY --from=builder /root/vlmcsd/bin/vlmcsd /usr/bin/vlmcsd
 RUN set -xe \
     && apk add tzdata \
