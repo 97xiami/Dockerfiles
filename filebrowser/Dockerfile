@@ -1,5 +1,5 @@
 FROM golang:alpine AS builder
-WORKDIR /roo
+WORKDIR /root
 RUN set -xe \
     && apk add git npm \
     && git clone https://github.com/filebrowser/filebrowser \
