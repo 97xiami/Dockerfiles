@@ -4,7 +4,7 @@ RUN set -xe \
     && apk add git gcc build-base \
     && git clone https://github.com/drakkan/sftpgo.git \
     && cd sftpgo \
-    && go build -tags nogcs,nos3,noazblob,nobolt,nomysql,nopgsql,novaultkms,noawskms,nogcpkms -ldflags "-s -w -X github.com/drakkan/sftpgo/v2/version.commit=`git describe --always --dirty` -X github.com/drakkan/sftpgo/v2/version.date=`date -u +%FT%TZ`" -o sftpgo \
+    && go build -ldflags "-s -w -X github.com/drakkan/sftpgo/v2/version.commit=`git describe --always --dirty` -X github.com/drakkan/sftpgo/v2/version.date=`date -u +%FT%TZ`" -o sftpgo \
     && chmod +x sftpgo
 
 FROM alpine
