@@ -10,12 +10,10 @@ RUN set -xe \
 FROM alpine:latest
 MAINTAINER xiami110
 WORKDIR /root
-VOLUME /etc/frp
-EXPOSE 7000
 COPY --from=builder /root/frp/bin/frps /usr/bin/frps
 COPY frps.ini /etc/frp/frps.ini
 RUN set -xe \
     && apk add tzdata \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && apk del tzdata
-CMD [ "/usr/bin/frps", "-c", "/etc/frp/frps.ini" ]
+CMD [ "frps", "-c", "/etc/frp/frps.ini" ]
