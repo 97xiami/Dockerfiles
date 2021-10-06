@@ -11,3 +11,5 @@ xraya: https://github.com/v2rayA/v2rayA
 filebrowser: https://github.com/filebrowser/filebrowser
 
 alpine: https://github.com/alpinelinux/docker-alpine
+
+cloudreve: https://github.com/cloudreve/Cloudreve
