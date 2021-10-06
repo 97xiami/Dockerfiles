@@ -39,4 +39,3 @@ jobs:
       uses: 97xiami/delete-workflow-runs@master
       with:
         retain_days: 7
-        keep_minimum_runs: 0
