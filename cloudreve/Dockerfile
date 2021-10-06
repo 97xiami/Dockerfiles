@@ -15,5 +15,5 @@ RUN set -xe \
 FROM alpine:latest
 MAINTAINER xiami110
 WORKDIR /root
-COPY --from=builder /root/Cloudreve/cloudreve /root/cloudreve
-CMD [ "./cloudreve" ]
+COPY --from=builder /root/Cloudreve/cloudreve /usr/bin/cloudreve
+CMD [ "cloudreve" ]
