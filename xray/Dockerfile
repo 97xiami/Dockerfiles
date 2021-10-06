@@ -10,8 +10,6 @@ RUN set -xe \
 FROM alpine:latest
 MAINTAINER xiami110
 WORKDIR /root
-VOLUME /etc/xray
-EXPOSE 443
 COPY --from=builder /root/Xray-core/xray /usr/bin/xray
 COPY config.json /etc/xray/config.json
 RUN set -xe \
@@ -21,4 +19,4 @@ RUN set -xe \
     && wget -O /usr/share/xray/geosite.dat https://github.com/v2fly/domain-list-community/releases/latest/download/dlc.dat \
     && wget -O /usr/share/xray/geoip.dat https://github.com/v2fly/geoip/releases/latest/download/geoip.dat \
     && apk del tzdata ca-certificates
-CMD [ "/usr/bin/xray", "-c", "/etc/xray/config.json" ]
+CMD [ "xray", "-c", "/etc/xray/config.json" ]
