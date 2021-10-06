@@ -17,7 +17,7 @@
     "max_total_connections": 0,
     "max_per_host_connections": 20,
     "defender": {
-      "enabled": false,
+      "enabled": true,
       "ban_time": 30,
       "ban_time_increment": 50,
       "threshold": 15,
@@ -52,7 +52,7 @@
   "sftpd": {
     "bindings": [
       {
-        "port": 2022,
+        "port": 1022,
         "address": "",
         "apply_proxy_config": true
       }
@@ -111,7 +111,7 @@
   "webdavd": {
     "bindings": [
       {
-        "port": 0,
+        "port": 1021,
         "address": "",
         "enable_https": false,
         "client_auth_type": 0,
@@ -199,7 +199,7 @@
   "httpd": {
     "bindings": [
       {
-        "port": 8081,
+        "port": 1020,
         "address": "",
         "enable_web_admin": true,
         "enable_web_client": true,
