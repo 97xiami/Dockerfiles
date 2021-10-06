@@ -13,3 +13,5 @@ filebrowser: https://github.com/filebrowser/filebrowser
 alpine: https://github.com/alpinelinux/docker-alpine
 
 cloudreve: https://github.com/cloudreve/Cloudreve
+
+sftpgo: https://github.com/drakkan/sftpgo
