@@ -1,4 +1,4 @@
-FROM golang:latest-alpine AS builder
+FROM golang:alpine AS builder
 WORKDIR /root
 RUN set -xe \
     && add git \
