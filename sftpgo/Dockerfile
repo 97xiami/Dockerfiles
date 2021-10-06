@@ -13,4 +13,5 @@ WORKDIR /root
 COPY --from=builder /root/sftpgo/sftpgo /usr/bin/sftpgo
 COPY --from=builder /root/sftpgo/templates /root/templates
 COPY --from=builder /root/sftpgo/static /root/static
-CMD [ "sftpgo", "serve" ]
+COPY sftpgo.json /root/sftpgo.json
+CMD [ "sftpgo", "serve", "--config-file", "/root/sftpgo.json" ]
