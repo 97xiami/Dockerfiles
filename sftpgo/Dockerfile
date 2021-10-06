@@ -1,7 +1,7 @@
 FROM golang:alpine AS builder
 WORKDIR /root
 RUN set -xe \
-    && apk add git \
+    && apk add git gcc \
     && git clone https://github.com/drakkan/sftpgo.git \
     && cd sftpgo \
     && go build -tags nogcs,nos3,noazblob,nobolt,nomysql,nopgsql,nometrics,novaultkms,noawskms,nogcpkms -ldflags "-s -w -X github.com/drakkan/sftpgo/v2/version.commit=`git describe --always --dirty` -X github.com/drakkan/sftpgo/v2/version.date=`date -u +%FT%TZ`" -o sftpgo \
