@@ -11,4 +11,4 @@ FROM alpine
 MAINTAINER xiami110
 WORKDIR /root
 COPY --from=builder /root/sftpgo/sftpgo /usr/bin/sftpgo
-CMD [ "sftpgo" ]
+CMD [ "sftpgo", "serve" ]
