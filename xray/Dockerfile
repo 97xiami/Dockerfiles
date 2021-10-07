@@ -11,12 +11,12 @@ FROM alpine:latest
 MAINTAINER xiami110
 WORKDIR /root
 COPY --from=builder /root/Xray-core/xray /usr/bin/xray
-COPY config.json /etc/xray/config.json
+COPY config.json /root/config.json
 RUN set -xe \
-    && mkdir -p /var/log/xray /usr/share/xray /etc/xray \
+    && mkdir -p /usr/share/xray \
     && apk add tzdata ca-certificates \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && wget -O /usr/share/xray/geosite.dat https://github.com/v2fly/domain-list-community/releases/latest/download/dlc.dat \
     && wget -O /usr/share/xray/geoip.dat https://github.com/v2fly/geoip/releases/latest/download/geoip.dat \
     && apk del tzdata ca-certificates
-CMD [ "xray", "-c", "/etc/xray/config.json" ]
+CMD [ "xray", "-c", "/root/config.json" ]
