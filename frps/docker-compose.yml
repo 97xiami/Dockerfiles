@@ -6,4 +6,4 @@ services:
     restart: always
     network_mode: host
     volumes:
-      - $PWD/frps:/etc/frps
+      - $PWD/frps:/root
