@@ -11,9 +11,9 @@ FROM alpine:latest
 MAINTAINER xiami110
 WORKDIR /root
 COPY --from=builder /root/frp/bin/frps /usr/bin/frps
-COPY frps.ini /root/frps.ini
+COPY frps.ini /root/frps/frps.ini
 RUN set -xe \
     && apk add tzdata \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && apk del tzdata
-CMD [ "frps", "-c", "/root/frps.ini" ]
+CMD [ "frps", "-c", "/root/frps/frps.ini" ]
