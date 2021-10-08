@@ -1,0 +1,8 @@
+version: '3'
+services:
+  cloudreve:
+    image: xiami110/cloudreve
+    container_name: cloudreve
+    restart: always
+    ports:
+      - 5212:5212
