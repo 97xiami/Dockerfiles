@@ -11,7 +11,7 @@ FROM alpine
 MAINTAINER xiami110
 WORKDIR /root
 COPY --from=builder /root/sftpgo/sftpgo /usr/bin/sftpgo
-COPY --from=builder /root/sftpgo/templates /root/templates
-COPY --from=builder /root/sftpgo/static /root/static
-COPY sftpgo.json /root/sftpgo.json
-CMD [ "sftpgo", "serve", "--config-file", "/root/sftpgo.json" ]
+COPY --from=builder /root/sftpgo/templates /root/sftpgo/templates
+COPY --from=builder /root/sftpgo/static /root/sftpgo/static
+COPY sftpgo.json /root/sftpgo/sftpgo.json
+CMD [ "sftpgo", "serve", "--config-file", "/root/sftpgo/sftpgo.json" ]
