@@ -1,0 +1,8 @@
+version: '3'
+services:
+  sftpgo:
+    image: xiami110/sftpgo
+    container_name: sftpgo
+    restart: always
+    ports:
+      - 8080:8080
