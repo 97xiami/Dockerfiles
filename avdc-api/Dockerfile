@@ -1,10 +1,14 @@
+FROM alpine AS git
+RUN apk add git \
+    && git clone https://github.com/xjasonlyu/avdc-api
+
 FROM xjasonlyu/face-recognition:latest
 LABEL org.opencontainers.image.source="https://github.com/xjasonlyu/avdc-api"
 
 WORKDIR /app
-COPY . /app
-
-RUN pip install --no-cache-dir -U pip \
+COPY --from=git /avdc-api/* /app
+RUN set -xe \
+    && pip install --no-cache-dir -U pip \
     && pip install --no-cache-dir -r requirements.txt \
     && rm -rf requirements.txt
 
