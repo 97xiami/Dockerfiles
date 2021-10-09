@@ -6,7 +6,7 @@ FROM xjasonlyu/face-recognition:latest
 LABEL org.opencontainers.image.source="https://github.com/xjasonlyu/avdc-api"
 
 WORKDIR /root
-COPY --from=git /avdc-api/* /root
+COPY --from=git /avdc-api /root
 RUN set -xe \
     && pip install --no-cache-dir -U pip \
     && pip install --no-cache-dir -r requirements.txt \
