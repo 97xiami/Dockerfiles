@@ -31,7 +31,7 @@ jobs:
       with:
         context: ./${{ github.event.inputs.project }}
         file: ./${{ github.event.inputs.project }}/Dockerfile
-        platforms: linux/amd64
+        platforms: linux/armv7
         push: true
         tags: xiami110/${{ github.event.inputs.project }}:latest
 
