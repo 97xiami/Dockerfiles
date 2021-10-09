@@ -1,4 +1,4 @@
-name: AMD64+ARM64
+name: AMD64+ARM64+ARM
 
 on:
   workflow_dispatch:
