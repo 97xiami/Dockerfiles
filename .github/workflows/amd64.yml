@@ -36,6 +36,6 @@ jobs:
         tags: xiami110/${{ github.event.inputs.project }}:latest
 
     - name: Delete Workflow History
-      uses: 97xiami/delete-workflow-runs@master
+      uses: 97xiami/delete-workflow-runs@main
       with:
         retain_days: 7
