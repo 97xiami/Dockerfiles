@@ -3,8 +3,8 @@ name: ARM64
 on:
   workflow_dispatch:
     inputs:
-      project:
-        description: 'Project'
+      name:
+        description: 'Dir Name'
         required: true
 
 jobs:
@@ -29,11 +29,11 @@ jobs:
     - name: Build and Push
       uses: docker/build-push-action@v2
       with:
-        context: ./${{ github.event.inputs.project }}
-        file: ./${{ github.event.inputs.project }}/Dockerfile
+        context: ./${{ github.event.inputs.name }}
+        file: ./${{ github.event.inputs.name }}/Dockerfile
         platforms: linux/arm64
         push: true
-        tags: xiami110/${{ github.event.inputs.project }}:arm64
+        tags: xiami110/${{ github.event.inputs.name }}:arm64
 
     - name: Delete Workflow History
       uses: 97xiami/delete-workflow-runs@main
