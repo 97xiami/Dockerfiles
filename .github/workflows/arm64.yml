@@ -33,7 +33,7 @@ jobs:
         file: ./${{ github.event.inputs.project }}/Dockerfile
         platforms: linux/arm64
         push: true
-        tags: xiami110/${{ github.event.inputs.project }}:latest
+        tags: xiami110/${{ github.event.inputs.project }}:arm64
 
     - name: Delete Workflow History
       uses: 97xiami/delete-workflow-runs@main
