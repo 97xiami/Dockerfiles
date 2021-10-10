@@ -1,4 +1,4 @@
-FROM xiami110:alpine
+FROM xiami110/alpine
 RUN set -xe \
     && apk add build-base cmake git \
     && git clone --single-branch https://github.com/davisking/dlib.git \
