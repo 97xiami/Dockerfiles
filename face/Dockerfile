@@ -1,10 +1,11 @@
-FROM python:3.9-slim
+FROM python:alpine
 
 ARG DEBIAN_FRONTEND="noninteractive"
 
 ARG DLIB_VERSION="v19.21"
 
-RUN apt-get -y update \
+RUN set -xe \
+    && apt-get -y update \
     && apt-get install -y --no-install-recommends build-essential cmake git \
     && git clone --single-branch --branch ${DLIB_VERSION} https://github.com/davisking/dlib.git \
     && cd dlib/ \
