@@ -2,7 +2,7 @@ FROM alpine AS git
 RUN apk add git \
     && git clone https://github.com/xjasonlyu/avdc-api
 
-FROM xiami110/face
+FROM xiami110/face:amd64
 WORKDIR /app
 COPY --from=git /avdc-api /app
 RUN set -xe \
