@@ -4,7 +4,7 @@ ARG DEBIAN_FRONTEND="noninteractive"
 
 ARG DLIB_VERSION="v19.21"
 
-RUN set -xe\
+RUN set -xe \
     && apk add build-base cmake git \
     && git clone --single-branch --branch ${DLIB_VERSION} https://github.com/davisking/dlib.git \
     && cd dlib \
