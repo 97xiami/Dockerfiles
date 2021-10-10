@@ -3,8 +3,8 @@ name: AMD64+ARM64+ARM
 on:
   workflow_dispatch:
     inputs:
-      project:
-        description: 'Project'
+      name:
+        description: 'Dir Name'
         required: true
 
 jobs:
