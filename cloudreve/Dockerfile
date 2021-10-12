@@ -17,4 +17,4 @@ FROM alpine:latest
 MAINTAINER xiami110
 WORKDIR /root
 COPY --from=builder /root/Cloudreve/cloudreve /root/cloudreve-main
-ENTRYPOINT [ "./cloudreve-main" "-c" "/root/cloudreve/conf.ini" ]
+CMD [ "./cloudreve-main", "-c", "/root/cloudreve/conf.ini" ]
