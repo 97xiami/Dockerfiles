@@ -5,6 +5,7 @@ RUN set -xe \
     && git clone --recurse-submodules https://github.com/cloudreve/Cloudreve.git \
     && cd Cloudreve/assets \
     && yarn install --network-timeout 1000000 \
+    && npx -y browserslist@latest --update-db \
     && yarn run build \
     && cd ../ \
     && go get github.com/rakyll/statik \
