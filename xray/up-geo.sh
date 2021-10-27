@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/sh
 
 IP="https://github.com/Loyalsoldier/v2ray-rules-dat/raw/release/geoip.dat"
 SITE="https://github.com/Loyalsoldier/v2ray-rules-dat/raw/release/geosite.dat"
