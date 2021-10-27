@@ -17,8 +17,8 @@ RUN set -xe \
     && mkdir -p /usr/share/xray \
     && apk add tzdata ca-certificates \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
-    && wget -O /usr/share/xray/geosite.dat https://github.com/v2fly/domain-list-community/releases/latest/download/dlc.dat \
-    && wget -O /usr/share/xray/geoip.dat https://github.com/v2fly/geoip/releases/latest/download/geoip.dat \
+    && wget -O /usr/share/xray/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/raw/release/geoip.dat \
+    && wget -O /usr/share/xray/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/raw/release/geosite.dat \
     && apk del tzdata ca-certificates \
     && chmod +x /root/xray/up-geo.sh \
     && echo "30 6 * * * sh /root/xray/up-geo.sh" >> /var/spool/cron/crontabs/root \
