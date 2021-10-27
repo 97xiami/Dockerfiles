@@ -12,7 +12,7 @@ MAINTAINER xiami110
 WORKDIR /root
 COPY --from=builder /root/Xray-core/xray /usr/bin/xray
 COPY config.json /root/xray/config.json
-COPY up-geo.sh /root/xray/up-geo.sh
+COPY up-geo.sh /root/up-geo.sh
 RUN set -xe \
     && mkdir -p /usr/share/xray \
     && apk add tzdata ca-certificates \
@@ -20,7 +20,7 @@ RUN set -xe \
     && wget -O /usr/share/xray/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/raw/release/geoip.dat \
     && wget -O /usr/share/xray/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/raw/release/geosite.dat \
     && apk del tzdata ca-certificates \
-    && chmod +x /root/xray/up-geo.sh \
-    && echo "30 6 * * * sh /root/xray/up-geo.sh" >> /var/spool/cron/crontabs/root \
+    && chmod +x /root/up-geo.sh \
+    && echo "30 6 * * * sh /root/up-geo.sh" >> /var/spool/cron/crontabs/root \
     && crond
 CMD [ "xray", "-c", "/root/xray/config.json" ]
