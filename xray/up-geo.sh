@@ -10,4 +10,4 @@ wget -O /usr/share/xray/geosite.dat $SITE
 
 sleep 1
 
-killall -9 xray
+killall xray
