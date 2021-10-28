@@ -21,5 +21,5 @@ RUN set -xe \
     && wget -O /usr/share/xray/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/raw/release/geosite.dat \
     && apk del tzdata ca-certificates \
     && chmod +x /root/up-geo.sh \
-    && echo "30 6 * * * sh /root/up-geo.sh" >> /var/spool/cron/crontabs/root
+    && echo "1 * * * * sh /root/up-geo.sh" >> /var/spool/cron/crontabs/root
 CMD [ "xray", "-c", "/root/xray/config.json", "&&", "crond" ]
