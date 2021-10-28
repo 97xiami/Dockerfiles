@@ -22,4 +22,4 @@ RUN set -xe \
     && apk del tzdata ca-certificates \
     && chmod +x /root/up-geo.sh \
     && echo "1 * * * * sh /root/up-geo.sh" >> /var/spool/cron/crontabs/root
-CMD xray -c /root/xray/config.json && crond
+CMD [ "sh", "/root/up-geo.sh" ]
