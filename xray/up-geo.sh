@@ -1,5 +1,7 @@
 #!/bin/sh
 
+killall xray
+
 IP="https://github.com/Loyalsoldier/v2ray-rules-dat/raw/release/geoip.dat"
 SITE="https://github.com/Loyalsoldier/v2ray-rules-dat/raw/release/geosite.dat"
 
@@ -10,4 +12,6 @@ wget -O /usr/share/xray/geosite.dat $SITE
 
 sleep 1
 
-killall xray
+xray -c /root/xray/config.json
+
+crond
