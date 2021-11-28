@@ -9,8 +9,8 @@ services:
             options: 
                 max-size: 1m
     devices:
-      - "$PWD/uploads:/cloudreve/uploads"
+      - "$PWD/uploads:/root/cloudreve/uploads"
       - "$PWD/downloads:/downloads"
-      - "$PWD/config:/cloudreve/config"
-      - "$PWD/db:/cloudreve/db"
-      - "$PWD/avatar:/cloudreve/avatar"
+      - "$PWD/config:/root/cloudreve/config"
+      - "$PWD/db:/root/cloudreve/db"
+      - "$PWD/avatar:/root/cloudreve/avatar"
