@@ -11,7 +11,7 @@ RUN set -xe \
     && go get github.com/rakyll/statik \
     && statik -src=assets/build/  -include=*.html,*.js,*.json,*.css,*.png,*.svg,*.ico -f \
     && go build -a -o cloudreve -ldflags " -X 'github.com/cloudreve/Cloudreve/v3/pkg/conf.BackendVersion=$(git describe --tags)' -X 'github.com/cloudreve/Cloudreve/v3/pkg/conf.LastCommit=$(git rev-parse --short HEAD)'" \
-    && chmod +x cloudreve \
+    && chmod +x cloudreve
 
 FROM alpine:latest
 LABEL MAINTAINER="xiami110"
