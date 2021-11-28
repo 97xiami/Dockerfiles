@@ -1,4 +1,4 @@
-FROM golang:alpine AS builder
+FROM golang:alpine as builder
 WORKDIR /root
 RUN set -xe \
     && apk add git yarn gcc build-base npm \
@@ -14,6 +14,7 @@ RUN set -xe \
     && chmod +x cloudreve \
 
 FROM alpine:latest
+LABEL MAINTAINER="xiami110"
 WORKDIR /root
 COPY --from=builder /root/Cloudreve/cloudreve /root/cloudreve-main
 CMD [ "/root/cloudreve-main", "-c", "/root/cloudreve/conf.ini" ]
