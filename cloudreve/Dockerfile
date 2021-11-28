@@ -14,8 +14,3 @@ RUN set -xe \
     && chmod +x cloudreve \
     
 
-FROM alpine:latest
-MAINTAINER xiami110
-WORKDIR /root
-COPY --from=builder /root/Cloudreve/cloudreve /root/main
-CMD [ "./main", "-c", "/root/cloudreve/conf.ini" ]
