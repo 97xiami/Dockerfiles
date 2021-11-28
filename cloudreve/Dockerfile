@@ -12,5 +12,9 @@ RUN set -xe \
     && statik -src=assets/build/  -include=*.html,*.js,*.json,*.css,*.png,*.svg,*.ico -f \
     && go build -a -o cloudreve -ldflags " -X 'github.com/cloudreve/Cloudreve/v3/pkg/conf.BackendVersion=$(git describe --tags)' -X 'github.com/cloudreve/Cloudreve/v3/pkg/conf.LastCommit=$(git rev-parse --short HEAD)'" \
     && chmod +x cloudreve \
-    
 
+FROM alpine:latest
+MAINTAINER xiami110
+WORKDIR /root
+COPY --from=builder /root/Cloudreve/cloudreve /root/cloudreve-main
+CMD [ "/root/cloudreve-main", "-c", "/root/cloudreve/conf.ini" ]
