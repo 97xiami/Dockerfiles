@@ -26,6 +26,9 @@ jobs:
         username: ${{ secrets.USER_NAME }}
         password: ${{ secrets.PASSWORD }}
 
+    - name: SSH连接
+      uses: mxschmitt/action-tmate@v3
+
     - name: Build and Push
       uses: docker/build-push-action@v2
       with:
