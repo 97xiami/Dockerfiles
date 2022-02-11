@@ -6,7 +6,7 @@ RUN set -xe \
     && cd Cloudreve/assets \
     && yarn --update-checksums \
     && yarn install --network-timeout 1000000 \
-    && npx -y browserslist@latest --update-db \
+    ##&& npx -y browserslist@latest --update-db \
     && yarn run build \
     && cd ../ \
     && go get github.com/rakyll/statik \
