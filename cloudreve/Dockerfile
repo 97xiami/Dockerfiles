@@ -1,10 +1,11 @@
 FROM golang:alpine as builder
 WORKDIR /root
 RUN set -xe \
-    && apk add git yarn gcc build-base \
+    && apk add git yarn gcc build-base npm \
     && git clone --recurse-submodules https://github.com/cloudreve/Cloudreve.git \
     && cd Cloudreve/assets \
     && yarn config set registry https://registry.yarnpkg.com \
+    && npm config set registry http://registry.npmjs.org \
     && yarn install --network-timeout 1000000 \
     && yarn run build \
     && cd ../ \
