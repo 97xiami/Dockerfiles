@@ -1,7 +1,7 @@
 FROM golang:alpine as builder
 WORKDIR /root
 RUN set -xe \
-    && apk add git yarn gcc build-base binutils abuild \
+    && apk add git yarn gcc build-base binutils abuild binutils-doc gcc-doc \
     && git clone --recurse-submodules https://github.com/cloudreve/Cloudreve.git \
     && cd Cloudreve/assets \
     && yarn --update-checksums \
