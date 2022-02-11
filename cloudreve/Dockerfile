@@ -4,6 +4,7 @@ RUN set -xe \
     && apk add git yarn gcc build-base \
     && git clone --recurse-submodules https://github.com/cloudreve/Cloudreve.git \
     && cd Cloudreve/assets \
+    && yarn config set registry https://registry.yarnpkg.com \
     && yarn install --network-timeout 1000000 \
     && yarn run build \
     && cd ../ \
