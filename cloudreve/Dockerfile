@@ -1,4 +1,4 @@
-FROM golang:alpine as builder
+FROM golang:1.16-alpine as builder
 WORKDIR /root
 RUN set -xe \
     && apk add git yarn gcc build-base binutils abuild binutils-doc gcc-doc \
