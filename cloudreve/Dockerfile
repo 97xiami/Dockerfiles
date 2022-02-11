@@ -6,7 +6,8 @@ RUN set -xe \
     && cd Cloudreve/assets \
     && yarn config set registry https://registry.yarnpkg.com \
     && yarn config delete registry \
-    && yarn clean cache \
+    && yarn cache clean \
+    && yarn --update-checksums \
     && npm config set registry http://registry.npmjs.org \
     && npm config delete registry \
     && yarn install --network-timeout 1000000 \
