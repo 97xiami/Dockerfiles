@@ -1,10 +1,10 @@
-FROM golang:1.16-alpine as builder
+FROM golang:alpine as builder
 WORKDIR /root
 RUN set -xe \
-    && apk add git yarn gcc build-base \
+    && apk add git yarn gcc build-base abuild binutils binutils-doc gcc-doc \
     && git clone --recurse-submodules https://github.com/cloudreve/Cloudreve.git \
     && cd Cloudreve/assets \
-    ##&& yarn --update-checksums \
+    && yarn --update-checksums \
     && yarn install --network-timeout 1000000 \
     ##&& npx -y browserslist@latest --update-db \
     && yarn run build \
