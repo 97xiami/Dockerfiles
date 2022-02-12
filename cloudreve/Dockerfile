@@ -10,6 +10,8 @@ RUN set -xe \
     && yarn --update-checksums \
     && npm config set registry https://registry.npmjs.org \
     && npm config delete registry \
+    && npm config rm proxy \
+    && npm config rm http-proxy \
     && yarn install --network-timeout 600000 \
     && yarn run build \
     && cd ../ \
