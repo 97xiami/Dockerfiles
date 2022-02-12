@@ -1,50 +1,70 @@
-FROM golang:alpine as builder
+FROM golang:1.17-alpine3.15 AS builder
 
-RUN apk add --no-cache git gcc g++ ca-certificates \
-  && go get -v -d github.com/drakkan/sftpgo
-WORKDIR /go/src/github.com/drakkan/sftpgo
-ARG TAG
+ENV GOFLAGS="-mod=readonly"
+
+RUN apk add --update --no-cache bash ca-certificates curl git gcc g++
+
+RUN mkdir -p /workspace
+WORKDIR /workspace
+
+ARG GOPROXY
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+ARG COMMIT_SHA
+
+# This ARG allows to disable some optional features and it might be useful if you build the image yourself.
+# For example you can disable S3 and GCS support like this:
+# --build-arg FEATURES=nos3,nogcs
 ARG FEATURES
-# Use --build-arg TAG=LATEST for latest tag. Use e.g. --build-arg TAG=v1.0.0 for a specific tag/commit. Otherwise HEAD (master) is built.
-RUN git checkout $(if [ "${TAG}" = LATEST ]; then echo `git rev-list --tags --max-count=1`; elif [ -n "${TAG}" ]; then echo "${TAG}"; else echo HEAD; fi)
-RUN go build $(if [ -n "${FEATURES}" ]; then echo "-tags ${FEATURES}"; fi) -ldflags "-s -w -X github.com/drakkan/sftpgo/version.commit=`git describe --always --dirty` -X github.com/drakkan/sftpgo/version.date=`date -u +%FT%TZ`" -v -o /go/bin/sftpgo
 
-FROM alpine:latest
+COPY . .
 
-RUN apk add --no-cache ca-certificates su-exec \
-  && mkdir -p /data /etc/sftpgo /srv/sftpgo/config /srv/sftpgo/web /srv/sftpgo/backups
+RUN set -xe && \
+    export COMMIT_SHA=${COMMIT_SHA:-$(git describe --always --dirty)} && \
+    go build $(if [ -n "${FEATURES}" ]; then echo "-tags ${FEATURES}"; fi) -trimpath -ldflags "-s -w -X github.com/drakkan/sftpgo/v2/version.commit=${COMMIT_SHA} -X github.com/drakkan/sftpgo/v2/version.date=`date -u +%FT%TZ`" -v -o sftpgo
 
-# git and rsync are optional, uncomment the next line to add support for them if needed.
-RUN apk add --no-cache git rsync
 
-COPY --from=builder /go/bin/sftpgo /bin/
-COPY --from=builder /go/src/github.com/drakkan/sftpgo/sftpgo.json /etc/sftpgo/sftpgo.json
-COPY --from=builder /go/src/github.com/drakkan/sftpgo/templates /srv/sftpgo/web/templates
-COPY --from=builder /go/src/github.com/drakkan/sftpgo/static /srv/sftpgo/web/static
-COPY docker-entrypoint.sh /bin/entrypoint.sh
-RUN chmod +x /bin/entrypoint.sh
+FROM alpine:3.15
 
-VOLUME [ "/data", "/srv/sftpgo/config", "/srv/sftpgo/backups" ]
-EXPOSE 2022 8080
+# Set to "true" to install the optional git dependency
+ARG INSTALL_OPTIONAL_PACKAGES=false
 
-# uncomment the following settings to enable FTP support
-ENV SFTPGO_FTPD__BIND_PORT=2121
-ENV SFTPGO_FTPD__FORCE_PASSIVE_IP=127.0.0.1
-EXPOSE 2121
+RUN apk add --update --no-cache ca-certificates tzdata mailcap
 
-# we need to expose the passive ports range too
-EXPOSE 50000-50100
+RUN if [ "${INSTALL_OPTIONAL_PACKAGES}" = "true" ]; then apk add --update --no-cache git; fi
 
-# it is a good idea to provide certificates to enable FTPS too
-ENV SFTPGO_FTPD__CERTIFICATE_FILE=/srv/sftpgo/config/mycert.crt
-ENV SFTPGO_FTPD__CERTIFICATE_KEY_FILE=/srv/sftpgo/config/mycert.key
+# set up nsswitch.conf for Go's "netgo" implementation
+# https://github.com/gliderlabs/docker-alpine/issues/367#issuecomment-424546457
+RUN test ! -e /etc/nsswitch.conf && echo 'hosts: files dns' > /etc/nsswitch.conf
 
-# uncomment the following setting to enable WebDAV support
-ENV SFTPGO_WEBDAVD__BIND_PORT=8090
+RUN mkdir -p /etc/sftpgo /var/lib/sftpgo /usr/share/sftpgo /srv/sftpgo/data /srv/sftpgo/backups
 
-# it is a good idea to provide certificates to enable WebDAV over HTTPS
-ENV SFTPGO_WEBDAVD__CERTIFICATE_FILE=${CONFIG_DIR}/mycert.crt
-ENV SFTPGO_WEBDAVD__CERTIFICATE_KEY_FILE=${CONFIG_DIR}/mycert.key
+RUN addgroup -g 1000 -S sftpgo && \
+    adduser -u 1000 -h /var/lib/sftpgo -s /sbin/nologin -G sftpgo -S -D -H -g "SFTPGo user" sftpgo
 
-ENTRYPOINT ["/bin/entrypoint.sh"]
-CMD ["serve"]
+COPY --from=builder /workspace/sftpgo.json /etc/sftpgo/sftpgo.json
+COPY --from=builder /workspace/templates /usr/share/sftpgo/templates
+COPY --from=builder /workspace/static /usr/share/sftpgo/static
+COPY --from=builder /workspace/openapi /usr/share/sftpgo/openapi
+COPY --from=builder /workspace/sftpgo /usr/local/bin/
+
+# Log to the stdout so the logs will be available using docker logs
+ENV SFTPGO_LOG_FILE_PATH=""
+# templates and static paths are inside the container
+ENV SFTPGO_HTTPD__TEMPLATES_PATH=/usr/share/sftpgo/templates
+ENV SFTPGO_SMTP__TEMPLATES_PATH=/usr/share/sftpgo/templates
+ENV SFTPGO_HTTPD__STATIC_FILES_PATH=/usr/share/sftpgo/static
+ENV SFTPGO_HTTPD__OPENAPI_PATH=/usr/share/sftpgo/openapi
+
+# Modify the default configuration file
+RUN sed -i "s|\"users_base_dir\": \"\",|\"users_base_dir\": \"/srv/sftpgo/data\",|" /etc/sftpgo/sftpgo.json && \
+    sed -i "s|\"backups\"|\"/srv/sftpgo/backups\"|" /etc/sftpgo/sftpgo.json
+
+RUN chown -R sftpgo:sftpgo /etc/sftpgo /srv/sftpgo && chown sftpgo:sftpgo /var/lib/sftpgo && chmod 700 /srv/sftpgo/backups
+
+WORKDIR /var/lib/sftpgo
+USER 1000:1000
+
+CMD ["sftpgo", "serve"]
