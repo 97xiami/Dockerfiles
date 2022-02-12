@@ -10,7 +10,7 @@ RUN set -xe \
     && yarn --update-checksums \
     && npm config set registry https://registry.npmjs.org \
     && npm config delete registry \
-    && yarn install --network-timeout 1000000 \
+    && yarn install --network-timeout 600000 \
     && yarn run build \
     && cd ../ \
     && go get github.com/rakyll/statik \
