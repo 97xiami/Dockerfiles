@@ -1,9 +1,0 @@
-version: '3'
-services:
-  frps:
-    image: xiami110/frps
-    container_name: frps
-    restart: always
-    network_mode: host
-    volumes:
-      - $PWD/frps:/root/frps
