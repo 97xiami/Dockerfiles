@@ -5,7 +5,7 @@ services:
     container_name: cloudreve
     restart: always
     ports:
-      - 5212:5212
+      - "5212:5212"
     environment:
       - TZ=Asia/Shanghai
     logging:
