@@ -14,3 +14,5 @@ services:
         max-size: 1m
     volumes:
       - &PWD/filebrowser.db:/filebrowser/filebrowser.db
+      - &PWD/log:/filebrowser/log
+      - &PWD/data:/mnt/data
