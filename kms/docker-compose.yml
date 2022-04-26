@@ -1,0 +1,14 @@
+version: '3'
+services:
+  kms:
+    image: xiami110/kms
+    container_name: kms
+    restart: always
+    ports:
+      - "1688:1688"
+    environment:
+      - TZ=Asia/Shanghai
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
