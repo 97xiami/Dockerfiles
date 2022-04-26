@@ -14,7 +14,7 @@ RUN set -xe \
 FROM alpine:latest
 MAINTAINER xiami110
 WORKDIR /filebrowser
-COPY --from=builder /root/filebrowser/filebrowser /filebrowser
+COPY --from=builder /root/filebrowser/filebrowser ./filebrowser
 RUN set -xe \
     && ./filebrowser -d ./filebrowser.db config init \
     && ./filebrowser -d ./filebrowser.db config set --address 0.0.0.0 \
