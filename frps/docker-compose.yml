@@ -1,0 +1,15 @@
+version: '3'
+services:
+  frps:
+    image: xiami110/frps
+    container_name: frps
+    restart: always
+    network_mode: host
+    environment:
+      - TZ=Asia/Shanghai
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+    volumes:
+      - $PWD/frps.ini:/frps/frps.ini
