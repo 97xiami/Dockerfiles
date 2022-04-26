@@ -21,4 +21,4 @@ RUN set -xe \
     && wget -O /usr/share/xray/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/raw/release/geosite.dat \
     && apk del ca-certificates \
     && chmod +x ./up-geo.sh
-CMD [ "./xray", "-c", "/xray/config.json" ]
+CMD [ "./xray", "-c", "./config.json" ]
