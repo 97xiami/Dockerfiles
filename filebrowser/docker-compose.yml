@@ -13,4 +13,4 @@ services:
       options:
         max-size: 1m
     volumes:
-      - &PWD/filebrowser/filebrowser.db:/filebrowser/filebrowser.db
+      - &PWD/filebrowser.db:/filebrowser/filebrowser.db
