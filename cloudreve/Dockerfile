@@ -22,6 +22,9 @@ RUN set -xe \
 
 FROM alpine:latest
 LABEL MAINTAINER="xiami110"
-WORKDIR /root
-COPY --from=builder /root/Cloudreve/cloudreve /root/cloudreve-main
-CMD [ "./cloudreve-main", "-c", "/root/cloudreve/config/cloudreve.ini" ]
+WORKDIR /cloudreve
+ENV TZ Asia/Shanghai
+EXPOSE 5212
+VOLUME ["/cloudreve/uploads", "/cloudreve/avatar", "/data"]
+COPY --from=builder /root/Cloudreve/cloudreve /cloudreve/cloudreve
+CMD [ "./cloudreve", "-c", "/cloudreve/conf.ini" ]
