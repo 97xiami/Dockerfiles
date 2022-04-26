@@ -4,14 +4,14 @@ RUN set -xe \
     && apk add git yarn gcc build-base npm \
     && git clone --recurse-submodules https://github.com/cloudreve/Cloudreve.git \
     && cd Cloudreve/assets \
-    && yarn config set registry https://registry.yarnpkg.com \
-    && yarn config delete registry \
-    && yarn cache clean \
+    #&& yarn config set registry https://registry.yarnpkg.com \
+    #&& yarn config delete registry \
+    #&& yarn cache clean \
     && yarn --update-checksums \
-    && npm config set registry https://registry.npmjs.org \
-    && npm config delete registry \
-    && npm config rm proxy \
-    && npm config rm http-proxy \
+    #&& npm config set registry https://registry.npmjs.org \
+    #&& npm config delete registry \
+    #&& npm config rm proxy \
+    #&& npm config rm http-proxy \
     && yarn install --network-timeout 600000 \
     && yarn run build \
     && cd ../ \
