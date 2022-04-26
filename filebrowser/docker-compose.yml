@@ -1,0 +1,16 @@
+version: '3'
+services:
+  filebrowser:
+    image: xiami110/filebrowser
+    container_name: filebrowser
+    restart: always
+    ports:
+      - "80:80"
+    environment:
+      - TZ=Asia/Shanghai
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+    volumes:
+      - &PWD/filebrowser/filebrowser.db:/filebrowser/filebrowser.db
