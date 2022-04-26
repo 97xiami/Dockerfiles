@@ -14,15 +14,15 @@ RUN set -xe \
 FROM alpine:latest
 MAINTAINER xiami110
 WORKDIR /filebrowser
-COPY --from=builder /root/filebrowser/filebrowser /filebrowser/filebrowser
+COPY --from=builder /root/filebrowser/filebrowser /filebrowser
 RUN set -xe \
-    && /filebrowser/filebrowser -d /filebrowser/filebrowser.db config init \
-    && /filebrowser/filebrowser -d /filebrowser/filebrowser.db config set --address 0.0.0.0 \
-    && /filebrowser/filebrowser -d /filebrowser/filebrowser.db config set --port 80 \
-    && /filebrowser/filebrowser -d /filebrowser/filebrowser.db config set --locale zh-cn \
-    && /filebrowser/filebrowser -d /filebrowser/filebrowser.db config set --log /root/log \
-    && /filebrowser/filebrowser -d /filebrowser/filebrowser.db config set --root /mnt/data \
-    && /filebrowser/filebrowser -d /filebrowser/filebrowser.db config set --branding.name filebrowser \
-    && /filebrowser/filebrowser -d /filebrowser/filebrowser.db users add admin password --perm.admin \
-    && /filebrowser/filebrowser -d /filebrowser/filebrowser.db config set --auth.method=noauth
-CMD ["/filebrowser/filebrowser", "-d", "/filebrowser/filebrowser.db"]
+    && ./filebrowser -d ./filebrowser.db config init \
+    && ./filebrowser -d ./filebrowser.db config set --address 0.0.0.0 \
+    && ./filebrowser -d ./filebrowser.db config set --port 80 \
+    && ./filebrowser -d ./filebrowser.db config set --locale zh-cn \
+    && ./filebrowser -d ./filebrowser.db config set --log /filebrowser/log \
+    && ./filebrowser -d ./filebrowser.db config set --root /mnt/data \
+    && ./filebrowser -d ./filebrowser.db config set --branding.name filebrowser \
+    && ./filebrowser -d ./filebrowser.db users add admin password --perm.admin \
+    && ./filebrowser -d ./filebrowser.db config set --auth.method=noauth
+CMD ["./filebrowser", "-d", "./filebrowser.db"]
