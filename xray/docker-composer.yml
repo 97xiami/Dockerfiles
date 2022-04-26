@@ -1,0 +1,16 @@
+version: '3'
+services:
+  xray:
+    image: xiami110/xray
+    container_name: xray
+    restart: always
+    network_mode: host
+    environment:
+      - TZ=Asia/Shanghai
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+    volumes:
+      - $PWD/config.json:/xray/config.json
+      - $PWD/ssl:/xray/ssl
