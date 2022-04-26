@@ -8,11 +8,9 @@ RUN set -xe \
     && chmod +x bin/vlmcsd
 
 FROM alpine:latest
-MAINTAINER xiami110
-WORKDIR /root
-COPY --from=builder /root/vlmcsd/bin/vlmcsd /usr/bin/vlmcsd
-RUN set -xe \
-    && apk add tzdata \
-    && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
-    && apk del tzdata
-CMD [ "vlmcsd", "-D", "-e" ]
+LABEL MAINTAINER="xiami110"
+WORKDIR /vlmcsd
+ENV TZ Asia/Shanghai
+EXPOSE 1688
+COPY --from=builder /root/vlmcsd/bin/vlmcsd ./vlmcsd
+CMD [ "./vlmcsd", "-D", "-e" ]
