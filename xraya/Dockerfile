@@ -12,11 +12,11 @@ RUN set -xe \
     && chmod +x xraya
 
 FROM xiami110/xray:latest
-MAINTAINER xiami110
-WORKDIR /root
-COPY --from=builder /root/v2rayA/service/xraya /usr/bin/xraya
+LABEL MAINTAINER="xiami110"
+WORKDIR /xraya
+ENV TZ Asia/Shanghai
+EXPOSE 2017
+COPY --from=builder /root/v2rayA/service/xraya ./xraya
 RUN set -xe \
-    && apk add iptables ip6tables tzdata \
-    && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
-    && apk del tzdata
+    && apk add iptables ip6tables
 ENTRYPOINT ["xraya"]
