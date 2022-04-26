@@ -1,0 +1,19 @@
+version: '3'
+services:
+  cloudreve:
+    image: cloudreve/cloudreve
+    container_name: cloudreve
+    restart: always
+    ports:
+      - 5212:5212
+    environment:
+      - TZ=Asia/Shanghai
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+    volumes:
+      - $PWD/cloudreve/avatar:/cloudreve/avatar
+      - $PWD/cloudreve/conf.ini:/cloudreve/conf.ini
+      - $PWD/cloudreve/cloudreve.db:/cloudreve/cloudreve.db
+      - $PWD/cloudreve/uploads:/cloudreve/uploads
