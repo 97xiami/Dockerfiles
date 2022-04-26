@@ -19,4 +19,4 @@ EXPOSE 2017
 COPY --from=builder /root/v2rayA/service/xraya ./xraya
 RUN set -xe \
     && apk add iptables ip6tables
-ENTRYPOINT ["xraya"]
+ENTRYPOINT ["./xraya"]
