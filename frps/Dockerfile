@@ -13,4 +13,6 @@ WORKDIR /frps
 ENV TZ Asia/Shanghai
 COPY --from=builder /root/frp/bin/frps ./frps
 COPY frps.ini /frps/frps.ini
+RUN set -xe \
+    && apk add --no-cache tzdata
 CMD [ "./frps", "-c", "./frps.ini" ]
