@@ -18,5 +18,5 @@ ENV TZ Asia/Shanghai
 EXPOSE 2017
 COPY --from=builder /root/v2rayA/service/xraya ./xraya
 RUN set -xe \
-    && apk add iptables ip6tables
+    && apk add iptables ip6tables tzdata
 ENTRYPOINT ["./xraya", "--v2ray-bin=/xray/xray"]
