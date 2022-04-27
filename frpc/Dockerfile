@@ -13,4 +13,6 @@ WORKDIR /frpc
 ENV TZ Asia/Shanghai
 COPY --from=builder /root/frp/bin/frpc ./frpc
 COPY frpc.ini ./frpc.ini
+RUN set -xe \
+    && apk add --no-cache tzdata
 CMD [ "./frpc", "-c", "./frpc.ini" ]
