@@ -19,6 +19,5 @@ RUN set -xe \
     && apk add -no-cache tzdata ca-certificates \
     && wget -O /usr/share/xray/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/raw/release/geoip.dat \
     && wget -O /usr/share/xray/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/raw/release/geosite.dat \
-    && apk del ca-certificates \
     && chmod +x ./up-geo.sh
 CMD [ "./xray", "-c", "./config.json" ]
