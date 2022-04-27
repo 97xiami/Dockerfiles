@@ -16,6 +16,7 @@ MAINTAINER xiami110
 WORKDIR /filebrowser
 COPY --from=builder /root/filebrowser/filebrowser ./filebrowser
 RUN set -xe \
+    && apk add --no-cache tzdata \
     && ./filebrowser -d ./filebrowser.db config init \
     && ./filebrowser -d ./filebrowser.db config set --address 0.0.0.0 \
     && ./filebrowser -d ./filebrowser.db config set --port 80 \
