@@ -16,7 +16,7 @@ COPY config.json ./config.json
 COPY up-geo.sh ./up-geo.sh
 RUN set -xe \
     && mkdir -p /usr/share/xray \
-    && apk add -no-cache tzdata ca-certificates \
+    && apk add --no-cache tzdata ca-certificates \
     && wget -O /usr/share/xray/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/raw/release/geoip.dat \
     && wget -O /usr/share/xray/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/raw/release/geosite.dat \
     && chmod +x ./up-geo.sh
