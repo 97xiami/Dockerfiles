@@ -13,4 +13,6 @@ WORKDIR /vlmcsd
 ENV TZ Asia/Shanghai
 EXPOSE 1688
 COPY --from=builder /root/vlmcsd/bin/vlmcsd ./vlmcsd
+RUN set -xe \
+    && apk add --no-cache tzdata
 CMD [ "./vlmcsd", "-D", "-e" ]
