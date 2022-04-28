@@ -12,4 +12,5 @@ services:
       options:
         max-size: 1m
     volumes:
-      - $PWD/frps.ini:/frps/frps.ini
+      - $PWD/config:/frps/config
+      - $PWD/log:/frps/log
