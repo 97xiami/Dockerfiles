@@ -14,6 +14,6 @@ services:
         max-size: 1m
     volumes:
       - $PWD/avatar:/cloudreve/avatar
-      - $PWD/conf.ini:/cloudreve/conf.ini
-      - $PWD/cloudreve.db:/cloudreve/cloudreve.db
+      - $PWD/config:/cloudreve/config
+      - $PWD/db:/cloudreve/db
       - $PWD/uploads:/cloudreve/uploads
