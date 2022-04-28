@@ -12,5 +12,5 @@ services:
       options:
         max-size: 1m
     volumes:
-      - $PWD/config.json:/xray/config.json
+      - $PWD/config:/xray/config
       - $PWD/ssl:/xray/ssl
