@@ -11,8 +11,9 @@ FROM alpine:latest
 LABEL MAINTAINER="xiami110"
 WORKDIR /frps
 ENV TZ Asia/Shanghai
+VOLUME ["/frps/config", "/frps/log"]
 COPY --from=builder /root/frp/bin/frps ./frps
-COPY frps.ini /frps/frps.ini
+COPY frps.ini ./config/frps.ini
 RUN set -xe \
     && apk add --no-cache tzdata
-CMD [ "./frps", "-c", "./frps.ini" ]
+CMD [ "./frps", "-c", "./config/frps.ini" ]
