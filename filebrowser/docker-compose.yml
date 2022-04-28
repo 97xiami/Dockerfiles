@@ -13,6 +13,6 @@ services:
       options:
         max-size: 1m
     volumes:
-      - $PWD/filebrowser.db:/filebrowser/filebrowser.db
+      - $PWD/db:/filebrowser/db
       - $PWD/log:/filebrowser/log
       - $PWD/data:/mnt/data
