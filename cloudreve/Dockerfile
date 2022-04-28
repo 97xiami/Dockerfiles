@@ -18,7 +18,7 @@ LABEL MAINTAINER="xiami110"
 WORKDIR /cloudreve
 ENV TZ Asia/Shanghai
 EXPOSE 5212
-VOLUME ["/cloudreve/uploads", "/cloudreve/avatar", "/cloudreve/config"]
+VOLUME ["/cloudreve/avatar", "/cloudreve/config", "/cloudreve/db", "/cloudreve/uploads"]
 COPY --from=builder /root/Cloudreve/cloudreve ./cloudreve
 COPY conf.ini ./config/conf.ini
 RUN set -xe \
