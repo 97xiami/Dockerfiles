@@ -18,9 +18,9 @@ LABEL MAINTAINER="xiami110"
 WORKDIR /cloudreve
 ENV TZ Asia/Shanghai
 EXPOSE 5212
-VOLUME ["/cloudreve/uploads", "/cloudreve/avatar"]
+VOLUME ["/cloudreve/uploads", "/cloudreve/avatar", "/cloudreve/config"]
 COPY --from=builder /root/Cloudreve/cloudreve ./cloudreve
-COPY conf.ini ./conf.ini
+COPY conf.ini ./config/conf.ini
 RUN set -xe \
     && apk add --no-cache tzdata
-CMD [ "./cloudreve", "-c", "./conf.ini" ]
+CMD [ "./cloudreve", "-c", "./config/conf.ini" ]
