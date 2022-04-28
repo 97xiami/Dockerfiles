@@ -11,8 +11,9 @@ FROM alpine:latest
 LABEL MAINTAINER="xiami110"
 WORKDIR /xray
 ENV TZ Asia/Shanghai
+VOLUME ["/xray/config"]
 COPY --from=builder /root/Xray-core/xray ./xray
-COPY config.json ./config.json
+COPY config.json ./config/config.json
 COPY up-geo.sh ./up-geo.sh
 RUN set -xe \
     && mkdir -p /usr/share/xray \
@@ -20,4 +21,4 @@ RUN set -xe \
     && wget -O /usr/share/xray/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/raw/release/geoip.dat \
     && wget -O /usr/share/xray/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/raw/release/geosite.dat \
     && chmod +x ./up-geo.sh
-CMD [ "./xray", "-c", "./config.json" ]
+CMD [ "./xray", "-c", "./config/config.json" ]
