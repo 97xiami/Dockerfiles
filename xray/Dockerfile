@@ -11,7 +11,7 @@ FROM alpine:latest
 LABEL MAINTAINER="xiami110"
 WORKDIR /xray
 ENV TZ Asia/Shanghai
-VOLUME ["/xray/config"]
+VOLUME ["/xray/config", "/xray/ssl"]
 COPY --from=builder /root/Xray-core/xray ./xray
 COPY config.json ./config/config.json
 COPY up-geo.sh ./up-geo.sh
