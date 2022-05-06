@@ -7,9 +7,9 @@ RUN set -xe \
     && yarn --update-checksums \
     && yarn install --network-timeout 600000 \
     && yarn run build \
+    && find . -name "*.map" -type f -delete \
     && cd ../ \
-    && go get github.com/rakyll/statik \
-    && statik -src=assets/build/  -include=*.html,*.js,*.json,*.css,*.png,*.svg,*.ico -f \
+    && zip -r - assets/build >assets.zip \
     && go build -a -o cloudreve -ldflags " -X 'github.com/cloudreve/Cloudreve/v3/pkg/conf.BackendVersion=$(git describe --tags)' -X 'github.com/cloudreve/Cloudreve/v3/pkg/conf.LastCommit=$(git rev-parse --short HEAD)'" \
     && chmod +x cloudreve
 
