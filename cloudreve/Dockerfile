@@ -4,7 +4,6 @@ RUN set -xe \
     && apk add git yarn gcc build-base npm \
     && git clone --recurse-submodules https://github.com/cloudreve/Cloudreve.git \
     && cd Cloudreve/assets \
-    && yarn --update-checksums \
     && yarn install --network-timeout 600000 \
     && yarn run build \
     && find . -name "*.map" -type f -delete \
