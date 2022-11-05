@@ -11,9 +11,9 @@ FROM alpine:latest
 MAINTAINER xiami110
 WORKDIR /frpc
 ENV TZ Asia/Shanghai
-VOLUME ["/frpc/config", "/frpc/log"]
+VOLUME ["/frpc"]
 COPY --from=builder /root/frp/bin/frpc ./frpc
 COPY frpc.ini ./config/frpc.ini
 RUN set -xe \
     && apk add --no-cache tzdata
-CMD [ "./frpc", "-c", "./config/frpc.ini" ]
+CMD [ "./frpc"， "-c", "./config/frpc.ini" ]
