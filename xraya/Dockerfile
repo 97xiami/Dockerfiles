@@ -2,7 +2,7 @@ FROM golang:alpine AS builder
 WORKDIR /root
 RUN set -xe \
     && apk add git yarn \
-    && git clone --single-branch https://github.com/v2rayA/v2rayA \
+    && git clone --single-branch https://github.com/v2rayA/v2rayA -b master \
     && cd v2rayA/gui \
     && yarn \
     && yarn build \
@@ -12,7 +12,6 @@ RUN set -xe \
     && chmod +x xraya
 
 FROM xiami110/xray:latest
-LABEL MAINTAINER="xiami110"
 WORKDIR /xraya
 ENV TZ Asia/Shanghai
 EXPOSE 2017
