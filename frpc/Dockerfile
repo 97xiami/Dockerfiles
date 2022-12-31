@@ -13,7 +13,7 @@ WORKDIR /frpc
 ENV TZ Asia/Shanghai
 VOLUME ["/frpc"]
 COPY --from=builder /root/frp/bin/frpc ./frpc
-COPY frpc.ini ./config/frpc.ini
+COPY frpc.ini ./frpc.ini
 RUN set -xe \
     && apk add --no-cache tzdata
-CMD [ "./frpc", "-c", "./config/frpc.ini" ]
+CMD [ "./frpc", "-c", "./frpc.ini" ]
