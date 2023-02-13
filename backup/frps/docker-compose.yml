@@ -4,11 +4,13 @@ services:
     image: xiami110/frps
     container_name: frps
     restart: always
+    network_mode: host
+    environment:
+      - TZ=Asia/Shanghai
     logging:
       driver: json-file
       options:
         max-size: 1m
-    network_mode: bridge
     volumes:
-      - /etc/locltime:/etc/localtime:ro
-      - $PWD/frps/frps.ini:/frps/frps.ini
+      - $PWD/config:/frps/config
+      - $PWD/log:/frps/log

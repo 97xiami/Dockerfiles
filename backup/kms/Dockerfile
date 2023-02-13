@@ -8,6 +8,11 @@ RUN set -xe \
     && chmod +x bin/vlmcsd
 
 FROM alpine:latest
+LABEL MAINTAINER="xiami110"
 WORKDIR /vlmcsd
+ENV TZ Asia/Shanghai
+EXPOSE 1688
 COPY --from=builder /root/vlmcsd/bin/vlmcsd ./vlmcsd
+RUN set -xe \
+    && apk add --no-cache tzdata
 CMD [ "./vlmcsd", "-D", "-e" ]

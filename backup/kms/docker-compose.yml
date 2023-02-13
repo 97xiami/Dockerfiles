@@ -4,12 +4,11 @@ services:
     image: xiami110/kms
     container_name: kms
     restart: always
+    ports:
+      - "1688:1688"
+    environment:
+      - TZ=Asia/Shanghai
     logging:
       driver: json-file
       options:
         max-size: 1m
-    network_mode: bridge
-    ports:
-      - 1688:1688/tcp
-    volumes:
-      - /etc/localtime:/etc/localtime:ro

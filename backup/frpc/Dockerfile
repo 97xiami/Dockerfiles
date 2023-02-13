@@ -8,7 +8,12 @@ RUN set -xe \
     && chmod +x bin/frpc
 
 FROM alpine:latest
+MAINTAINER xiami110
 WORKDIR /frpc
+ENV TZ Asia/Shanghai
+VOLUME ["/frpc"]
 COPY --from=builder /root/frp/bin/frpc ./frpc
 COPY frpc.ini ./frpc.ini
+RUN set -xe \
+    && apk add --no-cache tzdata
 CMD [ "./frpc", "-c", "./frpc.ini" ]

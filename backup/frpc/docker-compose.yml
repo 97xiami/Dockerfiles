@@ -4,11 +4,13 @@ services:
     image: xiami110/frpc
     container_name: frpc
     restart: always
+    network_mode: host
+    environment:
+      - TZ=Asia/Shanghai
     logging:
       driver: json-file
       options:
         max-size: 1m
-    network_mode: bridge
     volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - $PWD/frpc/frpc.ini:/frpc/frpc.ini
+      - $PWD/config:/frpc/config
+      - $PWD/log:/frpc/log
