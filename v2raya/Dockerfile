@@ -1,5 +1,7 @@
 FROM golang:alpine AS builder
 
+WORKDIR /build
+
 ARG VERSION
 ARG BUILD_DATE
 
@@ -17,11 +19,11 @@ RUN apk update \
     && yarn build \
     && cd ../service \
     && cp -r ../web server/router \
-    && CGO_ENABLE=0 go build -ldflags="-s -w -X github.com/v2rayA/v2rayA/conf.Version=${V2RAYA_VERSION}" -o v2raya . \
-    && chmod +x v2raya
+    && CGO_ENABLE=0 go build -ldflags="-s -w -X github.com/v2rayA/v2rayA/conf.Version=${V2RAYA_VERSION}" -o /build/v2raya . \
+    && chmod +x /build/v2raya
 
 FROM v2fly/v2fly-core
-COPY --from=builder /build/service/v2raya /usr/bin/
+COPY --from=builder /build/v2raya /usr/bin/
 RUN wget -O /usr/local/share/v2ray/LoyalsoldierSite.dat https://raw.githubusercontent.com/mzz2017/dist-v2ray-rules-dat/master/geosite.dat
 RUN apk add --no-cache iptables ip6tables
 EXPOSE 2017
