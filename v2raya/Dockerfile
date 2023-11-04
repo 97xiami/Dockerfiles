@@ -10,7 +10,7 @@ ENV TITLE=v2rayA
 
 RUN apk update \
     && apk add git yarn \
-    && git clone https://github.com/v2rayA/v2rayA -b master \
+    && git clone --single-branch https://github.com/v2rayA/v2rayA -b main \
     && cd v2rayA \
     && ${V2RAYA_VERSION}=$(git describe --abbrev=0 --tags) \
     && cd gui \
