@@ -10,11 +10,10 @@ RUN set -xe \
 
 FROM alpine:latest
 COPY --from=builder /build/v2ray /usr/bin/v2ray
-COPY config.json /config.json
 RUN set -xe \
     && mkdir -p /etc/v2ray /usr/local/share/v2ray \
     && apk add --no-cache ca-certificates \
     && wget -O /usr/local/share/v2ray/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/raw/release/geoip.dat \
     && wget -O /usr/local/share/v2ray/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/raw/release/geosite.dat \
-    && mv /config.json /etc/v2ray/config.json
+    && wget -O /etc/v2ray/config.json https://github.com/v2fly/v2ray-examples/blob/master/VLESS-TCP-TLS-WS%20(recommended)/config_client_ws_tls.json
 ENTRYPOINT ["v2ray"]
