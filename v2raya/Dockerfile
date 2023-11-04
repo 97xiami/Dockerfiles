@@ -2,7 +2,6 @@ FROM golang:alpine AS builder
 
 ARG VERSION
 ARG BUILD_DATE
-ARG V2RAYA_VERSION
 
 LABEL build_version="version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 
@@ -12,7 +11,7 @@ RUN apk update \
     && apk add git yarn \
     && git clone --single-branch https://github.com/v2rayA/v2rayA -b main \
     && cd v2rayA \
-    && ${V2RAYA_VERSION}=$(git describe --abbrev=0 --tags) \
+    && V2RAYA_VERSION=$(git describe --abbrev=0 --tags) \
     && cd gui \
     && yarn \
     && yarn build \
