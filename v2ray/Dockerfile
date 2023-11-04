@@ -13,7 +13,7 @@ COPY --from=builder /build/v2ray /usr/bin/v2ray
 RUN set -xe \
     && mkdir -p /etc/v2ray /usr/local/share/v2ray \
     && apk add --no-cache ca-certificates \
-    && wget -O /usr/local/share/v2ray/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/raw/release/geoip.dat \
-    && wget -O /usr/local/share/v2ray/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/raw/release/geosite.dat \
-    && wget -O /etc/v2ray/config.json https://github.com/v2fly/v2ray-examples/blob/master/VLESS-TCP-TLS-WS%20(recommended)/config_client_ws_tls.json
+    && wget -O /usr/local/share/v2ray/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat \
+    && wget -O /usr/local/share/v2ray/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat \
+    && wget -O /etc/v2ray/config.json https://raw.githubusercontent.com/v2fly/v2ray-examples/master/VLESS-TCP-TLS/config_client.json
 ENTRYPOINT ["v2ray"]
