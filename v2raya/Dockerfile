@@ -1,14 +1,5 @@
 FROM golang:alpine AS builder
-
 WORKDIR /build
-
-ARG VERSION
-ARG BUILD_DATE
-
-LABEL build_version="version:- ${VERSION} Build-date:- ${BUILD_DATE}"
-
-ENV TITLE=v2rayA
-
 RUN apk update \
     && apk add git yarn \
     && git clone --single-branch https://github.com/v2rayA/v2rayA -b main \

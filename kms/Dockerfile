@@ -1,13 +1,15 @@
 FROM alpine:latest AS builder
-WORKDIR /root
+WORKDIR /build
 RUN set -xe \
     && apk add --no-cache git make build-base \
-    && git clone --single-branch https://github.com/Wind4/vlmcsd.git \
+    && git clone --single-branch https://github.com/Wind4/vlmcsd \
     && cd vlmcsd \
+    && VLMCSD_VERSION=$(git describe --abbrev=0 --tags) \
     && make \
-    && chmod +x bin/vlmcsd
+    && chmod +x bin/vlmcs bin/vlmcsd
 
 FROM alpine:latest
-WORKDIR /vlmcsd
-COPY --from=builder /root/vlmcsd/bin/vlmcsd ./vlmcsd
-CMD [ "./vlmcsd", "-D", "-e" ]
+COPY --from=builder /build/vlmcsd/bin/vlmcs /usr/bin/
+COPY --from=builder /build/vlmcsd/bin/vlmcsd /usr/bin/
+EXPOSE 1688/tcp
+ENTRYPOINT ["vlmcsd", "-D", "-d", "-e"]
