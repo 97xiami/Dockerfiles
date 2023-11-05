@@ -11,4 +11,4 @@ services:
     network_mode: bridge
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - $PWD/frpc/frpc.ini:/frpc/frpc.ini
+      - $PWD/frpc/frpc.ini:/etc/frp/frpc.ini
