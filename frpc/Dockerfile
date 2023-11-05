@@ -9,4 +9,4 @@ RUN apk update \
 
 FROM alpine:latest
 COPY --from=builder /build/frp/bin/frpc /usr/bin/frpc
-ENTRYPOINT ["frpc"]
+ENTRYPOINT ["frpc", "-c", "/etc/frp/frpc.toml"]
