@@ -1,7 +1,7 @@
 FROM alpine:latest AS builder
 WORKDIR /build
 RUN apk update \
-    && apk add --no-cache git make build-base pkgconf qmake \
+    && apk add --no-cache git make build-base pkgconf qt5-qtbase-dev \
     && git clone --single-branch https://github.com/c0re100/qBittorrent-Enhanced-Edition \
     && cd qBittorrent-Enhanced-Edition \
     && ./configure --disable-gui --disable-debug \
