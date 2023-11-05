@@ -10,4 +10,4 @@ kms: https://github.com/Wind4/vlmcsd
 
 xray: https://github.com/XTLS/Xray-core
 
-xraya: https://github.com/v2rayA/v2rayA
+v2raya: https://github.com/v2rayA/v2rayA
