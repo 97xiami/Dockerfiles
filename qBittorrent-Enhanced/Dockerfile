@@ -11,6 +11,6 @@ RUN apk update \
 FROM alpine:latest
 COPY --from=builder /build/qBittorrent-Enhanced-Edition/qbittorrent-nox /usr/bin/qbittorrent-nox
 ENV QBT_WEBUI_PORT=8080
-EXPOSE map[16888/tcp:{} 16888/udp:{} 8080/tcp:{}]
-VOLUME [/qBittorrent /downloads]
+EXPOSE 16888/tcp 16888/udp 8080/tcp
+VOLUME [/qbittorrent /downloads]
 ENTRYPOINT ["qbittorrent-nox"]
