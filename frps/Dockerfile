@@ -2,7 +2,7 @@ FROM golang:alpine AS builder
 WORKDIR /build
 RUN apk update \
     && apk add git make \
-    && git clone --single-branch https://github.com/fatedier/frp.git \
+    && git clone --single-branch --depth=1 https://github.com/fatedier/frp \
     && cd frp \
     && make \
     && chmod +x bin/frps
