@@ -8,6 +8,6 @@ RUN apk update \
   && npm run build
 
 FROM nginx:stable-alpine
-COPY --from=builder /build/dist /usr/share/nginx/html
+COPY --from=builder /build/picx/dist /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx","-g", "daemon off;"]
