@@ -26,7 +26,8 @@ RUN apk update \
 FROM alpine:latest
 COPY --from=v2ray /build/v2ray /usr/bin/
 COPY --from=v2raya /build/v2raya /usr/bin/
-RUN apk add --no-cache iptables ip6tables ca-certificates \
+RUN apk update \
+    && apk add --no-cache iptables ip6tables ca-certificates \
     && mkdir -p /etc/v2ray /usr/local/share/v2ray \
     && wget -O /usr/local/share/v2ray/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat \
     && wget -O /usr/local/share/v2ray/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat \

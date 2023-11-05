@@ -1,6 +1,6 @@
 FROM golang:alpine AS builder
-WORKDIR /root
-RUN set -xe \
+WORKDIR /build
+RUN apk update \
     && apk add git make \
     && git clone --single-branch https://github.com/fatedier/frp.git \
     && cd frp \
@@ -8,7 +8,5 @@ RUN set -xe \
     && chmod +x bin/frpc
 
 FROM alpine:latest
-WORKDIR /frpc
-COPY --from=builder /root/frp/bin/frpc ./frpc
-COPY frpc.ini ./frpc.ini
-CMD [ "./frpc", "-c", "./frpc.ini" ]
+COPY --from=builder /build/frp/bin/frpc /usr/bin/frpc
+ENTRYPOINT ["frpc"]

@@ -1,10 +1,9 @@
 FROM alpine:latest AS builder
 WORKDIR /build
-RUN set -xe \
+RUN apk update \
     && apk add --no-cache git make build-base \
     && git clone --single-branch https://github.com/Wind4/vlmcsd \
     && cd vlmcsd \
-    && VLMCSD_VERSION=$(git describe --abbrev=0 --tags) \
     && make \
     && chmod +x bin/vlmcs bin/vlmcsd
 
