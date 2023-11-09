@@ -17,4 +17,4 @@ RUN apk update \
     && wget -O /usr/local/share/xray/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat \
     && wget -O /etc/xray/config.json https://raw.githubusercontent.com/v2fly/v2ray-examples/master/VLESS-TCP-TLS/config_client.json
 VOLUME /etc/xray
-ENTRYPOINT ["xray"]
+ENTRYPOINT ["xray", "-c", "/etc/xray/config.json"]
