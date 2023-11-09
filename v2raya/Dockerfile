@@ -12,7 +12,7 @@ FROM golang:alpine AS v2raya
 WORKDIR /v2raya
 RUN apk update \
     && apk add git yarn \
-    && git clone --single-branch --depth=1 https://github.com/v2rayA/v2rayA.git \
+    && git clone --single-branch https://github.com/v2rayA/v2rayA \
     && cd v2rayA \
     && V2RAYA_VERSION=$(git describe --abbrev=0 --tags) \
     && cd gui \
