@@ -1,15 +1,15 @@
 FROM golang:alpine AS xray
-WORKDIR /build
+WORKDIR /xray
 RUN apk update \
     && apk add git gcc build-base \
     && git clone --single-branch --depth=1 https://github.com/XTLS/Xray-core \
     && cd Xray-core \
     && go mod download \
-    && go build -o /build/xray -trimpath -ldflags "-s -w " ./main \
-    && chmod +x /build/xray
+    && go build -o /xray/xray -trimpath -ldflags "-s -w " ./main \
+    && chmod +x /xray/xray
 
 FROM golang:alpine AS v2raya
-WORKDIR /build
+WORKDIR /v2raya
 RUN apk update \
     && apk add git yarn \
     && git clone --single-branch --depth=1 https://github.com/v2rayA/v2rayA \
@@ -20,12 +20,12 @@ RUN apk update \
     && yarn build \
     && cd ../service \
     && cp -r ../web server/router \
-    && CGO_ENABLE=0 go build -ldflags="-s -w -X github.com/v2rayA/v2rayA/conf.Version=${V2RAYA_VERSION}" -o /build/v2raya . \
-    && chmod +x /build/v2raya
+    && CGO_ENABLE=0 go build -ldflags="-s -w -X github.com/v2rayA/v2rayA/conf.Version=${V2RAYA_VERSION}" -o /v2raya/v2raya . \
+    && chmod +x /v2raya/v2raya
 
 FROM alpine:latest
-COPY --from=xray /build/xray /usr/bin/
-COPY --from=v2raya /build/v2raya /usr/bin/
+COPY --from=xray /v2raya/xray /usr/bin/
+COPY --from=v2raya /v2raya/v2raya /usr/bin/
 RUN apk update \
     && apk add --no-cache iptables ip6tables ca-certificates \
     && mkdir -p /etc/xray /usr/local/share/xray \
