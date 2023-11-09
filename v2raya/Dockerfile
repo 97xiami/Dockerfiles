@@ -1,18 +1,18 @@
-FROM golang:alpine AS v2ray
+FROM golang:alpine AS xray
 WORKDIR /build
 RUN apk update \
     && apk add git gcc build-base \
-    && git clone --single-branch https://github.com/v2fly/v2ray-core \
-    && cd v2ray-core \
+    && git clone --single-branch --depth=1 https://github.com/XTLS/Xray-core \
+    && cd Xray-core \
     && go mod download \
-    && CGO_ENABLE=0 go build -o /build/v2ray -trimpath -ldflags "-s -w " ./main \
-    && chmod +x /build/v2ray
+    && go build -o /build/xray -trimpath -ldflags "-s -w " ./main \
+    && chmod +x /build/xray
 
 FROM golang:alpine AS v2raya
 WORKDIR /build
 RUN apk update \
     && apk add git yarn \
-    && git clone --single-branch https://github.com/v2rayA/v2rayA -b main \
+    && git clone --single-branch --depth=1 https://github.com/v2rayA/v2rayA \
     && cd v2rayA \
     && V2RAYA_VERSION=$(git describe --abbrev=0 --tags) \
     && cd gui \
@@ -24,15 +24,15 @@ RUN apk update \
     && chmod +x /build/v2raya
 
 FROM alpine:latest
-COPY --from=v2ray /build/v2ray /usr/bin/
+COPY --from=xray /build/xray /usr/bin/
 COPY --from=v2raya /build/v2raya /usr/bin/
 RUN apk update \
     && apk add --no-cache iptables ip6tables ca-certificates \
-    && mkdir -p /etc/v2ray /usr/local/share/v2ray \
-    && wget -O /usr/local/share/v2ray/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat \
-    && wget -O /usr/local/share/v2ray/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat \
-    && wget -O /etc/v2ray/config.json https://raw.githubusercontent.com/v2fly/v2ray-examples/master/VLESS-TCP-TLS/config_client.json \
-    && wget -O /usr/local/share/v2ray/LoyalsoldierSite.dat https://raw.githubusercontent.com/mzz2017/dist-v2ray-rules-dat/master/geosite.dat
+    && mkdir -p /etc/xray /usr/local/share/xray \
+    && wget -O /usr/local/share/xray/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat \
+    && wget -O /usr/local/share/xray/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat \
+    && wget -O /etc/xray/config.json https://raw.githubusercontent.com/v2fly/v2ray-examples/master/VLESS-TCP-TLS/config_client.json \
+    && wget -O /usr/local/share/xray/LoyalsoldierSite.dat https://raw.githubusercontent.com/mzz2017/dist-v2ray-rules-dat/master/geosite.dat
 EXPOSE 2017
 VOLUME /etc/v2raya
 ENTRYPOINT ["v2raya"]
