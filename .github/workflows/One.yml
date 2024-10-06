@@ -1,0 +1,50 @@
+name: One
+run-name: "Docker Build: ${{ inputs.name }}"
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Dir Name'
+        required: true
+        type: choice
+        options:
+          - 'frpc'
+          - 'frps'
+          - 'kms'
+          - 'mind-map'
+          - 'qbittorrentee'
+          - 'samba'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@master
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@master
+
+    - name: Login to DockerHub
+      uses: docker/login-action@master
+      with:
+        username: ${{ secrets.USER_NAME }}
+        password: ${{ secrets.PASSWORD }}
+
+    - name: Build and Push
+      uses: docker/build-push-action@master
+      with:
+        context: ./${{ github.event.inputs.name }}
+        file: ./${{ github.event.inputs.name }}/Dockerfile
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: xiami110/${{ github.event.inputs.name }}:latest
+
+    - name: Delete Workflow History
+      uses: Mattraks/delete-workflow-runs@main
+      with:
+        keep_minimum_runs: 2

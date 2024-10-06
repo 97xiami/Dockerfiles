@@ -1,0 +1,42 @@
+name: All
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        Dockerfiles: [ frpc, frps, mind-map, qbittorrentee, samba ]
+        
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@master
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@master
+
+    - name: Login to DockerHub
+      uses: docker/login-action@master
+      with:
+        username: ${{ secrets.USER_NAME }}
+        password: ${{ secrets.PASSWORD }}
+
+    - name: Build and Push
+      uses: docker/build-push-action@master
+      with:
+        context: ./${{ matrix.Dockerfiles }}
+        file: ./${{ matrix.Dockerfiles }}/Dockerfile
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: xiami110/${{ matrix.Dockerfiles }}:latest
+
+    - name: Delete Workflow History
+      uses: Mattraks/delete-workflow-runs@main
+      with:
+        keep_minimum_runs: 2
