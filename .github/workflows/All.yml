@@ -35,8 +35,3 @@ jobs:
         platforms: linux/amd64,linux/arm64
         push: true
         tags: xiami110/${{ matrix.Dockerfiles }}:latest
-
-    - name: Delete Workflow History
-      uses: Mattraks/delete-workflow-runs@main
-      with:
-        keep_minimum_runs: 2
