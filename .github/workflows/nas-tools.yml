@@ -1,5 +1,5 @@
-name: test
-run-name: "Docker Build: ${{ inputs.name }}"
+name: nas-tools
+run-name: "Docker Build: nas-tools"
 
 on:
   workflow_dispatch:
