@@ -25,14 +25,16 @@ jobs:
 
     - name: git clone nas-tools
       run: |
-        git clone --depth=1 https://github.com/97xiami/nas-tools ~/nas-tools
-        
+        sudo mkdir -p /workdir
+        sudo chown $USER:$GROUPS /workdir
+        git clone --depth=1 https://github.com/97xiami/nas-tools
+        ln -sf /workdir/nas-tools $GITHUB_WORKSPACE/nas-tools
 
     - name: Build and Push
       uses: docker/build-push-action@master
       with:
-        context: .
-        file: ~/nas-tools/docker/Dockerfile
+        context: /workdir
+        file: /workdir/nas-tools/docker/Dockerfile
         platforms: linux/amd64,linux/arm64
         push: true
         tags: xiami110/nas-tools:2.9.1
