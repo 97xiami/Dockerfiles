@@ -37,4 +37,4 @@ jobs:
         file: /workdir/docker/Dockerfile
         platforms: linux/amd64,linux/arm64
         push: true
-        tags: xiami110/LibreTranslate:latest
+        tags: xiami110/libretranslate:latest
