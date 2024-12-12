@@ -38,4 +38,4 @@ COPY --from=builder /src/darkhttpd /
 COPY --from=installer /ariang /AriaNg
 EXPOSE 6880
 ENTRYPOINT ["/darkhttpd", "/AriaNg"]
-CMD ["--port", "6880", "--chroot"]
+CMD ["--port", "6880"]
