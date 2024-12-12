@@ -9,8 +9,8 @@ if [ -z "$URL" ]; then
   exit 1
 fi
 
-curl -L -o AriaNg.ZIP $URL || { echo "Failed to download the file."; exit 1; }
+curl -L -o AriaNg.zip $URL || { echo "Failed to download the file."; exit 1; }
 
 echo "Download completed."
-unzip AriaNg.ZIP -d ${PWD}
+unzip AriaNg.zip -d ${PWD}
 rm AriaNg.zip
