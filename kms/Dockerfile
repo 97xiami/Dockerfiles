@@ -7,11 +7,11 @@ RUN apk update \
     && cd vlmcsd \
     && sed -n '473p' src/kms.c | sed -i '467r /dev/stdin' src/kms.c \
     && sed -i '474d' src/kms.c \
-    && make CC=gcc LDFLAGS="-static"
+    && make LDFLAGS="-static" vlmcsdmulti
 
 FROM scratch
-COPY --from=builder /build/vlmcsd/bin/vlmcs /vlmcs
-COPY --from=builder /build/vlmcsd/bin/vlmcsd /vlmcsd
+COPY --from=builder /build/vlmcsd/bin/vlmcsdmulti /vlmcsdmulti
 EXPOSE 1688/tcp
 
-CMD ["/vlmcsd", "-D", "-d", "-e"]
+ENTRYPOINT ["/vlmcsdmulti"]
+CMD ["vlmcsd", "-D", "-d", "-e"]
