@@ -14,5 +14,5 @@ COPY --from=builder /build/vlmcsd/bin/vlmcs /
 COPY --from=builder /build/vlmcsd/bin/vlmcsd /
 EXPOSE 1688/tcp
 
-ENTRYPOINT ["vlmcsd"]
+ENTRYPOINT ["/vlmcsd"]
 CMD ["-D", "-d", "-e"]
