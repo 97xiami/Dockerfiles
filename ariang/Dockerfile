@@ -23,6 +23,7 @@ RUN apk update \
     && cd AriaNg \
     && chmod a+x install.sh \
     && bash install.sh \
+    && rm install.sh \
     && cd /src \
     && git clone --single-branch --depth=1 https://github.com/emikulic/darkhttpd \
     && cd darkhttpd \
