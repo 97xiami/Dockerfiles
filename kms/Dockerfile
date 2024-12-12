@@ -7,10 +7,9 @@ RUN apk update \
     && cd vlmcsd \
     && sed -n '473p' src/kms.c | sed -i '467r /dev/stdin' src/kms.c \
     && sed -i '474d' src/kms.c \
-    && make \
-    && chmod +x bin/vlmcsd
+    && make
 
-FROM alpine:latest
+FROM scratch
 COPY --from=builder /build/vlmcsd/bin/vlmcs /usr/bin/
 COPY --from=builder /build/vlmcsd/bin/vlmcsd /usr/bin/
 EXPOSE 1688/tcp
