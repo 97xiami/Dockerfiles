@@ -3,7 +3,7 @@ WORKDIR /aria
 COPY install.sh /aria
 
 RUN apk update \
-    && apk add bash \
+    && apk add --no-cache ca-certificates curl bash \
     && chmod a+x install.sh \
     && bash install.sh
 
