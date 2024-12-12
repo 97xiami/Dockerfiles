@@ -1,13 +1,33 @@
-FROM nginx:stable-alpine
-
+FROM alpine:latest AS builder
+WORKDIR /src
+ENV CFLAGS=" \
+  -static                                 \
+  -O2                                     \
+  -flto                                   \
+  -D_FORTIFY_SOURCE=2                     \
+  -fstack-clash-protection                \
+  -fstack-protector-strong                \
+  -pipe                                   \
+  -Wall                                   \
+  -Werror=format-security                 \
+  -Werror=implicit-function-declaration   \
+  -Wl,-z,defs                             \
+  -Wl,-z,now                              \
+  -Wl,-z,relro                            \
+  -Wl,-z,noexecstack                      \
+"
 RUN apk update \
-    && apk add --no-cache git \
+    && apk add --no-cache git build-base \
+    && git clone --single-branch --depth=1 https://github.com/emikulic/darkhttpd \
     && git clone --single-branch --depth=1 https://github.com/wanglin2/mind-map \
-    && cp mind-map/index.html /usr/share/nginx/html/ \
-    && cp mind-map/nginx.conf /usr/share/nginx/html/ \
-    && cp -r mind-map/dist /usr/share/nginx/html/ \
-    && rm -rf mind-map \
-    && apk del git
-EXPOSE 80
+    && cd darkhttpd \
+    && make darkhttpd \
+    && strip darkhttpd
 
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+FROM scratch
+COPY --from=builder /src/darkhttpd /
+COPY --from=installer /src/mind-map/index.html /mind-map/index.html
+COPY --from==builder /src/mind-map/dist /mind-map/
+EXPOSE 80
+ENTRYPOINT ["/darkhttpd", "/mind-map"]
+CMD ["--port", "80"]
