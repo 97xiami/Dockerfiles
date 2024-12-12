@@ -8,7 +8,7 @@ RUN apk update \
     && bash install.sh
 
 FROM nginx:stable-alpine
-COPY --from=builder /aria/AriaNG/* /usr/share/nginx/html
+COPY --from=builder /aria/* /usr/share/nginx/html
 EXPOSE 6880
 
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
