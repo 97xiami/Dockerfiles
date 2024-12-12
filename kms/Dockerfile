@@ -8,7 +8,7 @@ RUN apk update \
     && make \
     && chmod +x bin/vlmcsd
 
-FROM alpine:latest
+FROM scratch
 COPY --from=builder /build/vlmcsd/bin/vlmcsd /usr/bin/
 EXPOSE 1688/tcp
 
