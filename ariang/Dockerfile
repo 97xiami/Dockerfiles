@@ -18,14 +18,11 @@ ENV CFLAGS=" \
 "
 
 RUN apk update \
-    && apk add --no-cache git build-base curl bash \
+    && apk add --no-cache git build-base \
     && git clone --single-branch --depth=1 https://github.com/emikulic/darkhttpd \
     && cd darkhttpd \
     && make darkhttpd \
-    && strip darkhttpd \
-    && cd /ariang \
-    && chmod a+x install.sh \
-    && bash install.sh
+    && strip darkhttpd 
 
 FROM alpine:latest AS installer
 WORKDIR /ariang
