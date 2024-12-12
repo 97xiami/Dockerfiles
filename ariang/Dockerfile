@@ -9,6 +9,5 @@ RUN apk update \
 
 FROM nginx:stable-alpine
 COPY --from=builder /aria/ /usr/share/nginx/html/
-EXPOSE 6880
 
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
