@@ -8,7 +8,7 @@ RUN apk update \
     && chmod +x install.sh \
     && bash install.sh
 
-FROM alpine:latest
+FROM scratch
 COPY --from=builder /build/frpc /usr/bin/
 COPY --from=builder /build/frpc.toml /etc/frp/frpc.toml
 
