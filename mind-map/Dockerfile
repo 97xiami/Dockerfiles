@@ -27,7 +27,7 @@ RUN apk update \
 FROM scratch
 COPY --from=builder /src/darkhttpd /
 COPY --from=builder /src/mind-map/index.html /mind-map/index.html
-COPY --from=builder /src/mind-map/dist /mind-map/
+COPY --from=builder /src/mind-map/dist /mind-map/dist
 EXPOSE 80
 ENTRYPOINT ["/darkhttpd", "/mind-map"]
 CMD ["--port", "80"]
