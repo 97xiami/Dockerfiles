@@ -2,7 +2,7 @@
 
 #Download Files
 echo "Downloading : AriaNg.zip"
-URL=$(curl -s "https://api.github.com/repos/mayswind/AriaNg/releases/latest" | grep "browser_download_url" | grep -E "AriaNg-[0-9]+\.[0-9]+\.[0-9]+\.AllInOne\.zip" | cut -d '"' -f 4)
+URL=$(curl -s "https://api.github.com/repos/mayswind/AriaNg/releases/latest" | grep "browser_download_url" | grep -E "AriaNg-[0-9]+\.[0-9]+\.[0-9]+-AllInOne\.zip" | cut -d '"' -f 4)
 
 if [ -z "$URL" ]; then
   echo "Failed to find the download."
