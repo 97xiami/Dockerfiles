@@ -10,8 +10,8 @@ RUN apk update \
     && make
 
 FROM scratch
-COPY --from=builder /build/vlmcsd/bin/vlmcs /usr/bin/
-COPY --from=builder /build/vlmcsd/bin/vlmcsd /usr/bin/
+COPY --from=builder /build/vlmcsd/bin/vlmcs /
+COPY --from=builder /build/vlmcsd/bin/vlmcsd /
 EXPOSE 1688/tcp
 
-CMD ["vlmcsd", "-D", "-d", "-e"]
+CMD ["/vlmcsd", "-D", "-d", "-e"]
