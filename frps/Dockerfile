@@ -8,8 +8,8 @@ RUN apk update \
     && chmod +x install.sh \
     && bash install.sh
 
-FROM alpine:latest
-COPY --from=builder /build/frps /usr/bin/frps
+FROM scratch
+COPY --from=builder /build/frps /usr/bin/
 COPY --from=builder /build/frps.toml /etc/frp/frps.toml
 
 ENTRYPOINT ["frps", "-c", "/etc/frp/frps.toml"]
