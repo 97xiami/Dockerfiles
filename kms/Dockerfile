@@ -11,6 +11,7 @@ RUN apk update \
     && chmod +x bin/vlmcsd
 
 FROM alpine:latest
+COPY --from=builder /build/vlmcsd/bin/vlmcs /usr/bin/
 COPY --from=builder /build/vlmcsd/bin/vlmcsd /usr/bin/
 EXPOSE 1688/tcp
 
