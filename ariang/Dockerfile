@@ -34,7 +34,7 @@ RUN apk update \
 
 # Just the static binary
 FROM scratch
-COPY --from=builder /src/darkhttpd /darkhttpd
+COPY --from=builder /src/darkhttpd /
 COPY --from=installer /ariang /AriaNg
 EXPOSE 6880
 ENTRYPOINT ["/darkhttpd", "/AriaNg"]
