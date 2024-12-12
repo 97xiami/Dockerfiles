@@ -9,6 +9,7 @@ on:
         required: true
         type: choice
         options:
+          - 'ariang'
           - 'frpc'
           - 'frps'
           - 'kms'
