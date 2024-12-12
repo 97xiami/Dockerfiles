@@ -1,5 +1,6 @@
 FROM alpine:latest AS builder
 WORKDIR /src
+COPY install.sh /AriaNg
 ENV CFLAGS=" \
   -static                                 \
   -O2                                     \
@@ -18,24 +19,19 @@ ENV CFLAGS=" \
 "
 
 RUN apk update \
-    && apk add --no-cache git build-base \
+    && apk add --no-cache git build-base curl bash \
+    && cd /AriaNg \
+    && chmod a+x install.sh \
+    && bash install.sh \
+    && cd /src
     && git clone --single-branch --depth=1 https://github.com/emikulic/darkhttpd \
     && cd darkhttpd \
     && make darkhttpd \
-    && strip darkhttpd 
+    && strip darkhttpd
 
-FROM alpine:latest AS installer
-WORKDIR /ariang
-COPY install.sh /ariang
-RUN apk update \
-    && apk add curl bash \
-    && chmod a+x install.sh \
-    && bash install.sh
-
-# Just the static binary
 FROM scratch
-COPY --from=builder /src/darkhttpd /
-COPY --from=installer /ariang /AriaNg
+COPY --from=builder /src/darkhttpd/darkhttpd /
+COPY --from=builder /AriaNg /AriaNg
 EXPOSE 6880
 ENTRYPOINT ["/darkhttpd", "/AriaNg"]
 CMD ["--port", "6880"]
