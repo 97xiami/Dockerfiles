@@ -25,7 +25,7 @@ RUN apk update \
     && strip darkhttpd
 
 FROM scratch
-COPY --from=builder /src/darkhttpd /
+COPY --from=builder /src/darkhttpd/darkhttpd /
 COPY --from=builder /src/mind-map/index.html /mind-map/index.html
 COPY --from=builder /src/mind-map/dist /mind-map/dist
 EXPOSE 80
