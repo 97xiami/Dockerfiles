@@ -1,6 +1,6 @@
 FROM alpine:latest AS builder
 WORKDIR /src
-COPY install.sh ./AriaNg
+COPY install.sh /src/AriaNg/
 ENV CFLAGS=" \
   -static                                 \
   -O2                                     \
