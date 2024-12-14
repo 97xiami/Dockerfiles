@@ -67,3 +67,10 @@ jobs:
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+
+    - name: Delete all owner containers without tags
+      uses: Chizkiyahu/delete-untagged-ghcr-action@v5
+      with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository_owner: ${{ github.actor }}
+          owner_type: user
