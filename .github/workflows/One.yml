@@ -20,7 +20,11 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest    
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -50,7 +54,7 @@ jobs:
       with:
         images: |
           ${{ secrets.USER_NAME }}/${{ github.event.inputs.name }}
-          97xiami/Dockerfiles
+          ${{ github.repository }}
         tags: |
           type=raw,value=latest
 
