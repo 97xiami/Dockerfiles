@@ -68,3 +68,11 @@ jobs:
         subject-name: ghcr.io/${{ github.actor }}/${{ github.event.inputs.name }}
         subject-digest: ${{ steps.push.outputs.digest }}
         push-to-registry: true
+
+    - name: Delete vaultwarden-buildcache containers
+      uses: actions/delete-package-versions@v5
+      with:
+        package-name: ${{ github.event.inputs.name }}
+        package-type: 'container'
+        min-versions-to-keep: 0
+        delete-only-untagged-versions: 'false'
