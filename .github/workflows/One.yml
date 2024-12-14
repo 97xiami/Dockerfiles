@@ -74,5 +74,4 @@ jobs:
       with:
         package-name: ${{ github.event.inputs.name }}
         package-type: 'container'
-        min-versions-to-keep: 0
-        delete-only-untagged-versions: 'false'
+        delete-only-untagged-versions: 'true'
