@@ -56,7 +56,7 @@ jobs:
       with:
         images: |
           ${{ secrets.USER_NAME }}/${{ github.event.inputs.name }}
-          ghcr.io/${{ github.repository }}
+          ghcr.io/${{ github.actor }}/${{ github.event.inputs.name }}
         tags: |
           type=raw,value=latest
 
@@ -74,6 +74,6 @@ jobs:
     - name: Generate artifact attestation
       uses: actions/attest-build-provenance@v1
       with:
-        subject-name: ghcr.io/${{ github.repository }}
+        subject-name: ghcr.io/${{ github.actor }}/${{ github.event.inputs.name }}
         subject-digest: ${{ steps.push.outputs.digest }}
         push-to-registry: true
