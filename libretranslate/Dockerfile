@@ -9,12 +9,12 @@ RUN apt-get update -qq \
   && apt-get clean \
   && rm -rf /var/lib/apt
 
-RUN python -mvenv venv && ./venv/bin/pip install --no-cache-dir --upgrade pip
-
-RUN git clone --depth=1 https://github.com/LibreTranslate/LibreTranslate .
+RUN git clone --depth=1 https://github.com/LibreTranslate/LibreTranslate
 
 # Install package from source code, compile translations
-RUN ./venv/bin/pip install Babel==2.12.1 && ./venv/bin/python scripts/compile_locales.py \
+RUN cd LibreTranslate \
+  && python -mvenv venv && ./venv/bin/pip install --no-cache-dir --upgrade pip
+  && ./venv/bin/pip install Babel==2.12.1 && ./venv/bin/python scripts/compile_locales.py \
   && ./venv/bin/pip install torch==2.0.1 --extra-index-url https://download.pytorch.org/whl/cpu \
   && ./venv/bin/pip install "numpy<2" \
   && ./venv/bin/pip install . \
@@ -28,10 +28,10 @@ ARG models=""
 RUN addgroup --system --gid 1032 libretranslate && adduser --system --uid 1032 libretranslate && mkdir -p /home/libretranslate/.local && chown -R libretranslate:libretranslate /home/libretranslate/.local
 USER libretranslate
 
-COPY --from=builder --chown=1032:1032 /app /app
+COPY --from=builder --chown=1032:1032 /app/LibreTranslate /app
 WORKDIR /app
 
-COPY --from=builder --chown=1032:1032 /app/venv/bin/ltmanage /usr/bin/
+COPY --from=builder --chown=1032:1032 /app/LibreTranslate/venv/bin/ltmanage /usr/bin/
 
 RUN if [ "$with_models" = "true" ]; then  \
   # initialize the language models
