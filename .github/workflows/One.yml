@@ -68,9 +68,13 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
 
-    - name: Delete all owner containers without tags
+    - name: Delete all containers from package without tags
       uses: Chizkiyahu/delete-untagged-ghcr-action@v5
       with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository_owner: ${{ github.actor }}
+          token: ${{ github.token }}
+          repository_owner: ${{ github.repository_owner }}
+          repository: ${{ github.repository }}
+          package_name: the-package-name
+          untagged_only: true
           owner_type: user
+          except_untagged_multiplatform: true
