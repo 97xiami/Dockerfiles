@@ -37,12 +37,20 @@ jobs:
         username: ${{ secrets.USER_NAME }}
         password: ${{ secrets.PASSWORD }}
 
+    - name: Login to GHCR
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Extract Metadata
       id: meta
       uses: docker/metadata-action@v5
       with:
         images: |
-          xiami110/${{ github.event.inputs.name }}
+          ${{ secrets.USER_NAME }}/${{ github.event.inputs.name }}
+          ${{ github.actor }}/${{ github.repository }}
         tags: |
           type=raw,value=latest
 
