@@ -50,7 +50,7 @@ jobs:
       with:
         images: |
           ${{ secrets.USER_NAME }}/${{ github.event.inputs.name }}
-          ${{ github.repository }}
+          97xiami/Dockerfiles
         tags: |
           type=raw,value=latest
 
