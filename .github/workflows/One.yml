@@ -74,9 +74,7 @@ jobs:
     - name: Generate artifact attestation
       uses: actions/attest-build-provenance@v2
       with:
-        subject-name: |
-          xiami110/${{ github.event.inputs.name }}
-          ghcr.io/${{ github.actor }}/${{ github.event.inputs.name }}
+        subject-name: ghcr.io/${{ github.actor }}/${{ github.event.inputs.name }}
         subject-digest: ${{ steps.push.outputs.digest }}
         push-to-registry: true
 
