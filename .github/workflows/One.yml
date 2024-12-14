@@ -50,7 +50,7 @@ jobs:
       with:
         images: |
           ${{ secrets.USER_NAME }}/${{ github.event.inputs.name }}
-          ${{ github.actor }}/${{ github.repository }}
+          ${{ github.repository }}
         tags: |
           type=raw,value=latest
 
