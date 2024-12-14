@@ -13,7 +13,7 @@ RUN git clone --depth=1 https://github.com/LibreTranslate/LibreTranslate
 
 # Install package from source code, compile translations
 RUN cd LibreTranslate \
-  && python -mvenv venv && ./venv/bin/pip install --no-cache-dir --upgrade pip
+  && python -mvenv venv && ./venv/bin/pip install --no-cache-dir --upgrade pip \
   && ./venv/bin/pip install Babel==2.12.1 && ./venv/bin/python scripts/compile_locales.py \
   && ./venv/bin/pip install torch==2.0.1 --extra-index-url https://download.pytorch.org/whl/cpu \
   && ./venv/bin/pip install "numpy<2" \
