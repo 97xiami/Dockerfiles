@@ -59,6 +59,7 @@ jobs:
           type=raw,value=latest
 
     - name: Build and push Docker image
+      id: push
       uses: docker/build-push-action@v6
       with:
         context: ./${{ github.event.inputs.name }}
@@ -67,6 +68,15 @@ jobs:
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+
+    - name: Generate artifact attestation
+      uses: actions/attest-build-provenance@v2
+      with:
+        subject-name: |
+          ${{ secrets.USER_NAME }}/${{ github.event.inputs.name }}
+          ghcr.io/${{ github.actor }}/${{ github.event.inputs.name }}
+        subject-digest: ${{ steps.push.outputs.digest }}
+        push-to-registry: true
 
     - name: Delete all containers from package without tags
       uses: Chizkiyahu/delete-untagged-ghcr-action@v5
@@ -77,4 +87,3 @@ jobs:
           package_name: ${{ github.event.inputs.name }}
           untagged_only: true
           owner_type: user
-          except_untagged_multiplatform: true
