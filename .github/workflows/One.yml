@@ -74,7 +74,7 @@ jobs:
           token: ${{ github.token }}
           repository_owner: ${{ github.repository_owner }}
           repository: ${{ github.repository }}
-          package_name: the-package-name
+          package_name: ${{ github.event.inputs.name }}
           untagged_only: true
           owner_type: user
           except_untagged_multiplatform: true
