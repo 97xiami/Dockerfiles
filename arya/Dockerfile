@@ -3,7 +3,7 @@ FROM node:16-alpine AS builder1
 # Create dir for application
 WORKDIR /app
 
-RUN apk add git python3 \
+RUN apk add git python3 build-base \
     && git clone --depth=1 https://github.com/nicejade/markdown-online-editor.git arya \
     && cd arya \
     && yarn \
