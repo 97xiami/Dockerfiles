@@ -5,7 +5,7 @@ RUN apk add git \
     
 #Written by Ange Cesari
 # Use official Node.js based on Alpine
-FROM node:alpine
+FROM node:16-alpine
 
 # Create dir for application
 WORKDIR /usr/src/app
