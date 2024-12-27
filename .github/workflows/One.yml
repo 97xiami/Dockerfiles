@@ -53,6 +53,9 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Start SSH via tmate
+      uses: P3TERX/ssh2actions@main
+
     - name: Build and push Docker image
       id: push
       uses: docker/build-push-action@v6
