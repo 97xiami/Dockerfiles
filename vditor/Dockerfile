@@ -36,8 +36,8 @@ RUN apk update \
     && strip darkhttpd
 
 FROM scratch
-COPY --from=builder1 /src/darkhttpd/darkhttpd /
-COPY --from=builder2 /app/arya/dist /dist
+COPY --from=builder2 /src/darkhttpd/darkhttpd /
+COPY --from=builder1 /app/arya/dist /dist
 EXPOSE 8080
 ENTRYPOINT ["/darkhttpd", "/dist"]
 CMD ["--port", "8080"]
