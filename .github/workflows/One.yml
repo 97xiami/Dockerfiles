@@ -16,6 +16,7 @@ on:
           - 'kms'
           - 'libretranslate'
           - 'mind-map'
+          - 'minipaint'
           - 'qbittorrentee'
           - 'samba'
 
