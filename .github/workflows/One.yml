@@ -19,6 +19,7 @@ on:
           - 'minipaint'
           - 'qbittorrentee'
           - 'samba'
+          - 'vditor'
 
 jobs:
   build:
