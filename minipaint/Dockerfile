@@ -5,21 +5,16 @@ RUN apk add git \
     
 #Written by Ange Cesari
 # Use official Node.js based on Alpine
-FROM node:16-alpine
+FROM node:alpine
 
 # Create dir for application
 WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json
-COPY --from=builder /git/miniPaint/package*.json ./
+COPY --from=builder /git/miniPaint ./
 
 # Install dependencies
 RUN npm i
-
-# Copy the rest of the application code
-COPY --from=builder /git/miniPaint ./
-
-RUN tree
 
 # Expose the port the application will run on
 EXPOSE 8080
