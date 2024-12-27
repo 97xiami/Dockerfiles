@@ -11,10 +11,15 @@ FROM node:alpine
 WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json
-COPY --from=builder /git/miniPaint/* ./
+COPY --from=builder /git/miniPaint/package*.json ./
 
 # Install dependencies
 RUN npm i
+
+# Copy the rest of the application code
+COPY /git/miniPaint/* .
+
+RUN tree
 
 # Expose the port the application will run on
 EXPOSE 8080
