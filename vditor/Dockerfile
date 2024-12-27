@@ -5,7 +5,7 @@ WORKDIR /app
 
 RUN apk add git \
     && git clone --depth=1 https://github.com/Vanessa219/vditor.git ./ \
-    && npm install
+    && npm install --legacy-peer-deps
 
 # Expose the port the application will run on
 EXPOSE 8080
