@@ -17,7 +17,7 @@ COPY --from=builder /git/miniPaint/package*.json ./
 RUN npm i
 
 # Copy the rest of the application code
-COPY --from=builder /git/miniPaint/* .
+COPY --from=builder /git/miniPaint ./
 
 RUN tree
 
