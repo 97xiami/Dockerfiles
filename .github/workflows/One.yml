@@ -58,7 +58,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Start SSH via tmate
-      uses: P3TERX/ssh2actions@main
+      uses: mxschmitt/action-tmate@v3
       if: ${{ github.event.inputs.ssh == 'true' }}
 
     - name: Build and push Docker image
