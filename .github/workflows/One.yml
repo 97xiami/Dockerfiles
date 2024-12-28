@@ -16,7 +16,6 @@ on:
         options:
           - 'aria2'
           - 'ariang'
-          - 'arya'
           - 'frpc'
           - 'frps'
           - 'kms'
