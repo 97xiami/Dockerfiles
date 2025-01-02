@@ -40,9 +40,3 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         event-type: AutoBuild-${{ matrix.repo }}
         client-payload: '{"repo": "${{ matrix.repo }}", "ver": "$latest_release"}'
-
-    - name: Delete workflow runs
-      uses: Mattraks/delete-workflow-runs@v2
-      with:
-        retain_days: 2
-        keep_minimum_runs: 0
