@@ -74,7 +74,7 @@ jobs:
             auth: '${{ secrets.GITHUB_TOKEN }}'
           })
           const response = await octokit.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
-            owner: '97xami',
+            owner: '97xiami',
             repo: 'Dockerfiles',
             workflow_id: 'AutoBuild.yml',
             ref: 'main',
