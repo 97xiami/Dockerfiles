@@ -1,0 +1,47 @@
+name: Update Checker
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 22 * * *
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        repo: [ aria2/aria2, mayswind/AriaNg, fatedier/frp, wanglin2/mind-map, viliusle/miniPaint, c0re100/qBittorrent-Enhanced-Edition ]
+        
+    steps:
+    - name: Get Latest Release Tag
+      id: get_tag
+      run: |
+        latest_release=$(curl -s https://api.github.com/repos/${{ matrix.repo }}/releases/latest | jq -r .tag_name)
+        echo "Latest release tag: $latest_release"
+        echo "tag=$latest_release" >> $GITHUB_OUTPUT
+
+    - name: Cache Tag
+      id: cache_tag
+      uses: actions/cache@v4
+      with:
+        path: release.txt
+        key: HEAD-${{ steps.get_tag.outputs.tag }}
+
+    - name: Save New Tag
+      if: steps.cache_tag.outputs.cache-hit != 'true'
+      run: |
+        echo ${{ steps.get_tag.outputs.tag }} | tee release.txt
+
+    - name: Trigger build
+      if: steps.cacheHash.outputs.cache-hit != 'true'
+      uses: peter-evans/repository-dispatch@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        event-type: AutoBuild-${{ matrix.repo }}
+
+    - name: Delete workflow runs
+      uses: Mattraks/delete-workflow-runs@v2
+      with:
+        retain_days: 2
+        keep_minimum_runs: 0
