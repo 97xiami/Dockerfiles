@@ -26,17 +26,38 @@ jobs:
       uses: actions/cache@v4
       with:
         path: release.txt
-        key: HEAD-${{ steps.get_tag.outputs.tag }}
+        key: ${{ matrix.repo }}:${{ steps.get_tag.outputs.tag }}
 
     - name: Save New Tag
       if: steps.cache_tag.outputs.cache-hit != 'true'
       run: |
         echo ${{ steps.get_tag.outputs.tag }} | tee release.txt
 
+    - name: Create
+      if: steps.cache_tag.outputs.cache-hit != 'true'
+      id: dirname
+      run: |
+        if [ "aria2/aria2" == "${{ matrix.repo }}" ]; then
+          echo "dir=aria2" >> $GITHUB_OUTPUT
+          
+        elif [ "mayswind/AriaNg" == "${{ matrix.repo }}" ]; then
+          echo "dir=ariang" >> $GITHUB_OUTPUT
+          
+        elif [ "wanglin2/mind-map" == "${{ matrix.repo }}" ]; then
+          echo "dir=mind-map" >> $GITHUB_OUTPUT
+          
+        elif [ "viliusle/miniPaint" == "${{ matrix.repo }}" ]; then
+          echo "dir=minipaint" >> $GITHUB_OUTPUT
+          
+        elif [ "c0re100/qBittorrent-Enhanced-Edition" == "${{ matrix.repo }}" ]; then
+          echo "dir=qbittorrentee" >> $GITHUB_OUTPUT
+          
+        fi
+
     - name: Trigger build
       if: steps.cacheHash.outputs.cache-hit != 'true'
       uses: peter-evans/repository-dispatch@v3
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        event-type: AutoBuild-${{ matrix.repo }}
-        client-payload: '{"repo": "${{ matrix.repo }}", "ver": "$latest_release"}'
+        event-type: AutoBuild-${{ steps.dirname.outputs.dir }}:$latest_release
+        client-payload: '{"repo": "${{ steps.dirname.outputs.dir }}", "ver": "$latest_release"}'
