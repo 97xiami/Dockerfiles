@@ -9,15 +9,25 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        repo: [ aria2/aria2, mayswind/AriaNg, wanglin2/mind-map, viliusle/miniPaint, c0re100/qBittorrent-Enhanced-Edition ]
+        repo: [ aria2, mayswind/AriaNg, frpc, frps, wanglin2/mind-map, viliusle/miniPaint, c0re100/qBittorrent-Enhanced-Edition, samba]
         
-    steps:
+    steps:          
     - name: Get Latest Release Tag
       id: get_tag
       run: |
-        latest_release=$(curl -s https://api.github.com/repos/${{ matrix.repo }}/releases/latest | jq -r .tag_name)
-        echo "Latest release tag: $latest_release"
-        echo "tag=$latest_release" >> $GITHUB_OUTPUT
+        if [ "aria2" == "${{ matrix.repo }}" ] || [ "samba" == "${{ matrix.repo }}" ]; then
+          latest_release=$(curl -s https://pkgs.alpinelinux.org/packages?name=${{ matrix.repo }} | sed -n 's/.*<strong[^>]*>\(.*\)<\/strong>.*/\1/p')
+          echo "Latest release tag: $latest_release"
+          echo "tag=$latest_release" >> $GITHUB_OUTPUT
+        elif [ "frpc" == "${{ matrix.repo }}" ] || [ "frps" == "${{ matrix.repo }}" ]; then
+          latest_release=$(curl -s https://api.github.com/repos/fatedier/frp/releases/latest | jq -r .tag_name)
+          echo "Latest release tag: $latest_release"
+          echo "tag=$latest_release" >> $GITHUB_OUTPUT
+        else
+          latest_release=$(curl -s https://api.github.com/repos/${{ matrix.repo }}/releases/latest | jq -r .tag_name)
+          echo "Latest release tag: $latest_release"
+          echo "tag=$latest_release" >> $GITHUB_OUTPUT
+        fi
 
     - name: Cache Tag
       id: cache_tag
@@ -48,11 +58,17 @@ jobs:
       if: steps.compare_tags.outputs.tags_different == 'true'
       id: dirname
       run: |
-        if [ "aria2/aria2" == "${{ matrix.repo }}" ]; then
+        if [ "aria2" == "${{ matrix.repo }}" ]; then
           echo "dir=aria2" >> $GITHUB_OUTPUT
-          
+
         elif [ "mayswind/AriaNg" == "${{ matrix.repo }}" ]; then
           echo "dir=ariang" >> $GITHUB_OUTPUT
+
+        elif [ "frpc" == "${{ matrix.repo }}" ]; then
+          echo "dir=frpc" >> $GITHUB_OUTPUT
+
+        elif [ "frps" == "${{ matrix.repo }}" ]; then
+          echo "dir=frps" >> $GITHUB_OUTPUT
           
         elif [ "wanglin2/mind-map" == "${{ matrix.repo }}" ]; then
           echo "dir=mind-map" >> $GITHUB_OUTPUT
@@ -62,6 +78,9 @@ jobs:
           
         elif [ "c0re100/qBittorrent-Enhanced-Edition" == "${{ matrix.repo }}" ]; then
           echo "dir=qbittorrentee" >> $GITHUB_OUTPUT
+          
+        elif [ "samba" == "${{ matrix.repo }}" ]; then
+          echo "dir=samba" >> $GITHUB_OUTPUT
           
         fi
 
