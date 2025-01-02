@@ -70,14 +70,17 @@ jobs:
       uses: actions/github-script@v7
       with:
         script: |
-          const response = await github.actions.createWorkflowDispatch({
-            owner: 97xiami,
-            repo: Dockerfiles,
+          const response = await octokit.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
+            owner: '97xami',
+            repo: 'Dockerfiles',
             workflow_id: 'AutoBuild.yml',
             ref: 'main',
             inputs: {
               repo: '${{ steps.dirname.outputs.dir }}',
-              version: '${{ steps.get_tag.outputs.tag }}'
+              ver: '${{ steps.get_tag.outputs.tag }}'
+            },
+            headers: {
+              'X-GitHub-Api-Version': '2022-11-28'
             }
-          });
+          })
           console.log(response);
