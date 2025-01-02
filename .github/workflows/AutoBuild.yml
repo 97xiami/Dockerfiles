@@ -39,7 +39,7 @@ jobs:
       uses: docker/login-action@v3
       with:
         registry: ghcr.io
-        username: ${{ github.actor }}
+        username: 97xiami
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Extract metadata (tags, labels) for Docker
@@ -48,7 +48,7 @@ jobs:
       with:
         images: |
           ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}
-          ghcr.io/${{ github.actor }}/${{ github.event.inputs.repo }}
+          ghcr.io/97xiami/${{ github.event.inputs.repo }}
         tags: |
           type=raw,value=latest
           type=raw,value=${{ github.event.inputs.ver }}
@@ -67,7 +67,7 @@ jobs:
     - name: Generate artifact attestation
       uses: actions/attest-build-provenance@v2
       with:
-        subject-name: ghcr.io/${{ github.actor }}/${{ github.event.inputs.repo }}
+        subject-name: ghcr.io/97xiami/${{ github.event.inputs.repo }}
         subject-digest: ${{ steps.push.outputs.digest }}
         push-to-registry: true
 
