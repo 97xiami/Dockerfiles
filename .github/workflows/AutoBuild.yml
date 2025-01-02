@@ -2,6 +2,7 @@ name: Auto Build
 run-name: "Auto Build ${{ inputs.repo }}:${{ inputs.ver }}"
 
 on:
+  repository_dispatch:
   workflow_dispatch:
     inputs:
       repo:
