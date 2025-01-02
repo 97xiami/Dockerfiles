@@ -19,7 +19,6 @@ on:
           - 'frpc'
           - 'frps'
           - 'kms'
-          - 'libretranslate'
           - 'mind-map'
           - 'minipaint'
           - 'qbittorrentee'
