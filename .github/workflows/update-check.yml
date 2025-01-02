@@ -72,5 +72,5 @@ jobs:
       uses: peter-evans/repository-dispatch@v3
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        event-type: AutoBuild-${{ steps.dirname.outputs.dir }}:$latest_release
-        client-payload: '{"repo": "${{ steps.dirname.outputs.dir }}", "ver": "$latest_release"}'
+        event-type: AutoBuild-${{ steps.dirname.outputs.dir }}:${{ steps.get_tag.outputs.tag }}
+        client-payload: '{"repo": "${{ steps.dirname.outputs.dir }}", "ver": "${{ steps.get_tag.outputs.tag }}"}'
