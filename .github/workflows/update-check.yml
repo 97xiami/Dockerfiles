@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        repo: [ aria2/aria2, mayswind/AriaNg, fatedier/frp, wanglin2/mind-map, viliusle/miniPaint, c0re100/qBittorrent-Enhanced-Edition ]
+        repo: [ aria2/aria2, mayswind/AriaNg, wanglin2/mind-map, viliusle/miniPaint, c0re100/qBittorrent-Enhanced-Edition ]
         
     steps:
     - name: Get Latest Release Tag
@@ -39,6 +39,7 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         event-type: AutoBuild-${{ matrix.repo }}
+        client-payload: '{"repo": "${{ matrix.repo }}", "ver": "$latest_release"}'
 
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
