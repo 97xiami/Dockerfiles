@@ -70,14 +70,9 @@ jobs:
         subject-digest: ${{ steps.push.outputs.digest }}
         push-to-registry: true
 
-    - name: Delete vaultwarden-buildcache containers
+    - name: Delete ghcr.io buildcache containers
       uses: actions/delete-package-versions@v5
       with:
         package-name: ${{ github.event.inputs.repo }}
         package-type: 'container'
         delete-only-untagged-versions: 'true'
-          
-    - name: Delete Workflow History
-      uses: Mattraks/delete-workflow-runs@v2
-      with:
-        retain_days: 7
