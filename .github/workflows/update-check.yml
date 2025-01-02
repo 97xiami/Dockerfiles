@@ -28,13 +28,26 @@ jobs:
         path: release.txt
         key: ${{ matrix.repo }}:${{ steps.get_tag.outputs.tag }}
 
+    - name: Compare Tags
+      id: compare_tags
+      run: |
+        if [ ! -f release.txt ]; then
+          touch release.txt
+        fi
+        cached_tag=$(cat release.txt || echo "")
+        if [ "$cached_tag" != "${{ steps.get_tag.outputs.tag }}" ]; then
+          echo "tags_different=true" >> $GITHUB_OUTPUT
+        else
+          echo "tags_different=false" >> $GITHUB_OUTPUT
+        fi
+
     - name: Save New Tag
-      if: steps.cache_tag.outputs.cache-hit != 'true'
+      if: steps.compare_tags.outputs.tags_different == 'true'
       run: |
         echo ${{ steps.get_tag.outputs.tag }} | tee release.txt
 
     - name: Create
-      if: steps.cache_tag.outputs.cache-hit != 'true'
+      if: steps.compare_tags.outputs.tags_different == 'true'
       id: dirname
       run: |
         if [ "aria2/aria2" == "${{ matrix.repo }}" ]; then
@@ -55,7 +68,7 @@ jobs:
         fi
 
     - name: Trigger build
-      if: steps.cacheHash.outputs.cache-hit != 'true'
+      if: steps.dirname.outputs.dir != ''
       uses: peter-evans/repository-dispatch@v3
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
