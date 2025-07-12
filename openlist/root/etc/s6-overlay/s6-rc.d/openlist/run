@@ -1,4 +1,5 @@
 #!/usr/bin/with-contenv ash
 # shellcheck shell=ash
 
+chown -R docker:docker /opt
 exec s6-notifyoncheck -d -n 300 -w 1000 -c "nc -z localhost 5244" s6-setuidgid docker /opt/openlist/openlist server --no-prefix --data /opt/openlist/data
