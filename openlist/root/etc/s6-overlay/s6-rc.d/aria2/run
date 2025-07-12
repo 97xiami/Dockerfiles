@@ -1,0 +1,4 @@
+#!/usr/bin/with-contemv ash
+# shellcheck shell=ash
+
+exec aria2c --conf-path /opt/aria2/config/aria2.conf
