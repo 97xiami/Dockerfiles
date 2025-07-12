@@ -14,6 +14,7 @@ on:
         required: true
         type: choice
         options:
+          - 'alpine-s6'
           - 'aria2'
           - 'ariang'
           - 'frpc'
