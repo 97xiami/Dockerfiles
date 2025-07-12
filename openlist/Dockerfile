@@ -1,9 +1,11 @@
 FROM xiami110/alpine-s6:latest
 
+WORKDIR /opt/openlist
+
 ARG OPENLIST_VERSION="v4.0.8"
 ARG TARGETPLATFORM
 RUN apk add --no-cache aria2 \
-    && mkdir -p /opt/aria2/downloads /opt/aria2/config /opt/openlist \
+    && mkdir -p /opt/aria2/downloads /opt/aria2/config \
     && touch /opt/aria2/aria2.session \
     && case "${TARGETPLATFORM}" in \
         "linux/amd64") \
