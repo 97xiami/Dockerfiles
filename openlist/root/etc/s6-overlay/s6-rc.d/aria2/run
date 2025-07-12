@@ -1,5 +1,4 @@
 #!/usr/bin/with-contenv ash
 # shellcheck shell=ash
 
-chmod 600 /opt/aria2/aria2.session
 exec s6-notifyoncheck -d -n 300 -w 1000 -c "nc -z localhost 6800" s6-setuidgid docker aria2c --conf-path /opt/aria2/config/aria2.conf
