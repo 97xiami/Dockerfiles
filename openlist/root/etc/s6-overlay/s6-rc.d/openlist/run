@@ -1,0 +1,4 @@
+#!/usr/bin/with-contemv ash
+# shellcheck shell=ash
+
+exec /opt/openlist server --no-prefix
