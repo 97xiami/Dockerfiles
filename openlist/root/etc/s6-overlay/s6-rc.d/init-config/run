@@ -1,0 +1,8 @@
+#!/usr/bin/with-contenv ash
+# shellcheck shell=ash
+
+mkdir -p /opt/aria2/config /opt/downloads
+touch /opt/aria2/aria2.session
+chmod 600 /opt/aria2/aria2.session
+chmod +x /opt/openlist/openlist
+chown -R docker:docker /opt
