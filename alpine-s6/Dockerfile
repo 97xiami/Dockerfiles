@@ -2,7 +2,8 @@ FROM alpine:latest
 
 ARG S6_OVERLAY_VERSION="v3.2.1.0"
 ARG TARGETPLATFORM
-RUN addgroup -S docker \
+RUN apk add --no-cache curl \
+    && addgroup -S docker \
     && adduser -S -G docker -s /bin/false docker \
     && curl -sSL https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz | tar -C / -Jxpf - \
     && curl -sSL https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-symlinks-noarch.tar.xz | tar -C / -Jxpf - \
