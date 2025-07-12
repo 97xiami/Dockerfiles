@@ -5,6 +5,9 @@ WORKDIR /opt/openlist
 ARG S6_OVERLAY_VERSION="v3.2.1.0"
 ARG OPENLIST_VERSION="v4.0.8"
 ARG TARGETPLATFORM
+COPY aria2.conf /opt/aria2/config
+COPY root /
+
 RUN apk add --no-cache aria2 curl \
     && addgroup -S docker \
     && adduser -S -G docker -s /bin/false docker \
@@ -21,10 +24,12 @@ RUN apk add --no-cache aria2 curl \
         *) \
           echo "不支持的CPU架构"; \
           exit 1;; \
-      esac
-
-COPY aria2.conf /opt/aria2/config
-COPY root /
+      esac \
+    && mkdir -p /opt/aria2/config /opt/downloads \
+    && touch /opt/aria2/aria2.session \
+    && chmod 600 /opt/aria2/aria2.session \
+    && chmod +x /opt/openlist/openlist \
+    && chown -R docker:docker /opt
 
 VOLUME /opt/openlist
 
