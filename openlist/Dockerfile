@@ -3,7 +3,7 @@ FROM alpine:latest
 WORKDIR /opt/openlist
 
 ARG S6_OVERLAY_VERSION="v3.2.1.0"
-ARG OPENLIST_VERSION="v4.0.8"
+ARG VERSION="v4.0.8"
 ARG TARGETPLATFORM
 COPY aria2.conf /opt/aria2/config/aria2.conf
 COPY root /
@@ -20,7 +20,7 @@ RUN apk add --no-cache aria2 curl \
           curl -sSL https://github.com/OpenListTeam/OpenList/releases/download/${OPENLIST_VERSION}/openlist-linux-musl-amd64.tar.gz | tar -C /opt/openlist -xvzf -;; \
         "linux/arm64") \
           curl -sSL https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-aarch64.tar.xz | tar -C / -Jxpf -; \
-          curl -sSL https://github.com/OpenListTeam/OpenList/releases/download/${OPENLIST_VERSION}/openlist-linux-musl-arm64.tar.gz | tar -C /opt/openlist -xvzf -;; \
+          curl -sSL https://github.com/OpenListTeam/OpenList/releases/download/${VERSION}/openlist-linux-musl-arm64.tar.gz | tar -C /opt/openlist -xvzf -;; \
         *) \
           echo "不支持的CPU架构"; \
           exit 1;; \
