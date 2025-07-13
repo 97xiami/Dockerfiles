@@ -17,10 +17,10 @@ RUN apk add --no-cache curl \
     && case "${TARGETPLATFORM}" in \
         "linux/amd64") \
           curl -sSL https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-x86_64.tar.xz | tar -C / -Jxpf -; \
-          curl -sSL https://github.com/c0re100/qBittorrent-Enhanced-Edition/releases/download/${VERSION}/qbittorrent-enhanced-nox_x86_64-linux-musl_static.zip | unzip - -d /opt/qBittorrentee;; \
+          curl -sSL https://github.com/c0re100/qBittorrent-Enhanced-Edition/releases/download/${VERSION}/qbittorrent-enhanced-nox_x86_64-linux-musl_static.zip | unzip -d /opt/qBittorrentee;; \
         "linux/arm64") \
           curl -sSL https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-aarch64.tar.xz | tar -C / -Jxpf -; \
-          curl -sSL https://github.com/c0re100/qBittorrent-Enhanced-Edition/releases/download/${VERSION}/qbittorrent-enhanced-nox_aarch64-linux-musl_static.zip | unzip - -d /opt/qBittorrentee;; \
+          curl -sSL https://github.com/c0re100/qBittorrent-Enhanced-Edition/releases/download/${VERSION}/qbittorrent-enhanced-nox_aarch64-linux-musl_static.zip | unzip -d /opt/qBittorrentee;; \
         *) \
           echo "不支持的CPU架构"; \
           exit 1;; \
