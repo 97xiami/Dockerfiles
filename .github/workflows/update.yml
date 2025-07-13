@@ -128,7 +128,7 @@ jobs:
         if [ -n "${{ steps.setup.outputs.local_ver }}" ]; then
           commit_msg+="\n- App: ${{ steps.setup.outputs.local_ver }} → ${{ steps.setup.outputs.latest_release }}"
         fi
-        git commit -m "$commit_msg"
+        git commit -m "$(printf $commit_msg)"
         git push
         echo "版本更新已提交"
         echo "::endgroup::"
