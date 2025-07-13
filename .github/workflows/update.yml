@@ -1,0 +1,150 @@
+name: Update Checker
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 23 * * *'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        repo: [ openlist ]
+        
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: 设置环境并获取版本信息
+      id: setup
+      run: |
+        echo "::group::获取s6-overlay最新版本"
+        latest_s6=$(curl -fsSL https://api.github.com/repos/just-containers/s6-overlay/releases/latest | jq -r .tag_name || echo "")
+        [ -z "$latest_s6" ] && echo "警告：获取s6-overlay最新版本失败"
+        echo "s6-overlay最新版本: $latest_s6"
+        echo "latest_s6=$latest_s6" >> $GITHUB_OUTPUT
+        echo "::endgroup::"
+        
+        echo "::group::获取${{ matrix.repo }}最新版本"
+        case "${{ matrix.repo }}" in
+          aria2|samba)
+            latest_release=$(curl -fsSL https://pkgs.alpinelinux.org/packages?name=${{ matrix.repo }} | sed -n 's/.*<strong[^>]*>\(.*\)<\/strong>.*/\1/p' || echo "")
+            echo "从Alpine Linux包仓库获取版本"
+            ;;
+          frpc|frps)
+            latest_release=$(curl -fsSL https://api.github.com/repos/fatedier/frp/releases/latest | jq -r .tag_name || echo "")
+            echo "从GitHub Releases获取版本"
+            ;;
+          *)
+            echo "错误：不支持的repo类型: ${{ matrix.repo }}"
+            exit 1
+            ;;
+        esac
+        [ -z "$latest_release" ] && echo "警告：获取${{ matrix.repo }}最新版本失败"
+        echo "${{ matrix.repo }}最新版本: $latest_release"
+        echo "latest_release=$latest_release" >> $GITHUB_OUTPUT
+        echo "::endgroup::"
+        
+        echo "::group::获取本地版本信息"
+        local_s6=$(grep -oP 'ARG S6_OVERLAY_VERSION="\K[^"]+' ${{ matrix.repo }}/Dockerfile || echo "")
+        echo "本地s6-overlay版本: $local_s6"
+        echo "local_s6=$local_s6" >> $GITHUB_OUTPUT
+        
+        if [ "${{ matrix.repo }}" != "aria2" ] && [ "${{ matrix.repo }}" != "samba" ]; then
+          local_ver=$(grep -oP 'ARG VERSION="\K[^"]+' ${{ matrix.repo }}/Dockerfile || echo "")
+          echo "本地${{ matrix.repo }}版本: $local_ver"
+          echo "local_ver=$local_ver" >> $GITHUB_OUTPUT
+        fi
+        echo "::endgroup::"
+    
+    - name: 版本比较
+      id: compare
+      run: |
+        echo "::group::版本比较结果"
+        need_update=false
+        
+        # S6版本比较
+        if [ -z "${{ steps.setup.outputs.latest_s6 }}" ] || [ -z "${{ steps.setup.outputs.local_s6 }}" ]; then
+          echo "错误：获取S6版本信息失败，跳过更新"
+          exit 1
+        elif [ "${{ steps.setup.outputs.local_s6 }}" != "${{ steps.setup.outputs.latest_s6 }}" ]; then
+          echo "发现S6版本差异：本地[${{ steps.setup.outputs.local_s6 }}] ≠ 远程[${{ steps.setup.outputs.latest_s6 }}]"
+          need_update=true
+        else
+          echo "S6版本一致：${{ steps.setup.outputs.local_s6 }}"
+        fi
+        
+        # 应用版本比较
+        if [ -n "${{ steps.setup.outputs.local_ver}}" ] && [ -n "${{ steps.setup.outputs.latest_release }}" ]; then
+          if [ "${{ steps.setup.outputs.local_ver }}" != "${{ steps.setup.outputs.latest_release }}" ]; then
+            echo "发现${{ matrix.repo }}版本差异：本地[${{ steps.setup.outputs.local_ver }}] ≠ 远程[${{ steps.setup.outputs.latest_release }}]"
+            need_update=true
+          else
+            echo "${{ matrix.repo }}版本一致：${{ steps.setup.outputs.local_ver }}"
+          fi
+        fi
+        
+        echo "是否需要更新: $need_update"
+        echo "need_update=$need_update" >> $GITHUB_OUTPUT
+        echo "::endgroup::"
+
+    - name: 触发构建工作流
+      if: steps.compare.outputs.need_update == 'true'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          console.log('准备触发自动构建工作流...');
+          try {
+            const response = await github.rest.actions.createWorkflowDispatch({
+              owner: '97xiami',
+              repo: 'Dockerfiles',
+              workflow_id: 'AutoBuild.yml',
+              ref: 'main',
+              inputs: {
+                repo: '${{ matrix.repo }}',
+                ver: '${{ steps.setup.outputs.latest_release }}'
+              }
+            });
+            console.log('工作流触发成功:', response.status);
+          } catch (error) {
+            core.setFailed(`工作流触发失败: ${error}`);
+            console.error('错误详情:', error);
+          }
+
+    - name: 更新版本并提交
+      if: steps.compare.outputs.need_update == 'true'
+      run: |
+        echo "::group::更新Dockerfile版本"
+        # 验证版本信息
+        if [ -z "${{ steps.setup.outputs.latest_s6 }}" ]; then
+          echo "错误：S6最新版本为空，终止更新"
+          exit 1
+        fi
+        
+        # 更新S6版本
+        echo "更新S6版本: ${{ steps.setup.outputs.local_s6 }} → ${{ steps.setup.outputs.latest_s6 }}"
+        sed -i "s/ARG S6_OVERLAY_VERSION=\".*\"/ARG S6_OVERLAY_VERSION=\"${{ steps.setup.outputs.latest_s6 }}\"/" ${{ matrix.repo }}/Dockerfile
+        
+        # 更新应用版本(非aria2/samba)
+        if [ "${{ matrix.repo }}" != "aria2" ] && [ "${{ matrix.repo }}" != "samba" ] && [ -n "${{ steps.setup.outputs.latest_release }}" ]; then
+          echo "更新${{ matrix.repo }}版本: ${{ steps.setup.outputs.local_ver }} → ${{ steps.setup.outputs.latest_release }}"
+          sed -i "s/ARG VERSION=\".*\"/ARG VERSION=\"${{ steps.setup.outputs.latest_release }}\"/" ${{ matrix.repo }}/Dockerfile
+        fi
+        
+        # 提交变更
+        echo "::group::提交版本更新"
+        git pull
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        git add ${{ matrix.repo }}/Dockerfile
+        git commit -m "chore: update ${{ matrix.repo }} versions" \
+          -m "S6: ${{ steps.setup.outputs.local_s6 }} → ${{ steps.setup.outputs.latest_s6 }}" \
+          $( [ -n "${{ steps.setup.outputs.local_ver }}" ] && echo "-m \"App: ${{ steps.setup.outputs.local_ver }} → ${{ steps.setup.outputs.latest_release }}\"" )
+        git push
+        echo "版本更新已提交"
+        echo "::endgroup::"
+        echo "::endgroup::"
