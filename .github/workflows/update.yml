@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        repo: [ openlist ]
+        repo: [ openlist, qbittorrentee ]
         
     steps:
     - name: Checkout code
