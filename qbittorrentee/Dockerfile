@@ -28,6 +28,7 @@ RUN apk add --no-cache curl \
     && apk del curl \
     && rm -rf /var/cache/apk/* \
     && mkdir -p /opt/downloads \
+    && tree /opt \
     && chmod +x /opt/qBittorrentee/qbittorrent-nox \
     && chown -R docker:docker /opt
 
