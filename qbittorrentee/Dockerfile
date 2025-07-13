@@ -3,9 +3,9 @@ FROM alpine:latest
 WORKDIR /opt/qBittorrentee
 
 ARG S6_OVERLAY_VERSION="v3.2.1.0"
-ARG VERSION="rel"
+ARG VERSION="release-5.1.2.10"
 ARG TARGETPLATFORM
-COPY qBittorrent.conf /opt/qBittorrentee/qBittorrent.conf
+COPY qBittorrent.conf /opt/qBittorrentee/qBittorrent/config/qBittorrent.conf
 COPY root /
 
 RUN apk add --no-cache curl \
@@ -17,16 +17,16 @@ RUN apk add --no-cache curl \
     && case "${TARGETPLATFORM}" in \
         "linux/amd64") \
           curl -sSL https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-x86_64.tar.xz | tar -C / -Jxpf -; \
-          curl -sSL https://github.com/c0re100/qBittorrent-Enhanced-Edition/releases/download/${VERSION}/qbittorrent-enhanced-nox_x86_64-linux-musl_static.zip | unzip - -d /opt/qBittorrentee;; \
+          curl -sSL https://github.com/c0re100/qBittorrent-Enhanced-Edition/releases/download/${VERSION}/qbittorrent-enhanced-nox_x86_64-linux-musl_static.zip -o /tmp/1.zip && unzip /tmp/1.zip -d /opt/qBittorrentee;; \
         "linux/arm64") \
           curl -sSL https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-aarch64.tar.xz | tar -C / -Jxpf -; \
-          curl -sSL https://github.com/c0re100/qBittorrent-Enhanced-Edition/releases/download/${VERSION}/qbittorrent-enhanced-nox_aarch64-linux-musl_static.zip | unzip - -d /opt/qBittorrentee;; \
+          curl -sSL https://github.com/c0re100/qBittorrent-Enhanced-Edition/releases/download/${VERSION}/qbittorrent-enhanced-nox_aarch64-linux-musl_static.zip -o /tmp/1.zip && unzip /tmp/1.zip -d /opt/qBittorrentee;; \
         *) \
           echo "不支持的CPU架构"; \
           exit 1;; \
       esac \
     && apk del curl \
-    && rm -rf /var/cache/apk/* \
+    && rm -rf /var/cache/apk/* /tmp/1.zip \
     && mkdir -p /opt/downloads \
     && tree /opt \
     && chmod +x /opt/qBittorrentee/qbittorrent-nox \
