@@ -123,9 +123,12 @@ jobs:
         git config --global user.name "GitHub Actions"
         git config --global user.email "actions@github.com"
         git add ${{ matrix.repo }}/Dockerfile
-        git commit -m "chore: update ${{ matrix.repo }} versions" \
-          -m "S6: ${{ steps.setup.outputs.local_s6 }} → ${{ steps.setup.outputs.latest_s6 }}" \
-          $( [ -n "${{ steps.setup.outputs.local_ver }}" ] && echo "-m \"App: ${{ steps.setup.outputs.local_ver }} → ${{ steps.setup.outputs.latest_release }}\"" )
+        commit_msg="chore(${{ matrix.repo }}): update versions\n"
+        commit_msg+="- S6: ${{ steps.setup.outputs.local_s6 }} → ${{ steps.setup.outputs.latest_s6 }}"
+        if [ -n "${{ steps.setup.outputs.local_ver }}" ]; then
+          commit_msg+="\n- App: ${{ steps.setup.outputs.local_ver }} → ${{ steps.setup.outputs.latest_release }}"
+        fi
+        git commit -m "$commit_msg"
         git push
         echo "版本更新已提交"
         echo "::endgroup::"
