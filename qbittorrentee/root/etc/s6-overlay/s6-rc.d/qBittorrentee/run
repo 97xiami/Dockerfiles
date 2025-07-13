@@ -1,4 +1,4 @@
 #!/usr/bin/with-contenv ash
 # shellcheck shell=ash
 
-exec s6-notifyoncheck -d -n 300 -w 1000 -c "nc -z localhost 8080" s6-setuidgid docker cd /opt/qBittorrentee ./qbittorrent-nox --profile=/opt/qBittorrentee
+exec s6-notifyoncheck -d -n 300 -w 1000 -c "nc -z localhost 8080" s6-setuidgid docker cd /opt/qBittorrentee ./qbittorrent-nox --webui-port=8080 --profile=/opt/qBittorrentee
