@@ -39,6 +39,10 @@ jobs:
             latest_release=$(curl -fsSL https://api.github.com/repos/fatedier/frp/releases/latest | jq -r .tag_name || echo "")
             echo "从GitHub Releases获取版本"
             ;;
+          openlist)
+            latest_release=$(curl -fsSL https://api.github.com/repos/OpenListTeam/OpenList/releases/latest | jq -r .tag_name || echo "")
+            echo "从GitHub Releases获取版本"
+            ;;
           *)
             echo "错误：不支持的repo类型: ${{ matrix.repo }}"
             exit 1
