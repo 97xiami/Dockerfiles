@@ -8,6 +8,7 @@ ARG TARGETPLATFORM
 COPY aria2.conf /opt/aria2/config/aria2.conf
 COPY root /
 
+SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 RUN apk add --no-cache aria2 curl \
     && addgroup -S docker \
     && adduser -S -G docker -s /bin/false docker \
