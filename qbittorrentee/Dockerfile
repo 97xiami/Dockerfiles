@@ -8,6 +8,7 @@ ARG TARGETPLATFORM
 COPY qBittorrent.conf /opt/qBittorrentee/qBittorrent/config/qBittorrent.conf
 COPY root /
 
+SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 RUN apk add --no-cache curl \
     && addgroup -S docker \
     && adduser -S -G docker -s /bin/false docker \
