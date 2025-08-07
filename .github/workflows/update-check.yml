@@ -17,7 +17,7 @@ jobs:
     # 定义策略
     strategy:
       # 一旦某个任务失败，立即取消其他并行任务（如果有的话）
-      fail-fast: true
+      fail-fast: false
       # 限制同时运行的任务数量为1，即逐个运行
       max-parallel: 1
       # 定义矩阵参数，repo 将依次取值为 openlist 和 qbittorrentee
