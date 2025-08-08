@@ -123,7 +123,7 @@ jobs:
           echo "need_update=$need_update" >> $GITHUB_OUTPUT
           echo "::endgroup::"
 
-      # 步骤4: 更新版本并提交（仅在需要更新时执行）
+      # 更新版本并提交
       - name: 更新版本并提交
         if: steps.compare.outputs.need_update == 'true'
         run: |
@@ -151,16 +151,21 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           git add ${{ matrix.repo }}/Dockerfile
-          # 构建 commit message
-          commit_msg=$'chore: update ${{ matrix.repo }} versions\n'
+
+          # 构建更直观的 commit message
+          commit_subject="chore(${{ matrix.repo }}): update versions"
+          commit_body=""
+
           if [ "${{ steps.setup.outputs.local_s6 }}" != "${{ steps.setup.outputs.latest_s6 }}" ]; then
-            commit_msg+=$'S6: ${{ steps.setup.outputs.local_s6 }} → ${{ steps.setup.outputs.latest_s6 }}\n'
-          fi
-          if [ -n "${{ steps.setup.outputs.local_ver}}" ] && [ "${{ steps.setup.outputs.local_ver }}" != "${{ steps.setup.outputs.latest_release }}" ]; then
-            commit_msg+=$'App: ${{ steps.setup.outputs.local_ver }} → ${{ steps.setup.outputs.latest_release }}\n'
+            commit_body+="* s6-overlay: ${{ steps.setup.outputs.local_s6 }} → ${{ steps.setup.outputs.latest_s6 }}\n"
           fi
 
-          git commit -m "$commit_msg"
+          if [ -n "${{ steps.setup.outputs.local_ver}}" ] && [ "${{ steps.setup.outputs.local_ver }}" != "${{ steps.setup.outputs.latest_release }}" ]; then
+            commit_body+="* ${{ matrix.repo }}: ${{ steps.setup.outputs.local_ver }} → ${{ steps.setup.outputs.latest_release }}"
+          fi
+
+          # 使用格式化的提交消息
+          git commit -m "$commit_subject" -m "$commit_body"
           git push
           echo "版本更新已提交"
           echo "::endgroup::"
