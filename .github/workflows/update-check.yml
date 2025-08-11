@@ -28,7 +28,7 @@ jobs:
     steps:
       # 步骤1: 检出代码
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           # 获取完整历史记录
           fetch-depth: 0
