@@ -2,7 +2,7 @@ FROM alpine:latest
 
 WORKDIR /opt/openlist
 
-ARG S6_OVERLAY_VERSION="v3.2.1.0"
+ARG S6_OVERLAY_VERSION="v3.2.2.0"
 ARG VERSION="v4.1.9"
 ARG TARGETPLATFORM
 COPY aria2.conf /opt/aria2/config/aria2.conf
