@@ -21,6 +21,7 @@ on:
           - 'frps'
           - 'kms'
           - 'mind-map'
+          - 'mindustry'
           - 'minipaint'
           - 'openlist'
           - 'qbittorrentee'
