@@ -1,4 +1,4 @@
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:25
 
 RUN apt-get update && apt-get install -y screen && rm -rf /var/lib/apt/lists/*
 
@@ -8,4 +8,4 @@ ADD https://github.com/Anuken/Mindustry/releases/download/v155.4/server-release.
 
 EXPOSE 6567 6567/UDP
 
-CMD ["screen", "-dmS", "server", "java", "-jar", "server.jar"]
+CMD ["screen", "-dmS", "server", "java", "-jar", "-XX:+HeapDumpOnOutOfMemoryError", "server-release.jar"]
