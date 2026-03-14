@@ -70,8 +70,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ${{ secrets.USER_NAME }}/${{ github.event.inputs.name }}:v146
-            ghcr.io/${{ github.actor }}/${{ github.event.inputs.name }}:v146
+            ${{ secrets.USER_NAME }}/${{ github.event.inputs.name }}:latest
+            ghcr.io/${{ github.actor }}/${{ github.event.inputs.name }}:latest
 
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v4
