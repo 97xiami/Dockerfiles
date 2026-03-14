@@ -2,7 +2,6 @@ FROM alpine:latest
 RUN set -eu && \
     apk add --no-cache samba && \
     adduser -D -s /sbin/nologin share && \
-    echo "share:password" | chpasswd && \
     (echo "password"; echo "password") | smbpasswd -s -a share && \
     mkdir /share | chmod 0770 /share | chown share:share /share && \
     rm -rf /tmp/* /var/cache/apk/*
