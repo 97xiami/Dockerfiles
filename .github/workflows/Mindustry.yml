@@ -47,7 +47,7 @@ jobs:
             echo "本地版本号: $local_tag"
           fi
 
-          if [ -z "$latest_tag" ] && [ -z "$local_tag" ] && [ $latest_tag != $local_tag ]; then
+          if [ -n "$latest_tag" ] && [ -n "$local_tag" ] && [ $latest_tag != $local_tag ]; then
             echo "latest_tag=$latest_tag" >> $GITHUB_OUTPUT
             echo "local_tag=$local_tag" >> $GITHUB_OUTPUT
             echo "有新版本：本地[$local_tag] --- 远程[$latest_tag]"
