@@ -174,7 +174,7 @@ jobs:
       # 步骤5: 触发构建工作流（仅在需要更新时执行）
       - name: 触发构建工作流
         if: steps.compare.outputs.need_update == 'true'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             console.log('准备触发自动构建工作流...');
