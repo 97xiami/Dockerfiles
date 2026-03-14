@@ -74,7 +74,7 @@ jobs:
 
           # 构建更直观的 commit message
           commit_subject="chore(${{ ENV.REPO_NAME }}): update version"
-          commit_body="${{ ENV.REPO_NAME }}: ${{ steps.compare.outputs.local_tag }} → ${{ steps.compare.outputs.latest_tag }}\n"
+          commit_body="${{ ENV.REPO_NAME }}: ${{ steps.compare.outputs.local_tag }} → ${{ steps.compare.outputs.latest_tag }}"
 
           # 使用格式化的提交消息
           git commit -m "$commit_subject" -m "$commit_body"
