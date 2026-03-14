@@ -50,7 +50,7 @@ jobs:
           if [ $latest_tag != $local_tag ]; then
             echo "latest_tag=$latest_tag" >> $GITHUB_OUTPUT
             echo "有新版本：本地[$local_tag] ≠ 远程[$latest_tag]"
-            need_update=true
+            echo "need_update=true" >> $GITHUB_OUTPUT
           else
             echo "没有新版本"
           fi
