@@ -2,10 +2,10 @@ FROM alpine:latest
 
 RUN apk update \
     && apk add --no-cache samba samba-common-tools \
-    && mkdir /home/share/share \
     && adduser -D -s /sbin/nologin share \
     && echo "share:password" | chpasswd \
-    && (echo "password"; echo "password") | smbpasswd -s -a share
+    && (echo "password"; echo "password") | smbpasswd -s -a share \
+    && mkdir /home/share/share
 
 #复制smb.conf配置文件
 COPY smb.conf /etc/samba/smb.conf
