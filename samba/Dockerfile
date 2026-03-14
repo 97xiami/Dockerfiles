@@ -1,29 +1,17 @@
 FROM alpine:latest
 RUN set -eu && \
-    apk --no-cache add \
-    tini \
-    bash \
-    samba \
-    tzdata \
-    shadow && \
-    addgroup -S smb && \
-    rm -f /etc/samba/smb.conf && \
+    apk add --no-cache samba && \
+    adduser -D -s /sbin/nologin share && \
+    echo "share:password" | chpasswd && \
+    (echo "password"; echo "password") | smbpasswd -s -a share && \
+    mkdir /share | chmod 0770 /share | chown share:share && \
     rm -rf /tmp/* /var/cache/apk/*
 
-COPY --chmod=755 samba.sh /usr/bin/samba.sh
-COPY --chmod=664 smb.conf /etc/samba/smb.default
+COPY --chmod=664 smb.conf /etc/samba/smb.conf
 
-VOLUME /storage
+VOLUME /share
 EXPOSE 139 445
 
-ENV NAME="Share"
-ENV USER="share"
-ENV PASS="password"
+HEALTHCHECK --interval=60s --timeout=15s CMD smbclient --configfile=/etc/samba/smb.conf -L \\localhost -U % -m SMB3
 
-ENV UID=1000
-ENV GID=1000
-ENV RW=true
-
-HEALTHCHECK --interval=60s --timeout=15s CMD smbclient --configfile=/etc/samba.conf -L \\localhost -U % -m SMB3
-
-ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/samba.sh"]
+ENTRYPOINT ["smbd", "-F", "--debug-stdout", "--no-process-group"]
