@@ -95,7 +95,7 @@ jobs:
                 workflow_id: 'AutoBuild.yml',
                 ref: 'main',
                 inputs: {
-                  repo: '$REPO_NAME',
+                  repo: $REPO_DIR,
                   ver: '${{ steps.compare.outputs.latest_tag }}'
                 }
               });
