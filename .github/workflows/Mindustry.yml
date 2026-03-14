@@ -1,5 +1,5 @@
 # 工作流名称
-name: Mindustry Auto Update and Build
+name: Check Mindustry
 
 # 定义触发条件
 on:
