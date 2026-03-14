@@ -10,7 +10,7 @@ RUN set -eu && \
 COPY --chmod=664 smb.conf /etc/samba/smb.conf
 
 VOLUME /share
-EXPOSE 139 445
+EXPOSE 445
 
 HEALTHCHECK --interval=60s --timeout=15s CMD smbclient --configfile=/etc/samba/smb.conf -L \\localhost -U % -m SMB3
 
