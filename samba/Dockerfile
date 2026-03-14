@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.23
 RUN set -eu && \
     apk add --no-cache samba && \
     adduser -D -s /sbin/nologin share && \

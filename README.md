@@ -10,8 +10,6 @@ kms: https://github.com/Wind4/vlmcsd
 
 mind-map: https://github.com/wanglin2/mind-map
 
-minipaint: https://github.com/viliusle/miniPaint
-
 openlist: https://github.com/OpenListTeam/Openlist
 
 qBittorrentee: https://github.com/c0re100/qBittorrent-Enhanced-Edition
