@@ -12,6 +12,6 @@ COPY --chmod=664 smb.conf /etc/samba/smb.conf
 VOLUME /share
 EXPOSE 445
 
-HEALTHCHECK --interval=60s --timeout=15s CMD smbclient --configfile=/etc/samba/smb.conf -L \\localhost -U % -m SMB3
+HEALTHCHECK --interval=60s --timeout=10s CMD smbclient --configfile=/etc/samba/smb.conf -L localhost -U % -m SMB3 -t 5 -c "exit" > /dev/null 2>&1
 
 ENTRYPOINT ["smbd", "-F", "--debug-stdout", "--no-process-group"]
