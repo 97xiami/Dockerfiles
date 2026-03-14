@@ -26,10 +26,10 @@ jobs:
         id: compare
         run: |
           echo "获取最新版本号"
-          latest_tag=$(curl -sf "https://api.github.com/repos/$REPO_NAME/releases?per_page=1" | jq -r '.[0].tag_name? // empty')
+          latest_tag=$(curl -sf "https://api.github.com/repos/${{ ENV.REPO_NAME }}/releases?per_page=1" | jq -r '.[0].tag_name? // empty')
           # 另一种获取方法
           if [ -z "$latest_tag" ]; then
-            latest_tag=$(curl -s "https://api.github.com/repos/$REPO_NAME/releases?per_page=1" | jq  -r '[.. | .tag_name? | select(. !=null)] | .[0]  // empty')
+            latest_tag=$(curl -s "https://api.github.com/repos/${{ ENV.REPO_NAME }}/releases?per_page=1" | jq  -r '[.. | .tag_name? | select(. !=null)] | .[0]  // empty')
           fi
 
           if [ -z "$latest_tag" ]; then
@@ -39,7 +39,7 @@ jobs:
           fi
 
           echo "获取本地版本号"
-          local_tag=$(grep -oP 'ARG VERSION="\K[^"]+' $REPO_DIR/Dockerfile || echo "")
+          local_tag=$(grep -oP 'ARG VERSION="\K[^"]+' ${{ ENV.REPO_DIR }}/Dockerfile || echo "")
 
           if [ -z "$local_tag" ]; then
             echo "警告：获取本地版本号失败！"
@@ -62,19 +62,19 @@ jobs:
           git pull
           if [ -n "${{ steps.compare.outputs.latest_tag }}" ]; then
             echo "更新版本: ${{ steps.compare.outputs.local_tag }} → ${{ steps.compare.outputs.latest_tag }}"
-            sed -i "s/ARG VERSION=\".*\"/ARG VERSION=\"${{ steps.compare.outputs.latest_tag }}\"/" $REPO_DIR/Dockerfile
+            sed -i "s/ARG VERSION=\".*\"/ARG VERSION=\"${{ steps.compare.outputs.latest_tag }}\"/" ${{ ENV.REPO_DIR }}/Dockerfile
           fi
 
           # 提交变更
           echo "::group::提交版本更新"
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add $REPO_DIR/Dockerfile
+          git add ${{ ENV.REPO_DIR }}/Dockerfile
 
           # 构建更直观的 commit message
-          commit_subject="chore($REPO_NAME): update version"
+          commit_subject="chore(${{ ENV.REPO_NAME }}): update version"
           commit_body=""
-          commit_body+="$REPO_NAME: ${{ steps.compare.outputs.local_tag }} → ${{ steps.compare.outputs.latest_tag }}\n"
+          commit_body+="${{ ENV.REPO_NAME }}: ${{ steps.compare.outputs.local_tag }} → ${{ steps.compare.outputs.latest_tag }}\n"
 
           # 使用格式化的提交消息
           git commit -m "$commit_subject" -m "$commit_body"
@@ -95,7 +95,7 @@ jobs:
                 workflow_id: 'AutoBuild.yml',
                 ref: 'main',
                 inputs: {
-                  repo: $REPO_DIR,
+                  repo: '${{ ENV.REPO_DIR }}',
                   ver: '${{ steps.compare.outputs.latest_tag }}'
                 }
               });
