@@ -1,0 +1,95 @@
+# 工作流名称
+name: Mindustry Auto Update and Build
+
+# 定义触发条件
+on:
+  # 允许手动触发工作流
+  workflow_dispatch:
+  # 定时执行，每天 23:00 UTC 触发
+  schedule:
+    - cron: "0 23 * * *"
+
+env:
+  REPO_NAME: Anuken/Mindustry
+  REPO_DIR: mindustry
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: 获取版本号并比较
+        id: compare
+        run: |
+          echo "获取最新版本号"
+          latest_tag=$(curl -sf "https://api.github.com/repos/$REPO_NAME/releases?per_page=1" | jq -r '.[0].tag_name? // empty')
+          # 另一种获取方法
+          [ -z "$latest_tag" ] && latest_tag=$(curl -s "https://api.github.com/repos/$REPO_NAME/releases?per_page=1" | jq  -r '[.. | .tag_name? | select(. !=null)] | .[0]  // empty') || echo "警告：获取最新版本号失败！"
+          echo "最新版本号: $latest_tag"
+
+          echo "获取本地版本号"
+          local_ver=$(grep -oP 'ARG VERSION="\K[^"]+' $REPO_DIR/Dockerfile || echo "")
+          [ -z "$local_tag" ] && echo "警告：获取本地版本号失败！"
+          echo "本地版本号: $local_tag"
+
+          if [ $latest_tag != $local_tag ]; then
+            echo "latest_tag=$latest_tag" >> $GITHUB_OUTPUT
+            echo "有新版本：本地[$local_tag] ≠ 远程[$latest_tag]"
+            need_update=true
+          else
+            echo "没有新版本"
+          fi
+
+      - name: 更新版本并提交
+        if: steps.compare.outputs.need_update == 'true'
+        run: |
+          # 同步远程仓库
+          git pull
+          if [ -n "${{ steps.compare.outputs.latest_tag }}" ]; then
+            echo "更新版本: ${{ steps.compare.outputs.local_tag }} → ${{ steps.compare.outputs.latest_tag }}"
+            sed -i "s/ARG VERSION=\".*\"/ARG VERSION=\"${{ steps.compare.outputs.latest_tag }}\"/" $REPO_DIR/Dockerfile
+          fi
+
+          # 提交变更
+          echo "::group::提交版本更新"
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add $REPO_DIR/Dockerfile
+
+          # 构建更直观的 commit message
+          commit_subject="chore($REPO_NAME): update version"
+          commit_body=""
+          commit_body+="$REPO_NAME: ${{ steps.compare.outputs.local_tag }} → ${{ steps.compare.outputs.latest_tag }}\n"
+
+          # 使用格式化的提交消息
+          git commit -m "$commit_subject" -m "$commit_body"
+          git push
+          echo "版本更新已提交"
+
+      - name: 触发构建工作流
+        if: steps.compare.outputs.need_update == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            console.log('准备触发自动构建工作流...');
+            try {
+              // 调用 GitHub API 触发 AutoBuild.yml 工作流
+              const response = await github.rest.actions.createWorkflowDispatch({
+                owner: '97xiami',
+                repo: 'Dockerfiles',
+                workflow_id: 'AutoBuild.yml',
+                ref: 'main',
+                inputs: {
+                  repo: '$REPO_NAME',
+                  ver: '${{ steps.compare.outputs.latest_tag }}'
+                }
+              });
+              console.log('工作流触发成功:', response.status);
+            } catch (error) {
+              core.setFailed(`工作流触发失败: ${error}`);
+              console.error('错误详情:', error);
+            }
