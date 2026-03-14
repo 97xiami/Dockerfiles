@@ -3,7 +3,7 @@ FROM alpine:latest
 RUN apk update \
     && apk add --no-cache samba samba-common-tools \
     && mkdir /home/share/share \
-    && adduser -D -H -s /sbin/nologin share \
+    && adduser -D -s /sbin/nologin share \
     && echo "share:password" | chpasswd \
     && (echo "password"; echo "password") | smbpasswd -s -a share
 
