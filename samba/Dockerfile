@@ -4,7 +4,7 @@ RUN set -eu && \
     adduser -D -s /sbin/nologin share && \
     echo "share:password" | chpasswd && \
     (echo "password"; echo "password") | smbpasswd -s -a share && \
-    mkdir /share | chmod 0770 /share | chown share:share && \
+    mkdir /share | chmod 0770 /share | chown share:share /share && \
     rm -rf /tmp/* /var/cache/apk/*
 
 COPY --chmod=664 smb.conf /etc/samba/smb.conf
