@@ -28,13 +28,24 @@ jobs:
           echo "获取最新版本号"
           latest_tag=$(curl -sf "https://api.github.com/repos/$REPO_NAME/releases?per_page=1" | jq -r '.[0].tag_name? // empty')
           # 另一种获取方法
-          [ -z "$latest_tag" ] && latest_tag=$(curl -s "https://api.github.com/repos/$REPO_NAME/releases?per_page=1" | jq  -r '[.. | .tag_name? | select(. !=null)] | .[0]  // empty') || echo "警告：获取最新版本号失败！"
-          echo "最新版本号: $latest_tag"
+          if [ -z "$latest_tag" ]; then
+            latest_tag=$(curl -s "https://api.github.com/repos/$REPO_NAME/releases?per_page=1" | jq  -r '[.. | .tag_name? | select(. !=null)] | .[0]  // empty')
+          fi
+
+          if [ -z "$latest_tag" ]; then
+             echo "警告：获取最新版本号失败！"
+          else
+            echo "最新版本号: $latest_tag"
+          fi
 
           echo "获取本地版本号"
-          local_ver=$(grep -oP 'ARG VERSION="\K[^"]+' $REPO_DIR/Dockerfile || echo "")
-          [ -z "$local_tag" ] && echo "警告：获取本地版本号失败！"
-          echo "本地版本号: $local_tag"
+          local_tag=$(grep -oP 'ARG VERSION="\K[^"]+' $REPO_DIR/Dockerfile || echo "")
+
+          if [ -z "$local_tag" ]; then
+            echo "警告：获取本地版本号失败！"
+          else
+            echo "本地版本号: $local_tag"
+          fi
 
           if [ $latest_tag != $local_tag ]; then
             echo "latest_tag=$latest_tag" >> $GITHUB_OUTPUT
