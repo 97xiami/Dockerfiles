@@ -22,13 +22,13 @@ jobs:
       matrix:
         include:
           - repo_dir: mindustry
-            repo_name: Anuken/Mindustry
+            repo_name: Anuken/Mindustry/releases
 
           - repo_dir: openlist
-            repo_name: OpenListTeam/OpenList
+            repo_name: OpenListTeam/OpenList/releases/latest
 
           - repo_dir: qbittorrentee
-            repo_name: c0re100/qBittorrent-Enhanced-Edition
+            repo_name: c0re100/qBittorrent-Enhanced-Edition/releases/latest
 
     steps:
       - name: Checkout
@@ -40,34 +40,34 @@ jobs:
         id: compare
         run: |
           # 获取最新版本号
-          latest_tag=$(curl -sf "https://api.github.com/repos/${{ matrix.repo_name }}/releases?per_page=1" | jq -r '.[0].tag_name? // empty')
+          latest_tag=$(curl -sf "https://api.github.com/repos/${{ matrix.repo_name }}?per_page=1" | jq -r '.[0].tag_name? // empty')
           # 备份获取方法
           if [ -z "$latest_tag" ]; then
-            latest_tag=$(curl -s "https://api.github.com/repos/${{ matrix.repo_name }}/releases?per_page=1" | jq  -r '[.. | .tag_name? | select(. !=null)] | .[0] // empty')
+            latest_tag=$(curl -s "https://api.github.com/repos/${{ matrix.repo_name }}?per_page=1" | jq  -r '[.. | .tag_name? | select(. !=null)] | .[0] // empty')
           fi
 
           if [ -z "$latest_tag" ]; then
-             echo "获取${{ matrix.repo_name }}最新版本号失败！"
+             echo "获取${{ matrix.repo_dir }}最新版本号失败！"
           else
-            echo "${{ matrix.repo_name }}最新版本号: $latest_tag"
+            echo "${{ matrix.repo_dir }}最新版本号: $latest_tag"
           fi
 
           # 获取本地版本号
           local_tag=$(grep -oP 'ARG VERSION="\K[^"]+' ${{ matrix.repo_dir }}/Dockerfile || echo "")
 
           if [ -z "$local_tag" ]; then
-            echo "获取${{ matrix.repo_name }}本地版本号失败！"
+            echo "获取${{ matrix.repo_dir }}本地版本号失败！"
           else
-            echo "${{ matrix.repo_name }}本地版本号: $local_tag"
+            echo "${{ matrix.repo_dir }}本地版本号: $local_tag"
           fi
 
           if [ -n "$latest_tag" ] && [ -n "$local_tag" ] && [ $latest_tag != $local_tag ]; then
             echo "latest_tag=$latest_tag" >> $GITHUB_OUTPUT
             echo "local_tag=$local_tag" >> $GITHUB_OUTPUT
-            echo "${{ matrix.repo_name }}有新版本：本地[$local_tag] --- 远程[$latest_tag]"
+            echo "${{ matrix.repo_dir }}有新版本：本地[$local_tag] --- 远程[$latest_tag]"
             echo "need_update=true" >> $GITHUB_OUTPUT
           else
-            echo "${{ matrix.repo_name }}没有新版本"
+            echo "${{ matrix.repo_dir }}没有新版本"
           fi
 
       - name: 更新版本并提交
@@ -76,7 +76,7 @@ jobs:
           # 同步远程仓库
           git pull
           if [ -n "${{ steps.compare.outputs.latest_tag }}" ]; then
-            echo "更新${{ matrix.repo_name }}版本: ${{ steps.compare.outputs.local_tag }} → ${{ steps.compare.outputs.latest_tag }}"
+            echo "更新${{ matrix.repo_dir }}版本: ${{ steps.compare.outputs.local_tag }} → ${{ steps.compare.outputs.latest_tag }}"
             sed -i "s/ARG VERSION=\".*\"/ARG VERSION=\"${{ steps.compare.outputs.latest_tag }}\"/" ${{ matrix.repo_dir }}/Dockerfile
           fi
 
@@ -87,8 +87,8 @@ jobs:
           git add ${{ matrix.repo_dir }}/Dockerfile
 
           # 构建更直观的 commit message
-          commit_subject="chore(${{ matrix.repo_name }}): update version"
-          commit_body="${{ matrix.repo_name }}: ${{ steps.compare.outputs.local_tag }} → ${{ steps.compare.outputs.latest_tag }}\n"
+          commit_subject="chore(${{ matrix.repo_dir }}): update version"
+          commit_body="${{ matrix.repo_dir }}: ${{ steps.compare.outputs.local_tag }} → ${{ steps.compare.outputs.latest_tag }}\n"
 
           # 使用格式化的提交消息
           git commit -m "$commit_subject" -m "$commit_body"
