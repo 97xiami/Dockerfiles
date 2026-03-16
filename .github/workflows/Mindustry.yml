@@ -40,11 +40,7 @@ jobs:
         id: compare
         run: |
           # 获取最新版本号
-          latest_tag=$(curl -sf "https://api.github.com/repos/${{ matrix.repo_name }}?per_page=1" | jq -r '.[0].tag_name? // empty')
-          # 备份获取方法
-          if [ -z "$latest_tag" ]; then
-            latest_tag=$(curl -s "https://api.github.com/repos/${{ matrix.repo_name }}?per_page=1" | jq  -r '[.. | .tag_name? | select(. !=null)] | .[0] // empty')
-          fi
+          latest_tag=$(curl -s "https://api.github.com/repos/${{ matrix.repo_name }}?per_page=1" | jq  -r '[.. | .tag_name? | select(. !=null)] | .[0] // empty')
 
           if [ -z "$latest_tag" ]; then
              echo "获取${{ matrix.repo_dir }}最新版本号失败！"
