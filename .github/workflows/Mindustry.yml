@@ -93,7 +93,7 @@ jobs:
 
       - name: 触发构建工作流
         if: steps.compare.outputs.need_update == 'true'
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             console.log('准备触发自动构建工作流...');
