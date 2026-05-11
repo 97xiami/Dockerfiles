@@ -35,20 +35,4 @@ COPY --from=builder /build/artifacts/ntp-daemon /usr/bin/ntp-daemon
 COPY --from=builder /build/artifacts/ntp-ctl /usr/bin/ntp-ctl
 COPY --from=builder /build/artifacts/ntp-metrics-exporter /usr/bin/ntp-metrics-exporter
 
-ARG USER=ntpd-rs
-ENV USER=${USER}
-ARG UID=1000
-ENV UID=${UID}
-ARG GID=1000
-ENV GID=${GID}
-RUN addgroup --system --gid "${GID}" "${USER}" \
-    && adduser \
-        --system \
-        --disabled-login \
-        --shell /bin/bash \
-        --uid "${UID}" \
-        --gid "${GID}" \
-        "${USER}"
-USER ${USER}
-
 CMD ["ntp-daemon"]
