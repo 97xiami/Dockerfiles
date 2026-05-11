@@ -1,0 +1,30 @@
+[observability]
+log-level = "debug"
+# observation-path = "/var/run/ntpd-rs/observe"
+
+[[source]]
+mode = "pool"
+address = "ntp.ntsc.ac.cn"
+count = 4
+
+[[source]]
+mode = "pool"
+address = "ntp.cnnic.cn"
+count = 4
+
+[[source]]
+mode = "pool"
+address = "ntp.aliyun.com"
+count = 4
+
+[[source]]
+mode = "pool"
+address = "cn.ntp.org.cn"
+count = 4
+
+[[server]]
+listen = "[::]:123"
+
+[synchronization]
+single-step-panic-threshold = 1800
+startup-step-panic-threshold = { forward="inf", backward = 1800 }
