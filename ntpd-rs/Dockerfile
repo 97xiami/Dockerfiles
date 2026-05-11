@@ -8,7 +8,7 @@ SHELL ["/bin/bash", "-xo", "pipefail", "-c"]
 # Install OS dependencies
 RUN apt update \
     && apt install -y --no-install-recommends \
-        ca-certificates git zig cargo-zigbuild\
+        ca-certificates git\
     && rm -rf /var/lib/apt/lists/* /tmp/* \
     && git clone --single-branch --depth=1 https://github.com/pendulum-project/ntpd-rs \
     && mv ntpd-rs /build
