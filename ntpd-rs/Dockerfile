@@ -29,8 +29,26 @@ RUN --mount=type=cache,target=/usr/local/cargo/git/db \
     && cp target/release/ntp-metrics-exporter /build/artifacts
 
 # Setup the final actual runner image stage
-FROM scratch
+FROM alpine AS runner
 
-COPY --from=builder /build/artifacts/ntp-daemon /ntp-daemon
+COPY --from=builder /build/artifacts/ntp-daemon /usr/bin/ntp-daemon
+COPY --from=builder /build/artifacts/ntp-ctl /usr/bin/ntp-ctl
+COPY --from=builder /build/artifacts/ntp-metrics-exporter /usr/bin/ntp-metrics-exporter
 
-CMD ["/ntp-daemon"]
+ARG USER=ntpd-rs
+ENV USER=${USER}
+ARG UID=1000
+ENV UID=${UID}
+ARG GID=1000
+ENV GID=${GID}
+RUN addgroup --system --gid "${GID}" "${USER}" \
+    && adduser \
+        --system \
+        --disabled-login \
+        --shell /bin/bash \
+        --uid "${UID}" \
+        --gid "${GID}" \
+        "${USER}"
+USER ${USER}
+
+CMD ["ntp-daemon"]
