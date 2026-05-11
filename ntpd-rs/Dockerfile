@@ -29,10 +29,8 @@ RUN --mount=type=cache,target=/usr/local/cargo/git/db \
     && cp target/release/ntp-metrics-exporter /build/artifacts
 
 # Setup the final actual runner image stage
-FROM alpine
+FROM scratch
 
-COPY --from=builder /build/artifacts/ntp-daemon /usr/local/bin/ntp-daemon
-COPY --from=builder /build/artifacts/ntp-ctl /usr/local/bin/ntp-ctl
-COPY --from=builder /build/artifacts/ntp-metrics-exporter /usr/local/bin/ntp-metrics-exporter
+COPY --from=builder /build/artifacts/ntp-daemon /ntp-daemon
 
-CMD ["/usr/local/bin/ntp-daemon"]
+CMD ["/ntp-daemon"]
