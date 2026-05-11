@@ -21,6 +21,7 @@ on:
           - "kms"
           - "mind-map"
           - "mindustry"
+          - "ntpd-rs"
           - "openlist"
           - "qbittorrentee"
           - "samba"
