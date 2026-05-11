@@ -34,5 +34,8 @@ FROM alpine AS runner
 COPY --from=builder /build/artifacts/ntp-daemon /usr/bin/ntp-daemon
 COPY --from=builder /build/artifacts/ntp-ctl /usr/bin/ntp-ctl
 COPY --from=builder /build/artifacts/ntp-metrics-exporter /usr/bin/ntp-metrics-exporter
+COPY ntp.toml ntp.toml
 
-CMD ["ntp-daemon"]
+expose 123
+
+CMD ["ntp-daemon", "-c", "ntp.toml"]
