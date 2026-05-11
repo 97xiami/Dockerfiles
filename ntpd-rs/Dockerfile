@@ -1,6 +1,6 @@
 ARG RUST_VERSION=1
 
-FROM rust:${RUST_VERSION}-bookworm AS builder
+FROM rust:${RUST_VERSION}-alpine AS builder
 
 # Use a shell that exists whenever it encounters errors
 SHELL ["/bin/bash", "-xo", "pipefail", "-c"]
