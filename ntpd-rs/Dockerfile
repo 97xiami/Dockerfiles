@@ -6,9 +6,8 @@ FROM rust:${RUST_VERSION}-alpine AS builder
 SHELL ["/bin/bash", "-xo", "pipefail", "-c"]
 
 # Install OS dependencies
-RUN apt update \
-    && apt install -y --no-install-recommends \
-        ca-certificates git\
+RUN apk update \
+    && apk add ca-certificates git\
     && rm -rf /var/lib/apt/lists/* /tmp/* \
     && git clone --single-branch --depth=1 https://github.com/pendulum-project/ntpd-rs \
     && mv ntpd-rs /build
