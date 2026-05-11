@@ -10,10 +10,10 @@ RUN apt update \
     && apt install -y --no-install-recommends \
         ca-certificates git\
     && rm -rf /var/lib/apt/lists/* /tmp/* \
-    && git clone --single-branch --depth=1 https://github.com/pendulum-project/ntpd-rs
+    && git clone --single-branch --depth=1 https://github.com/pendulum-project/ntpd-rs \
+    && mv ntpd-rs/* /build
 
 WORKDIR /build
-COPY ntpd-rs /build
 
 ARG NTPDRS_BUILD_FEATURES=""
 ENV NTPDRS_BUILD_FEATURES="${NTPDRS_BUILD_FEATURES}"
