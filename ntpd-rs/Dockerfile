@@ -36,6 +36,6 @@ COPY --from=builder /build/artifacts/ntp-ctl /usr/bin/ntp-ctl
 COPY --from=builder /build/artifacts/ntp-metrics-exporter /usr/bin/ntp-metrics-exporter
 COPY ntp.toml ntp.toml
 
-expose 123
+EXPOSE 123/udp
 
 CMD ["ntp-daemon", "-c", "ntp.toml"]
