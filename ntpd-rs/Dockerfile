@@ -26,7 +26,7 @@ ENV NTPDRS_BUILD_FEATURES="${NTPDRS_BUILD_FEATURES}"
 RUN --mount=type=cache,target=/usr/local/cargo/git/db \
     --mount=type=cache,target=/usr/local/cargo/registry \
     --mount=type=cache,target=/build/target/ \
-    cargo zigbuild --locked --release --features="${NTPDRS_BUILD_FEATURES}" \
+    cargo build --locked --release --features="${NTPDRS_BUILD_FEATURES}" -Z build-std \
     && mkdir -p /build/artifacts \
     && cp target/release/ntp-daemon /build/artifacts \
     && cp target/release/ntp-ctl /build/artifacts \
