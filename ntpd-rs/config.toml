@@ -1,0 +1,5 @@
+[target.'cfg(all())']
+rustflags = [
+  "-C", "force-unwind-tables",
+  "-C", "target-feature=+crt-static"
+  ]
