@@ -8,13 +8,13 @@ SHELL ["/bin/bash", "-xo", "pipefail", "-c"]
 # Install OS dependencies
 RUN apt update \
     && apt install -y --no-install-recommends \
-        ca-certificates git\
+        ca-certificates git zig cargo-zigbuild\
     && rm -rf /var/lib/apt/lists/* /tmp/* \
     && git clone --single-branch --depth=1 https://github.com/pendulum-project/ntpd-rs \
     && mv ntpd-rs /build
 
 WORKDIR /build
-# COPY config.toml /build/.cargo/config.toml
+COPY config.toml /build/.cargo/config.toml
 
 ARG NTPDRS_BUILD_FEATURES=""
 ENV NTPDRS_BUILD_FEATURES="${NTPDRS_BUILD_FEATURES}"
@@ -26,7 +26,7 @@ ENV NTPDRS_BUILD_FEATURES="${NTPDRS_BUILD_FEATURES}"
 RUN --mount=type=cache,target=/usr/local/cargo/git/db \
     --mount=type=cache,target=/usr/local/cargo/registry \
     --mount=type=cache,target=/build/target/ \
-    cargo build --locked --release --features="${NTPDRS_BUILD_FEATURES}" -Z build-std \
+    cargo build --locked --release --features="${NTPDRS_BUILD_FEATURES}" \
     && mkdir -p /build/artifacts \
     && cp target/release/ntp-daemon /build/artifacts \
     && cp target/release/ntp-ctl /build/artifacts \
