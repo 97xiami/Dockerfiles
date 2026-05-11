@@ -14,7 +14,7 @@ RUN apt update \
     && mv ntpd-rs /build
 
 WORKDIR /build
-COPY config.toml /build/.cargo/config.toml
+# COPY config.toml /build/.cargo/config.toml
 
 ARG NTPDRS_BUILD_FEATURES=""
 ENV NTPDRS_BUILD_FEATURES="${NTPDRS_BUILD_FEATURES}"
