@@ -1,41 +1,27 @@
-ARG RUST_VERSION=1
+ARG APP_VERSION=v1.8.0
 
-FROM rust:${RUST_VERSION}-alpine AS builder
+FROM rust:1-alpine AS builder
 
-# Install OS dependencies
 RUN apk update \
-    && apk add ca-certificates git\
-    && rm -rf /var/lib/apt/lists/* /tmp/* \
-    && git clone --single-branch --depth=1 https://github.com/pendulum-project/ntpd-rs \
+    && apk add ca-certificates git \
+    && git clone -b ${APP_VERSION} --single-branch --depth=1 https://github.com/pendulum-project/ntpd-rs \
     && mv ntpd-rs /build
 
 WORKDIR /build
 COPY config.toml /build/.cargo/config.toml
 
 ARG NTPDRS_BUILD_FEATURES=""
-ENV NTPDRS_BUILD_FEATURES="${NTPDRS_BUILD_FEATURES}"
 
-# Run the build command.
-# Note that this mounts several cache directories to speed up subsequent builds.
-# After build, we move the binaries out of the target directory because that directory
-# will not be available in the next steps (as it is a cached directory).
 RUN --mount=type=cache,target=/usr/local/cargo/git/db \
     --mount=type=cache,target=/usr/local/cargo/registry \
     --mount=type=cache,target=/build/target/ \
-    cargo build --locked --release --features="${NTPDRS_BUILD_FEATURES}" \
-    && mkdir -p /build/artifacts \
-    && cp target/release/ntp-daemon /build/artifacts \
-    && cp target/release/ntp-ctl /build/artifacts \
-    && cp target/release/ntp-metrics-exporter /build/artifacts
+    cargo build --locked --release --features="${NTPDRS_BUILD_FEATURES}"
 
-# Setup the final actual runner image stage
-FROM alpine AS runner
+FROM scratch
 
-COPY --from=builder /build/artifacts/ntp-daemon /usr/bin/ntp-daemon
-COPY --from=builder /build/artifacts/ntp-ctl /usr/bin/ntp-ctl
-COPY --from=builder /build/artifacts/ntp-metrics-exporter /usr/bin/ntp-metrics-exporter
-COPY ntp.toml ntp.toml
+COPY --from=builder /build/target/release/ntp-daemon /ntp-daemon
+COPY ntp.toml /ntp.toml
 
 EXPOSE 123/udp
 
-CMD ["ntp-daemon", "-c", "ntp.toml"]
+CMD ["/ntp-daemon", "-c", "/ntp.toml"]
