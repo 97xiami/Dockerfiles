@@ -4,7 +4,7 @@ FROM rust:1-alpine AS builder
 
 RUN apk update \
     && apk add ca-certificates git \
-    && git clone -b ${APP_VERSION} --single-branch --depth=1 https://github.com/pendulum-project/ntpd-rs \
+    && git clone -b ${APP_VERSION} --depth=1 https://github.com/pendulum-project/ntpd-rs \
     && mv ntpd-rs /build
 
 WORKDIR /build
