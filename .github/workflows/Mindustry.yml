@@ -1,5 +1,5 @@
 # 工作流名称
-name: Check Mindustry
+name: 检查更新
 
 # 定义触发条件
 on:
