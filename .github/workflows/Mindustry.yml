@@ -17,7 +17,7 @@ jobs:
       # 设置为 false 时，当前矩阵中的其他任务不会因为单个任务失败而取消
       fail-fast: false
       # 限制同时运行的任务数量为1，即逐个运行
-      max-parallel: 1
+      # max-parallel: 1
       # 定义矩阵参数
       matrix:
         include:
@@ -25,13 +25,14 @@ jobs:
           - repo_dir: mindustry
             repo_name: Anuken/Mindustry/releases
 
+          - repo_dir: ntpd-rs
+            repo_name: pendulum-project/ntpd-rs/releases/latest
+
           - repo_dir: openlist
             repo_name: OpenListTeam/OpenList/releases/latest
 
           - repo_dir: qbittorrentee
             repo_name: c0re100/qBittorrent-Enhanced-Edition/releases/latest
-          - repo_dir: ntpd-rs
-            repo_name: pendulum-project/ntpd-rs/releases/latest
 
     steps:
       - name: Checkout
