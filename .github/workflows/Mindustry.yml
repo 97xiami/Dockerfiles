@@ -29,6 +29,8 @@ jobs:
 
           - repo_dir: qbittorrentee
             repo_name: c0re100/qBittorrent-Enhanced-Edition/releases/latest
+          - repo_dir: ntpd-rs
+            repo_name: pendulum-project/ntpd-rs/releases/latest
 
     steps:
       - name: Checkout
@@ -49,7 +51,7 @@ jobs:
           fi
 
           # 获取本地版本号
-          local_tag=$(grep -oP 'ARG VERSION="\K[^"]+' ${{ matrix.repo_dir }}/Dockerfile || echo "")
+          local_tag=$(grep -oP 'ARG APP_VERSION="\K[^"]+' ${{ matrix.repo_dir }}/Dockerfile || echo "")
 
           if [ -z "$local_tag" ]; then
             echo "获取${{ matrix.repo_dir }}本地版本号失败！"
@@ -73,7 +75,7 @@ jobs:
           git pull
           if [ -n "${{ steps.compare.outputs.latest_tag }}" ]; then
             echo "更新${{ matrix.repo_dir }}版本: ${{ steps.compare.outputs.local_tag }} → ${{ steps.compare.outputs.latest_tag }}"
-            sed -i "s/ARG VERSION=\".*\"/ARG VERSION=\"${{ steps.compare.outputs.latest_tag }}\"/" ${{ matrix.repo_dir }}/Dockerfile
+            sed -i "s/ARG APP_VERSION=\".*\"/ARG APP_VERSION=\"${{ steps.compare.outputs.latest_tag }}\"/" ${{ matrix.repo_dir }}/Dockerfile
           fi
 
           # 提交变更
