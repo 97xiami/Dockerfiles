@@ -15,11 +15,12 @@ ARG NTPDRS_BUILD_FEATURES=""
 RUN --mount=type=cache,target=/usr/local/cargo/git/db \
     --mount=type=cache,target=/usr/local/cargo/registry \
     --mount=type=cache,target=/build/target/ \
-    cargo build --locked --release --features="${NTPDRS_BUILD_FEATURES}"
+    cargo build --locked --release --features="${NTPDRS_BUILD_FEATURES}" \
+    && cp target/release/ntp-daemon /build
 
 FROM scratch
 
-COPY --from=builder /build/target/release/ntp-daemon /ntp-daemon
+COPY --from=builder /build/ntp-daemon /ntp-daemon
 COPY ntp.toml /ntp.toml
 
 EXPOSE 123/udp
