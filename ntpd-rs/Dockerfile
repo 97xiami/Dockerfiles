@@ -1,6 +1,6 @@
 FROM rust:1-alpine AS builder
 
-ARG APP_VERSION=v1.8.0
+ARG APP_VERSION="v1.8.0"
 
 RUN apk update \
     && apk add ca-certificates git \
