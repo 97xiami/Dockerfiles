@@ -1,0 +1,108 @@
+# 工作流名称
+name: 检查更新-Alpine仓库
+
+# 定义触发条件
+on:
+  # 允许手动触发工作流
+  workflow_dispatch:
+  # 定时执行，每天 23:00 UTC 触发
+  schedule:
+    - cron: "0 23 * * *"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    # 定义策略
+    strategy:
+      # 设置为 false 时，当前矩阵中的其他任务不会因为单个任务失败而取消
+      fail-fast: false
+      # 限制同时运行的任务数量为1，即逐个运行
+      # max-parallel: 1
+      # 定义矩阵参数
+      matrix:
+        repo: [ aria2, samba ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - name: 获取版本号并比较
+        id: compare
+        run: |
+          # 获取最新版本号
+          latest_tag=$(curl -fsSL https://pkgs.alpinelinux.org/packages?name=${{ matrix.repo }} | sed -n 's/.*<strong[^>]*>\(.*\)<\/strong>.*/\1/p' || echo "")
+
+          if [ -z "$latest_tag" ]; then
+             echo "获取${{  matrix.repo }}最新版本号失败！"
+          else
+            echo "${{  matrix.repo }}最新版本号: $latest_tag"
+          fi
+
+          # 获取本地版本号
+          local_tag=$(grep -oP 'ARG APP_VERSION="\K[^"]+' ${{  matrix.repo }}/Dockerfile || echo "")
+
+          if [ -z "$local_tag" ]; then
+            echo "获取${{  matrix.repo }}本地版本号失败！"
+          else
+            echo "${{  matrix.repo }}本地版本号: $local_tag"
+          fi
+
+          if [ -n "$latest_tag" ] && [ -n "$local_tag" ] && [ $latest_tag != $local_tag ]; then
+            echo "latest_tag=$latest_tag" >> $GITHUB_OUTPUT
+            echo "local_tag=$local_tag" >> $GITHUB_OUTPUT
+            echo "${{  matrix.repo }}有新版本：本地[$local_tag] --- 远程[$latest_tag]"
+            echo "need_update=true" >> $GITHUB_OUTPUT
+          else
+            echo "${{  matrix.repo }}没有新版本"
+          fi
+
+      - name: 更新版本并提交
+        if: steps.compare.outputs.need_update == 'true'
+        run: |
+          # 同步远程仓库
+          git pull  
+          if [ -n "${{ steps.compare.outputs.latest_tag }}" ]; then
+            echo "更新${{  matrix.repo }}版本: ${{ steps.compare.outputs.local_tag }} → ${{ steps.compare.outputs.latest_tag }}"
+            sed -i "s/ARG APP_VERSION=\".*\"/ARG APP_VERSION=\"${{ steps.compare.outputs.latest_tag }}\"/" ${{  matrix.repo }}/Dockerfile
+          fi
+
+          # 提交变更
+          echo "提交版本更新"
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add ${{  matrix.repo }}/Dockerfile
+
+          # 构建更直观的 commit message
+          commit_subject="chore(${{  matrix.repo }}): update version"
+          commit_body="${{  matrix.repo }}: ${{ steps.compare.outputs.local_tag }} → ${{ steps.compare.outputs.latest_tag }}"
+
+          # 使用格式化的提交消息
+          git commit -m "$commit_subject" -m "$commit_body"
+          git push
+          echo "版本更新已提交"
+
+      - name: 触发构建工作流
+        if: steps.compare.outputs.need_update == 'true'
+        uses: actions/github-script@v9
+        with:
+          script: |
+            console.log('准备触发自动构建工作流...');
+            try {
+              // 调用 GitHub API 触发 AutoBuild.yml 工作流
+              const response = await github.rest.actions.createWorkflowDispatch({
+                owner: '97xiami',
+                repo: 'Dockerfiles',
+                workflow_id: 'AutoBuild.yml',
+                ref: 'main',
+                inputs: {
+                  repo: '${{  matrix.repo }}',
+                  ver: '${{ steps.compare.outputs.latest_tag }}'
+                }
+              });
+              console.log('工作流触发成功:', response.status);
+            } catch (error) {
+              core.setFailed(`工作流触发失败: ${error}`);
+              console.error('错误详情:', error);
+            }
