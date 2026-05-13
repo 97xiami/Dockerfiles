@@ -9,4 +9,4 @@ updates:
     directories:
       - "**/*"
     schedule:
-      interval: daily
+      interval: "daily"
