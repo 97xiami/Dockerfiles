@@ -8,5 +8,6 @@ updates:
   - package-ecosystem: "docker"
     directories:
       - "openlist"
+      - "ntpd-rs"
     schedule:
       interval: "daily"
