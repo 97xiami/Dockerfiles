@@ -17,7 +17,8 @@ jobs:
       # 设置为 false 时，当前矩阵中的其他任务不会因为单个任务失败而取消
       fail-fast: false
       # 限制同时运行的任务数量为1，即逐个运行
-      # max-parallel: 1
+      # 防止有多个更新出现时git push冲突
+      max-parallel: 1
       # 定义矩阵参数
       matrix:
         repo: [ aria2, samba ]
