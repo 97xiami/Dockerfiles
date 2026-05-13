@@ -7,7 +7,9 @@ updates:
 
   - package-ecosystem: "docker"
     directories:
-      - "openlist"
+      - "mindustry"
       - "ntpd-rs"
+      - "openlist"
+      - "qbittorrentee"
     schedule:
       interval: "daily"
