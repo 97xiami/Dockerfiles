@@ -22,6 +22,9 @@ jobs:
       # 定义矩阵参数
       matrix:
         include:
+          - repo_dir: ariang
+            repo_name: mayswind/AriaNg/releases/latest
+            
           # 不加latest表示使用测试版本
           - repo_dir: mindustry
             repo_name: Anuken/Mindustry/releases
