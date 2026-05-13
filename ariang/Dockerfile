@@ -1,4 +1,4 @@
-FROM alpine:latest AS builder
+FROM alpine:3.23 AS builder
 ARG APP_VERSION="1"
 WORKDIR /src
 ENV CFLAGS=" \
