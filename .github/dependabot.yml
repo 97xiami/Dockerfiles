@@ -7,11 +7,6 @@ updates:
 
   - package-ecosystem: "docker"
     directories:
-      - "aria2"
-      - "mindustry"
-      - "ntpd-rs"
-      - "openlist"
-      - "qbittorrentee"
-      - "samba"
+      - "*"
     schedule:
       interval: "weekly"
