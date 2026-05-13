@@ -1,7 +1,6 @@
 FROM alpine:latest AS builder
 ARG APP_VERSION="1"
 WORKDIR /src
-COPY install.sh /src/AriaNg/
 ENV CFLAGS=" \
   -static                                 \
   -O2                                     \
@@ -21,10 +20,11 @@ ENV CFLAGS=" \
 
 RUN apk update \
     && apk add --no-cache git build-base curl bash \
+    && mkdir AriaNg \
     && cd AriaNg \
-    && chmod a+x install.sh \
-    && bash install.sh \
-    && rm install.sh \
+    && curl -L -o AriaNg.zip https://github.com/mayswind/AriaNg/releases/download/${APP_VERSION}/AriaNg-${APP_VERSION}.zip \
+    && unzip AriaNg.zip -d ${PWD} \
+    && rm AriaNg.zip \
     && cd /src \
     && git clone --single-branch --depth=1 https://github.com/emikulic/darkhttpd \
     && cd darkhttpd \
