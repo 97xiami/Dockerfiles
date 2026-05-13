@@ -1,5 +1,5 @@
 FROM alpine:3.23
-ARG APP_VERSION="4.23.-r1"
+ARG APP_VERSION="4.23.5-r1"
 RUN set -eu && \
     apk add --no-cache samba@${APP_VERSION} && \
     adduser -D -s /sbin/nologin share && \
