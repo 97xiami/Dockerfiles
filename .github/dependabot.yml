@@ -7,3 +7,9 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "ci"
+
+  - package-ecosystem: "docker"
+    directories:
+      - "**/*"
+    schedule:
+      interval: daily
