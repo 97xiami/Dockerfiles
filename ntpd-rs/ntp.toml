@@ -30,7 +30,7 @@ listen = "0.0.0.0:123"
 
 [synchronization]
 # 3个以上ntp服务器时间相同才会同步时间
-minimun-agreeing-sources = 3
+minimum-agreeing-sources = 3
 # 运行过程中时间差距±1000秒以内才会同步时间
 single-step-panic-threshold = { forward = 1000, backward = 1000 }
 # 初次运行时时间慢了无限秒和快了86400秒才会同步时间
