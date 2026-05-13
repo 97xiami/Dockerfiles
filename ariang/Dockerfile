@@ -1,5 +1,5 @@
 FROM alpine:3.23 AS builder
-ARG APP_VERSION="1"
+ARG APP_VERSION="1.3.13"
 WORKDIR /src
 ENV CFLAGS=" \
   -static                                 \
