@@ -21,7 +21,7 @@ jobs:
       # 定义矩阵参数
       matrix:
         include:
-          # 不加latest表示使用测试版本号
+          # 不加latest表示使用测试版本
           - repo_dir: mindustry
             repo_name: Anuken/Mindustry/releases
 
