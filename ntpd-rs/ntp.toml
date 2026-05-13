@@ -21,5 +21,9 @@ address = "cn.ntp.org.cn"
 listen = "0.0.0.0:123"
 
 [synchronization]
-single-step-panic-threshold = 1800
-startup-step-panic-threshold = { forward="inf", backward = 1800 }
+# 3个以上ntp服务器时间相同才会更改本地时间
+minimun-agreeing-sources = 3
+# 运行过程中时间跳变秒以内才会更改本地时间
+single-step-panic-threshold = { forward = 1000, backward = 1000 }
+# 初次运行时时间慢了无限秒和快了86400秒才会更改本地时间
+startup-step-panic-threshold = { forward="inf", backward = 86400 }
