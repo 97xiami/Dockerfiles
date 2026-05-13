@@ -1,7 +1,7 @@
-FROM alpine:latest
-
+FROM alpine:3.23
+ARG APP_VERSION="1"
 RUN apk update \
-    && apk add --no-cache aria2 \
+    && apk add --no-cache aria2@${APP_VERSION} \
     && mkdir /downloads /config \
     && touch /config/aria2.session
 
