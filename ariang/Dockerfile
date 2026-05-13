@@ -1,4 +1,5 @@
 FROM alpine:latest AS builder
+ARG APP_VERSION="1"
 WORKDIR /src
 COPY install.sh /src/AriaNg/
 ENV CFLAGS=" \
