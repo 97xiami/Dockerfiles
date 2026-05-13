@@ -1,4 +1,4 @@
-FROM rust:1.94.0-alpine3.2 AS builder
+FROM rust:alpine AS builder
 
 ARG APP_VERSION="v1.8.0"
 
