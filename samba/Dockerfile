@@ -1,6 +1,7 @@
 FROM alpine:3.23
+ARG APP_VERSION="4.23.5-r1"
 RUN set -eu && \
-    apk add --no-cache samba && \
+    apk add --no-cache samba@${APP_VERSION} && \
     adduser -D -s /sbin/nologin share && \
     (echo "password"; echo "password") | smbpasswd -s -a share && \
     mkdir /share | chmod 0770 /share | chown share:share /share && \
