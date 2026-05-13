@@ -44,7 +44,7 @@ jobs:
         id: compare
         run: |
           # 获取最新版本号
-          latest_tag=$(curl -s "https://api.github.com/repos/${{ matrix.repo_name }}?per_page=1" | jq  -r '[.. | .tag_name? | select(. !=null)] | .[0] // empty')
+          latest_tag=$(curl -s "https://api.github.com/repos/${{ matrix.repo_name }}?per_page=1" | jq  -r '.[0].tag_name // empty')
 
           if [ -z "$latest_tag" ]; then
              echo "获取${{ matrix.repo_dir }}最新版本号失败！"
@@ -74,7 +74,7 @@ jobs:
         if: steps.compare.outputs.need_update == 'true'
         run: |
           # 同步远程仓库
-          git pull
+          git pull  
           if [ -n "${{ steps.compare.outputs.latest_tag }}" ]; then
             echo "更新${{ matrix.repo_dir }}版本: ${{ steps.compare.outputs.local_tag }} → ${{ steps.compare.outputs.latest_tag }}"
             sed -i "s/ARG APP_VERSION=\".*\"/ARG APP_VERSION=\"${{ steps.compare.outputs.latest_tag }}\"/" ${{ matrix.repo_dir }}/Dockerfile
