@@ -1,4 +1,4 @@
-FROM alpine:3.23
+FROM alpine:3.22
 
 WORKDIR /opt/openlist
 
