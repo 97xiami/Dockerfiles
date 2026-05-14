@@ -1,3 +1,6 @@
+# 输出格式
+format: tty
+
 # 高于warning才会失败
 failure-threshold: warning
 
