@@ -1,9 +1,3 @@
-# 输出格式
-format: tty
-
-# 高于warning才会失败
-failure-threshold: warning
-
 ignore: 
   - DL3008 # 忽略apt install版本
   - DL3018 # 忽略apk add版本
