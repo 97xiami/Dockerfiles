@@ -47,6 +47,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
+      - uses: hadolint/hadolint-action@v3.3.0
+        with:
+          dockerfile: ${{ github.event.inputs.name }}/Dockerfile
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
 
