@@ -52,6 +52,7 @@ jobs:
         with:
           dockerfile: ${{ github.event.inputs.name }}/Dockerfile
           failure-threshold: warning
+          config: .hadolint.yaml
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
