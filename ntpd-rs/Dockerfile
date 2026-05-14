@@ -2,8 +2,8 @@ FROM rust:1.95.0-alpine AS builder
 
 ARG APP_VERSION="v1.8.0"
 
-RUN apk update \
-    && apk add ca-certificates git \
+RUN apk add --no-cache ca-certificates git \
+    && rm -rf /var/apk/* \
     && git clone --depth=1 --branch ${APP_VERSION} --single-branch https://github.com/pendulum-project/ntpd-rs \
     && mv ntpd-rs /build
 
