@@ -1,3 +1,0 @@
-ignored:
-  - DL3008 # 忽略apt install版本
-  - DL3018 # 忽略apk add版本
