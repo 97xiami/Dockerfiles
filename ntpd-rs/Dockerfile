@@ -20,7 +20,7 @@ RUN --mount=type=cache,target=/usr/local/cargo/git/db \
     && cp target/release/ntp-daemon /build \
     && cp target/release/ntp-metrics-exporter /build
 
-FROM stratch
+FROM scratch
 COPY --from=builder /build/ntp-daemon /ntp-daemon
 COPY ntp.toml /ntp.toml
 
