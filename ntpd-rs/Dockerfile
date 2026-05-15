@@ -22,7 +22,7 @@ RUN --mount=type=cache,target=/usr/local/cargo/git/db \
 
 FROM stratch
 COPY --from=builder /build/ntp-daemon /ntp-daemon
-COPY  ntp.toml /ntp.toml
+COPY ntp.toml /ntp.toml
 
 EXPOSE 123/udp
 ENTRYPOINT ["/ntp-daemon"]
