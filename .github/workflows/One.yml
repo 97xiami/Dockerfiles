@@ -34,18 +34,21 @@ on:
           - "linux/amd64"
           - "linux/arm64"
 
+permissions: {}
+
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
       packages: write
-      attestations: write
-      id-token: write
 
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 1
+          persist-credentials: false # Github Token仅用于拉取代码，完成后从本地删除
+          
 
       - name: Hadolint Check
         uses: hadolint/hadolint-action@2332a7b74a6de0dda2e2221d575162eba76ba5e5 # v3.3.0
