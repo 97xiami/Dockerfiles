@@ -84,8 +84,8 @@ jobs:
           platforms: ${{ github.event.inputs.arch }}
           push: true
           tags: |
-            ${{ secrets.USER_NAME }}/${{ github.event.inputs.name }}:latest
-            ghcr.io/${{ github.actor }}/${{ github.event.inputs.name }}:latest
+            ${{ secrets.USER_NAME }}/${{ github.event.inputs.name }}:test
+            ghcr.io/${{ github.actor }}/${{ github.event.inputs.name }}:test
 
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v4
