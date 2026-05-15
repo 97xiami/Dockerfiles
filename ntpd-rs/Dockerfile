@@ -1,4 +1,4 @@
-FROM rust:1.95.0-alpine AS builder
+FROM rust:1.95.0-alpine@sha256:606fd313a0f49743ee2a7bd49a0914bab7deedb12791f3a846a34a4711db7ed2 AS builder
 
 ARG APP_VERSION="v1.8.0"
 
