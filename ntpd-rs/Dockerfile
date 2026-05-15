@@ -20,13 +20,16 @@ RUN --mount=type=cache,target=/usr/local/cargo/git/db \
     && cp target/release/ntp-daemon /build \
     && cp target/release/ntp-metrics-exporter /build
 
-FROM gcr.io/distroless/static:debug
+FROM gcr.io/distroless/static:debug-nonroot
 WORKDIR /app
 COPY --from=builder /build/ntp-ctl ./ntp-ctl
 COPY --from=builder /build/ntp-daemon ./ntp-daemon
 COPY --from=builder /build/ntp-metrics-exporter ./ntp-metrics-exporter
-COPY ntp.toml ./ntp.toml
+COPY  ntp.toml ./ntp.toml
 
+RUN adduser --system --uid 10010 --gid 10010 ntpd-rs
+
+USER ntpd-rs
 ENV TZ=Asia/Shanghai
 EXPOSE 123/udp
 ENTRYPOINT ["./ntp-daemon"]
