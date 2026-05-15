@@ -9,9 +9,14 @@ on:
   schedule:
     - cron: "0 23 * * *"
 
+permissions: {}
+
 jobs:
   check:
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: write
     # 定义策略
     strategy:
       # 设置为 false 时，当前矩阵中的其他任务不会因为单个任务失败而取消
