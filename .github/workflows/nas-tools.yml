@@ -4,6 +4,8 @@ run-name: "Docker Build: nas-tools"
 on:
   workflow_dispatch:
 
+permissions: {}
+
 jobs:
   build:
     runs-on: ubuntu-latest    
