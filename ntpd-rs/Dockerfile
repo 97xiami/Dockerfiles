@@ -18,13 +18,12 @@ RUN --mount=type=cache,target=/usr/local/cargo/git/db \
     cargo build --locked --release --features="${NTPDRS_BUILD_FEATURES}" \
     && cp target/release/ntp-daemon /build
 
-FROM gcr.io/distroless/static:debug-nonroot
-
-COPY --from=builder --chown=65532:65532 /build/ntp-daemon /ntp-daemon
-COPY --chown=65532:65532 ntp.toml /ntp.toml
+FROM gcr.io/distroless/static:debug
+WORKDIR /app
+COPY --from=builder /build/ntp-daemon ./ntp-daemon
+COPY ntp.toml ./ntp.toml
 
 ENV TZ=Asia/Shanghai
 EXPOSE 123/udp
-USER nonroot
-ENTRYPOINT ["/ntp-daemon"]
-CMD ["-c", "/ntp.toml"]
+ENTRYPOINT ["./ntp-daemon"]
+CMD ["-c", "./ntp.toml"]
