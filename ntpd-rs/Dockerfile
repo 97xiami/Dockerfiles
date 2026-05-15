@@ -21,7 +21,7 @@ RUN --mount=type=cache,target=/usr/local/cargo/git/db \
 FROM gcr.io/distroless/static:debug-nonroot
 
 COPY --from=builder --chown=65532:65532 /build/ntp-daemon /ntp-daemon
-COPY ntp.toml /ntp.toml
+COPY --chown=65532:65532 ntp.toml /ntp.toml
 
 ENV TZ=Asia/Shanghai
 EXPOSE 123/udp
