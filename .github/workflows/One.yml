@@ -54,6 +54,11 @@ jobs:
           fetch-depth: 1
           persist-credentials: false # Github Token仅用于拉取代码，完成后从本地删除
 
+      - name: Hadolint Check
+        uses: hadolint/hadolint-action@2332a7b74a6de0dda2e2221d575162eba76ba5e5 # v3.3.0
+        with:
+          dockerfile: ${{ github.event.inputs.name }}/Dockerfile
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@ce360397dd3f832beb865e1373c09c0e9f86d70a # v4.0.0
 
