@@ -20,24 +20,10 @@ RUN --mount=type=cache,target=/usr/local/cargo/git/db \
     && cp target/release/ntp-daemon /build \
     && cp target/release/ntp-metrics-exporter /build
 
-FROM alpine:3.23
-WORKDIR /app
-COPY --from=builder /build/ntp-ctl ./ntp-ctl
-COPY --from=builder /build/ntp-daemon ./ntp-daemon
-COPY --from=builder /build/ntp-metrics-exporter ./ntp-metrics-exporter
-COPY  ntp.toml ./ntp.toml
+FROM stratch
+COPY --from=builder /build/ntp-daemon /ntp-daemon
+COPY  ntp.toml /ntp.toml
 
-RUN apk add --no-cache libcap \
-    && rm -rf /var/cache/apk/* \
-    && addgroup -S ntpd-rs \
-    && adduser -S -G ntpd-rs -H ntpd-rs \
-    && setcap cap_sys_time+ep ./ntp-ctl \
-    && setcap cap_sys_time+ep ./ntp-daemon \
-    && setcap cap_sys_time+ep ./ntp-metrics-exporter \
-    && chown -R ntpd-rs:ntpd-rs ./
-
-USER ntpd-rs
-ENV TZ=Asia/Shanghai
 EXPOSE 123/udp
-ENTRYPOINT ["./ntp-daemon"]
-CMD ["-c", "./ntp.toml"]
+ENTRYPOINT ["/ntp-daemon"]
+CMD ["-c", "/ntp.toml"]
