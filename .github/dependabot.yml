@@ -4,9 +4,15 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      minor-actions-dependencies:
+        update-types: [minor, patch]
 
   - package-ecosystem: "docker"
     directories:
       - "/*"
     schedule:
       interval: "weekly"
+    groups:
+      minor-docker-dependencies:
+        update-types: [minor, patch]
