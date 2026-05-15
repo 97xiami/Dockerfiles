@@ -20,7 +20,7 @@ RUN --mount=type=cache,target=/usr/local/cargo/git/db \
     && cp target/release/ntp-daemon /build \
     && cp target/release/ntp-metrics-exporter /build
 
-FROM gcr.io/distroless/static:debug-nonroot
+FROM alpine:3.23
 WORKDIR /app
 COPY --from=builder /build/ntp-ctl ./ntp-ctl
 COPY --from=builder /build/ntp-daemon ./ntp-daemon
