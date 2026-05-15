@@ -1,4 +1,4 @@
-name: GitHub Actions Security Analysis with zizmor
+name: Security Analysis with zizmor
 
 on:
   push:
