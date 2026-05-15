@@ -16,11 +16,15 @@ RUN --mount=type=cache,target=/usr/local/cargo/git/db \
     --mount=type=cache,target=/usr/local/cargo/registry \
     --mount=type=cache,target=/build/target/ \
     cargo build --locked --release --features="${NTPDRS_BUILD_FEATURES}" \
-    && cp target/release/ntp-daemon /build
+    && cp target/release/ntp-ctl /build \
+    && cp target/release/ntp-daemon /build \
+    && cp target/release/ntp-metrics-exporter /build
 
 FROM gcr.io/distroless/static:debug
 WORKDIR /app
+COPY --from=builder /build/ntp-ctl ./ntp-ctl
 COPY --from=builder /build/ntp-daemon ./ntp-daemon
+COPY --from=builder /build/ntp-metrics-exporter ./ntp-metrics-exporter
 COPY ntp.toml ./ntp.toml
 
 ENV TZ=Asia/Shanghai
