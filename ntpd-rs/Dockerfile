@@ -27,7 +27,8 @@ COPY --from=builder /build/ntp-daemon ./ntp-daemon
 COPY --from=builder /build/ntp-metrics-exporter ./ntp-metrics-exporter
 COPY  ntp.toml ./ntp.toml
 
-RUN adduser --system --uid 10010 --gid 10010 ntpd-rs
+RUN addgroup --system --gid 10010 ntpd-rs \
+    && adduser --system --uid 10010 --gid 10010 ntpd-rs
 
 USER ntpd-rs
 ENV TZ=Asia/Shanghai
