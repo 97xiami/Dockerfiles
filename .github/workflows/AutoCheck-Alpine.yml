@@ -39,7 +39,7 @@ jobs:
         id: compare
         run: |
           # 获取最新版本号
-          alpine_ver=$(grep -oP 'FROM alpine:\K.*' ${{  matrix.repo }}/Dockerfile || echo "")
+          alpine_ver=$(grep -oP 'FROM alpine:\K[^@\s]+' ${{  matrix.repo }}/Dockerfile || echo "")
           latest_tag=$(curl -fsSL "https://pkgs.alpinelinux.org/packages?name=${{ matrix.repo }}&branch=v$alpine_ver" | sed -n 's/.*<strong[^>]*>\(.*\)<\/strong>.*/\1/p' || echo "")
 
           if [ -z "$latest_tag" ]; then
