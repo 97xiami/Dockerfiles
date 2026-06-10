@@ -1,5 +1,5 @@
 FROM alpine:3.23@sha256:5b10f432ef3da1b8d4c7eb6c487f2f5a8f096bc91145e68878dd4a5019afde11
-ARG APP_VERSION="4.22.8-r0"
+ARG APP_VERSION="4.22.10-r0"
 RUN set -eu && \
     apk add --no-cache samba=${APP_VERSION} && \
     adduser -D -s /sbin/nologin share && \
