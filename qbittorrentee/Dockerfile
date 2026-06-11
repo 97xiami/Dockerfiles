@@ -3,7 +3,7 @@ FROM alpine:3.23@sha256:5b10f432ef3da1b8d4c7eb6c487f2f5a8f096bc91145e68878dd4a50
 WORKDIR /opt/qBittorrentee
 
 ARG S6_OVERLAY_VERSION="v3.2.2.0"
-ARG APP_VERSION="release-5.1.3.10"
+ARG APP_VERSION="release-5.2.1.10"
 ARG TARGETPLATFORM
 COPY qBittorrent.conf /opt/qBittorrentee/qBittorrent/config/qBittorrent.conf
 COPY root /
