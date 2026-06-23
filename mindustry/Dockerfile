@@ -1,4 +1,4 @@
-FROM eclipse-temurin:25@sha256:edb3aa0f621796d8f5f9d602c7611ffdf015cd89e6ddda1894d85a3a99d170a8
+FROM eclipse-temurin:25@sha256:dfc0093e3dbf43dae57827111c6e374f5b44fac19a9451584b2b336b81474d64
 
 RUN apt-get update && \
     apt-get install -y screen tzdata && \
