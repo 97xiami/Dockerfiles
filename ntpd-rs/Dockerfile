@@ -1,6 +1,6 @@
 FROM rust:1.96.1-alpine@sha256:a41f7740f8b45d45795624eec13a8b42263cc700f19f7e4e86e04d3dda08a479 AS builder
 
-ARG APP_VERSION="v2.0.0-alpha.20260715"
+ARG APP_VERSION="v1.9.0"
 
 RUN apk add --no-cache ca-certificates git \
     && rm -rf /var/cache/apk/* \
