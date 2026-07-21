@@ -9,9 +9,7 @@ RUN apk add --no-cache ca-certificates git \
 WORKDIR /build
 COPY config.toml /build/.cargo/config.toml
 
-ARG NTPDRS_BUILD_FEATURES=""
-
-RUN cargo build --locked --release --features="${NTPDRS_BUILD_FEATURES}" --bin ntp-daemon \
+RUN cargo build --locked --release --bin ntp-daemon \
     && cp target/release/ntp-daemon /build/ntp-daemon
 
 FROM scratch
