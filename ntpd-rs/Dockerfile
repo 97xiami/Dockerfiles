@@ -20,7 +20,7 @@ RUN --mount=type=cache,target=/usr/local/cargo/git/db \
     && tar --xattrs -cf /build/ntp-daemon.tar -C /build ntp-daemon
 
 FROM scratch
-ADD --chown 65534:65534 /build/ntp-daemon.tar /
+ADD --chown=65534:65534 /build/ntp-daemon.tar /
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY ntp.toml /ntp.toml
 
