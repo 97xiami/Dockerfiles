@@ -2,7 +2,7 @@ FROM rust:1.96.1-alpine@sha256:a41f7740f8b45d45795624eec13a8b42263cc700f19f7e4e8
 
 ARG APP_VERSION="v1.9.0"
 
-RUN apk add --no-cache ca-certificates git \
+RUN apk add --no-cache ca-certificates git tzdata\
     && rm -rf /var/cache/apk/* \
     && git clone --depth=1 --branch ${APP_VERSION} --single-branch https://github.com/pendulum-project/ntpd-rs \
     && mv ntpd-rs /build
@@ -21,9 +21,12 @@ RUN --mount=type=cache,target=/usr/local/cargo/git/db \
     && cp target/release/ntp-metrics-exporter /build
 
 FROM scratch
+COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
+COPY --from=builder /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 COPY --from=builder /build/ntp-daemon /ntp-daemon
 COPY ntp.toml /ntp.toml
 
+ENV TZ=Asia/Shanghai
 EXPOSE 123/udp
 ENTRYPOINT ["/ntp-daemon"]
 CMD ["-c", "/ntp.toml"]
