@@ -9,7 +9,7 @@ RUN apk add --no-cache ca-certificates git \
 WORKDIR /build
 COPY config.toml /build/.cargo/config.toml
 
-RUN cargo build --locked --release --bin ntp-daemon \
+RUN cargo build --locked --release --no-default-features --features="aws-lc,rustcrypto" --bin ntp-daemon \
     && cp target/release/ntp-daemon /build/ntp-daemon
 
 FROM scratch
