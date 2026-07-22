@@ -119,11 +119,11 @@ jobs:
           git pull  
           echo "更新${{ matrix.repo_dir }}版本: ${{ steps.compare.outputs.local_tag }} → ${{ steps.compare.outputs.latest_tag }}"
 
-          # 合并写入版本号和commit id到Dockerfile
-          sed -i \
-            "s/^ARG APP_VERSION=\".*\"/ARG APP_VERSION=\"${{ steps.compare.outputs.latest_tag }}\"/" \
-            -e "s/^ARG APP_COMMIT=\".*\"/ARG APP_COMMIT=\"${{ steps.verify.outputs.commit_id }}\"/" \
-            ${{ matrix.repo_dir }}/Dockerfile
+          # 写入新tag到Dockerfile
+          sed -i "s/^ARG APP_VERSION=\".*\"/ARG APP_VERSION=\"${{ steps.compare.outputs.latest_tag }}\"/" ${{ matrix.repo_dir }}/Dockerfile
+
+          # 写入新commit id到Dockerfile
+          sed -i "s/^ARG APP_COMMIT=\".*\"/ARG APP_COMMIT=\"${{ steps.verify.outputs.commit_id }}\"/" ${{ matrix.repo_dir }}/Dockerfile
 
           cat ${{ matrix.repo_dir }}/Dockerfile
 
