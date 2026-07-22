@@ -157,8 +157,7 @@ jobs:
                 ref: 'main',
                 inputs: {
                   repo: '${{ matrix.repo_dir }}',
-                  ver: '${{ steps.compare.outputs.latest_tag }}',
-                  commit: '${{ steps.verify.outputs.commit_id }}'
+                  ver: '${{ steps.compare.outputs.latest_tag }}'
                 }
               });
               console.log('工作流触发成功:', response.status);
