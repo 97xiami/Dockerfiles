@@ -53,20 +53,38 @@ jobs:
       - name: 获取版本号并比较
         id: compare
         run: |
-          # 获取最新版本号
-          latest_tag=$(curl -s "https://api.github.com/repos/${{ matrix.repo_name }}?per_page=1" | jq  -r '[.. | .tag_name? | select(. !=null)] | .[0] // empty')
+          # 获取最新tag和commit id
+          if curl -sL --fail -o release.json "https://api.github.com/repos/${{ matrix.repo_name }}?per_page=1; then
+            echo "✅ 获取API成功！"
 
-          if [ -z "$latest_tag" ]; then
-             echo "获取${{ matrix.repo_dir }}最新版本号失败！"
+            if [ ! -s release.json ]; then
+              echo "❌ 文件为空"
+              exit 1
+            fi
+
+            latest_tag=$(cat release.json | jq  -r '[.. | .tag_name? | select(. !=null)] | .[0] // empty')
+            if [ -z "$latest_tag" ]; then
+             echo "❌ 获取${{ matrix.repo_dir }}最新版本号失败！"
+            else
+              echo "${{ matrix.repo_dir }}最新版本号: $latest_tag"
+            fi
+
+            latest_commit=$(cat release.json | jq  -r '[.. | .target_commitish? | select(. !=null)] | .[0] // empty')
+            if [ -z "$latest_commit" ]; then
+             echo "❌ 获取${{ matrix.repo_dir }}最新commit id失败！"
+            else
+              echo "${{ matrix.repo_dir }}最新commit id: $latest_commit"
+            fi
           else
-            echo "${{ matrix.repo_dir }}最新版本号: $latest_tag"
+            echo "❌ 获取API失败！"
+            exit 1
           fi
 
           # 获取本地版本号
           local_tag=$(grep -oP 'ARG APP_VERSION="\K[^"]+' ${{ matrix.repo_dir }}/Dockerfile || echo "")
 
           if [ -z "$local_tag" ]; then
-            echo "获取${{ matrix.repo_dir }}本地版本号失败！"
+            echo "❌ 获取${{ matrix.repo_dir }}本地版本号失败！"
           else
             echo "${{ matrix.repo_dir }}本地版本号: $local_tag"
           fi
@@ -80,40 +98,8 @@ jobs:
             echo "${{ matrix.repo_dir }}没有新版本"
           fi
 
-      - name: 验证release并获取commit id
-        if: steps.compare.outputs.has_new_version == 'true'
-        id: verify
-        run: |
-          # 从 repo_name 提取 owner/repo（去掉 /releases/latest 或 /releases 后缀）
-          repo_full=$(echo "${{ matrix.repo_name }}" | sed 's|/releases/latest||;s|/releases||')
-
-          # 使用 GitHub API 验证 release 并获取 tag 和 commit 信息
-          curl -s "https://api.github.com/repos/$repo_full/releases/tags/${{ steps.compare.outputs.latest_tag }}" \
-            > /tmp/release_verify.json
-
-          verified_tag=$(jq -r '.tag_name // empty' /tmp/release_verify.json)
-          commit_id=$(jq -r '.target_commitish // empty' /tmp/release_verify.json)
-
-          if [ -z "$verified_tag" ] || [ -z "$commit_id" ]; then
-            echo "Release验证失败！无法获取tag或commit信息，跳过更新"
-            echo "need_update=false" >> $GITHUB_OUTPUT
-            echo "commit_id=" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-
-          if [ "$verified_tag" != "${{ steps.compare.outputs.latest_tag }}" ]; then
-            echo "Tag验证失败: 期望 ${{ steps.compare.outputs.latest_tag }}, 实际 $verified_tag，跳过更新"
-            echo "need_update=false" >> $GITHUB_OUTPUT
-            echo "commit_id=" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-
-          echo "need_update=true" >> $GITHUB_OUTPUT
-          echo "commit_id=$commit_id" >> $GITHUB_OUTPUT
-          echo "验证通过: tag=$verified_tag, commit=$commit_id"
-
       - name: 更新版本并提交
-        if: steps.verify.outputs.need_update == 'true'
+        if: steps.compare.outputs.has_new_version == 'true'
         run: |
           # 同步远程仓库
           git pull  
@@ -123,7 +109,7 @@ jobs:
           sed -i "s/^ARG APP_VERSION=\".*\"/ARG APP_VERSION=\"${{ steps.compare.outputs.latest_tag }}\"/" ${{ matrix.repo_dir }}/Dockerfile
 
           # 写入新commit id到Dockerfile
-          sed -i "s/^ARG APP_COMMIT=\".*\"/ARG APP_COMMIT=\"${{ steps.verify.outputs.commit_id }}\"/" ${{ matrix.repo_dir }}/Dockerfile
+          sed -i "s/^ARG APP_COMMIT=\".*\"/ARG APP_COMMIT=\"${{ steps.compare.outputs.latest_commit }}\"/" ${{ matrix.repo_dir }}/Dockerfile
 
           cat ${{ matrix.repo_dir }}/Dockerfile
 
@@ -135,7 +121,7 @@ jobs:
 
           # 构建更直观的 commit message
           commit_subject="chore(${{ matrix.repo_dir }}): update version"
-          commit_body="${{ matrix.repo_dir }}: ${{ steps.compare.outputs.local_tag }} → ${{ steps.compare.outputs.latest_tag }} (commit: ${{ steps.verify.outputs.commit_id }})"
+          commit_body="${{ matrix.repo_dir }}: ${{ steps.compare.outputs.local_tag }} → ${{ steps.compare.outputs.latest_tag }} (commit id: ${{ steps.compare.outputs.latest_commit }})"
 
           # 使用格式化的提交消息
           git commit -m "$commit_subject" -m "$commit_body"
@@ -143,7 +129,7 @@ jobs:
           echo "版本更新已提交"
 
       - name: 触发构建工作流
-        if: steps.verify.outputs.need_update == 'true'
+        if: steps.compare.outputs.has_new_version == 'true'
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
