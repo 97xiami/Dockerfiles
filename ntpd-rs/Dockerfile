@@ -1,8 +1,8 @@
 FROM rust:1.97.0-alpine@sha256:ec9c91e77119ce498cd1e87d96d77e0f75b2cee21655a29bc2bf75a51a2b20a4 AS builder
 
 ARG REPO="pendulum-project/ntpd-rs"
-ARG APP_VERSION="test"
-ARG APP_COMMIT="test"
+ARG APP_VERSION="v1.9.0"
+ARG APP_COMMIT=""
 
 RUN apk add --no-cache ca-certificates git \
     && git init code \
