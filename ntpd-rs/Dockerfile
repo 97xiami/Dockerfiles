@@ -23,9 +23,12 @@ COPY --from=builder /build/ntp-daemon /usr/local/bin/ntp-daemon
 COPY --from=builder /build/ntp-metrics-exporter /usr/local/bin/ntp-metrics-exporter
 COPY ntp.toml /ntp.toml
 
-RUN apk add --no-cache ca-certificates tzdata \
+RUN apk add --no-cache ca-certificates tzdata libcap\
     && addgroup -S ntpd-rs \
-    && adduser -S ntpd-rs -G ntpd-rs
+    && adduser -S ntpd-rs -G ntpd-rs \
+    && chmod +x /usr/local/bin/ntp-daemon \
+    && chown ntpd-rs:ntpd-rs /usr/local/bin/ntp-daemon \
+    && setcap cap_sys_time=+ep /usr/local/bin/ntp-daemon
 
 USER ntpd-rs
 EXPOSE 123/udp
