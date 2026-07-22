@@ -121,12 +121,9 @@ jobs:
 
           # 合并写入版本号和commit id到Dockerfile
           sed -i \
-            "s/ARG APP_VERSION=\".*\"/ARG APP_VERSION=\"${{ steps.compare.outputs.latest_tag }}\"/" \
+            "s/^ARG APP_VERSION=\".*\"/ARG APP_VERSION=\"${{ steps.compare.outputs.latest_tag }}\"/" \
             -e "s/^ARG APP_COMMIT=\".*\"/ARG APP_COMMIT=\"${{ steps.verify.outputs.commit_id }}\"/" \
             "${{ matrix.repo_dir }}/Dockerfile"
-          grep -q '^ARG APP_COMMIT=' "${{ matrix.repo_dir }}/Dockerfile" || \
-            sed -i "/^ARG APP_VERSION=/a ARG APP_COMMIT=\"${{ steps.verify.outputs.commit_id }}\"" \
-              "${{ matrix.repo_dir }}/Dockerfile"
 
           # 提交变更
           echo "提交版本更新"
