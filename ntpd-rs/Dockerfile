@@ -4,8 +4,13 @@ ARG APP_VERSION="v1.9.0"
 ARG APP_COMMIT="46ec9bb4d5b6cb24f814f5543d85b9138afb4cba"
 
 RUN apk add --no-cache ca-certificates git \
-    && git clone --depth=1 --branch ${APP_VERSION} --single-branch https://github.com/pendulum-project/ntpd-rs \
-    && mv ntpd-rs /build
+    && git init code \
+    && cd code \
+    && git remote add origin https://github.com/$REPO.git \
+    && git fetch --depth=1 origin "$APP_COMMIT" \
+    && git checkout FETCH_HEAD \
+    && cd .. \
+    && mv code /build
 
 WORKDIR /build
 COPY config.toml /build/.cargo/config.toml
