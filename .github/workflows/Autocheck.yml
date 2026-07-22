@@ -89,8 +89,9 @@ jobs:
             echo "${{ matrix.repo_dir }}本地版本号: $local_tag"
           fi
 
-          if [ -n "$latest_tag" ] && [ -n "$local_tag" ] && [ "$latest_tag" != "$local_tag" ]; then
+          if [ -n "$latest_tag" ] && [ -n "$latest_commit" ] && [ -n "$local_tag" ] && [ "$latest_tag" != "$local_tag" ]; then
             echo "latest_tag=$latest_tag" >> $GITHUB_OUTPUT
+            echo "latest_tag=$latest_commit" >> $GITHUB_OUTPUT
             echo "local_tag=$local_tag" >> $GITHUB_OUTPUT
             echo "${{ matrix.repo_dir }}有新版本：本地[$local_tag] --- 远程[$latest_tag]"
             echo "has_new_version=true" >> $GITHUB_OUTPUT
