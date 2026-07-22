@@ -14,7 +14,7 @@ RUN apk add --no-cache git make build-base tree \
     && make LDFLAGS="-static" vlmcsdmulti
 
 FROM scratch
-COPY --from=builder /build/vlmcsd/bin/vlmcsdmulti /vlmcsdmulti
+COPY --from=builder /build/bin/vlmcsdmulti /vlmcsdmulti
 EXPOSE 1688/tcp
 
 USER 65534
