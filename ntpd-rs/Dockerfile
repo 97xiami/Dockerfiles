@@ -9,7 +9,7 @@ RUN apk add --no-cache ca-certificates git \
     && git remote add origin https://github.com/$REPO \
     && git fetch --depth=1 origin "$APP_COMMIT" \
     && git checkout FETCH_HEAD \
-    && cargo build --locked --release --no-default-features --features="aws-lc,rustcrypto" --target x86_64-unknown-linux-musl --bin ntp-daemon \
+    && cargo build --locked --release --no-default-features --features="aws-lc,rustcrypto" --bin ntp-daemon \
     && cp target/release/ntp-daemon /build/ntp-daemon
 
 FROM scratch
