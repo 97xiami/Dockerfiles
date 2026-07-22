@@ -26,13 +26,22 @@ on:
           - "qbittorrentee"
           - "samba"
       arch:
-        description: " Target Arch"
+        description: "Target Arch"
         required: true
         type: choice
         default: "linux/amd64"
         options:
           - "linux/amd64"
           - "linux/arm64"
+
+      tag:
+        description: "Target Tag"
+        required: true
+        type: choice
+        default: "test"
+        options:
+          - "latest"
+          - "test"
 
 permissions: {}
 
@@ -80,4 +89,4 @@ jobs:
           platforms: ${{ github.event.inputs.arch }}
           push: true
           tags: |
-            ${{ secrets.USER_NAME }}/${{ github.event.inputs.name }}:test
+            ${{ secrets.USER_NAME }}/${{ github.event.inputs.name }}:${{ github.event.inputs.tag }}
