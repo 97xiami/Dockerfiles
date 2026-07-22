@@ -4,7 +4,7 @@ ARG REPO="Wind4/vlmcsd.git"
 ARG APP_COMMIT="70e03572b254688b8c3557f898e7ebd765d29ae1"
 
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
-RUN apk add --no-cache git make build-base tree \
+RUN apk add --no-cache git make build-base \
     && git init \
     && git remote add origin https://github.com/$REPO \
     && git fetch --depth=1 origin "$APP_COMMIT" \
