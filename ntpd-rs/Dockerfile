@@ -9,7 +9,7 @@ RUN apk add --no-cache ca-certificates git \
     && git remote add origin https://github.com/$REPO \
     && git fetch --depth=1 origin "$APP_COMMIT" \
     && git checkout FETCH_HEAD \
-    && cargo build --locked --release --no-default-features --features="aws-lc,rustcrypto" \
+    && cargo build --locked --release \
     && cp target/release/ntp-ctl /build/ntp-ctl \
     && cp target/release/ntp-daemon /build/ntp-daemon \
     && cp target/release/ntp-metrics-exporter /build/ntp-metrics-exporter
