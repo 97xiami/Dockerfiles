@@ -26,7 +26,10 @@ RUN apk add --no-cache ca-certificates libcap \
     && addgroup -S ntpd-rs \
     && adduser -S ntpd-rs -G ntpd-rs \
     && chown ntpd-rs:ntpd-rs /usr/local/bin/ntp-ctl /usr/local/bin/ntp-daemon /usr/local/bin/ntp-metrics-exporter \
-    && setcap cap_sys_time=+ep /usr/local/bin/ntp-daemon
+    && setcap cap_sys_time=+ep /usr/local/bin/ntp-daemon \
+    && mkdir /var/run/ntpd-rs \
+    && chown ntpd-rs:ntpd-rs /var/run/ntpd-rs \
+    && chmod 750 /var/run/ntpd-rs
 
 USER ntpd-rs
 EXPOSE 123/udp
