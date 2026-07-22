@@ -28,12 +28,12 @@ jobs:
       # 定义矩阵参数
       matrix:
         include:
-          - repo_dir: ariang
-            repo_name: mayswind/AriaNg/releases/latest
+          # - repo_dir: ariang
+          #   repo_name: mayswind/AriaNg/releases/latest
             
           # 不加latest表示使用测试版本
-          - repo_dir: mindustry
-            repo_name: Anuken/Mindustry/releases
+          # - repo_dir: mindustry
+          #   repo_name: Anuken/Mindustry/releases
 
           - repo_dir: ntpd-rs
             repo_name: pendulum-project/ntpd-rs/releases/latest
@@ -41,8 +41,8 @@ jobs:
           # - repo_dir: openlist
           #   repo_name: OpenListTeam/OpenList/releases/latest
 
-          - repo_dir: qbittorrentee
-            repo_name: c0re100/qBittorrent-Enhanced-Edition/releases/latest
+          # - repo_dir: qbittorrentee
+          #   repo_name: c0re100/qBittorrent-Enhanced-Edition/releases/latest
 
     steps:
       - name: Checkout
