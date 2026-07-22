@@ -1,5 +1,6 @@
 [observability]
 log-level = "info"
+observation-path = "/var/run/ntpd-rd/observe"
 
 [[source]]
 mode = "server"
