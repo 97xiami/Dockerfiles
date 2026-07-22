@@ -89,7 +89,7 @@ jobs:
           fi
 
           # 获取本地commit id
-          local_commit=$(grep -oP 'ARG APP_commit="\K[^"]+' ${{ matrix.repo_dir }}/Dockerfile || echo "")
+          local_commit=$(grep -oP 'ARG APP_COMMIT="\K[^"]+' ${{ matrix.repo_dir }}/Dockerfile || echo "")
           if [ -z "$local_commit" ]; then
             echo "❌ 获取${{ matrix.repo_dir }}本地commit id失败！"
           else
