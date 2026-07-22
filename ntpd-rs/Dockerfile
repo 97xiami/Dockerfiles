@@ -4,6 +4,7 @@ ARG REPO="pendulum-project/ntpd-rs.git"
 ARG APP_VERSION="v1.9.0"
 ARG APP_COMMIT="46ec9bb4d5b6cb24f814f5543d85b9138afb4cba"
 
+SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 RUN apk add --no-cache ca-certificates git \
     && git init \
     && git remote add origin https://github.com/$REPO \
