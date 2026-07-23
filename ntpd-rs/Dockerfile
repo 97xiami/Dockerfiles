@@ -1,5 +1,14 @@
 # syntax=docker/dockerfile:1
 
+FROM alpine:3.24.1@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b AS libcap
+WORKDIR /build
+SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
+RUN apk add --no-caache git make build-base base linux-headers \
+    && git clone https://git.kernel.org/pub/scm/libs/libcap/libcap.git \
+    && cd libcap \
+    && make -C libcap \
+    && gcc -static -I libcap/include progs/setcap.c libcap/libcap.a -o setcap
+
 FROM rust:1.97.0-alpine@sha256:ec9c91e77119ce498cd1e87d96d77e0f75b2cee21655a29bc2bf75a51a2b20a4 AS builder
 WORKDIR /build
 ARG REPO="pendulum-project/ntpd-rs.git"
@@ -21,10 +30,9 @@ FROM gcr.io/distroless/static-debian13:nonroot@sha256:f7f8f729987ad0fdf6b05eeeae
 COPY --from=builder /build/ntp-daemon /usr/local/bin/ntp-daemon
 COPY ntp.toml /ntp.toml
 
-COPY --from=builder /usr/sbin/setcap /usr/sbin/setcap
-COPY --from=builder /usr/lib/libcap.so.* /usr/lib/
+COPY --from=libcap /build/setcap /setcap
 
-RUN ["setcap", "cap_sys_time=+ep", "/ntp-daemon"]
+RUN ["/setcap", "cap_sys_time=+ep", "/ntp-daemon"]
 
 EXPOSE 123/udp
 ENTRYPOINT ["/ntp-daemon"]
