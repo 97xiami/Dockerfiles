@@ -30,7 +30,7 @@ FROM gcr.io/distroless/static-debian13:nonroot@sha256:f7f8f729987ad0fdf6b05eeeae
 COPY --from=builder /build/ntp-daemon /usr/local/bin/ntp-daemon
 COPY ntp.toml /ntp.toml
 
-COPY --from=libcap /build/setcap /setcap
+COPY --chmod=755 --from=libcap /build/libcap/setcap /setcap
 
 RUN ["/setcap", "cap_sys_time=+ep", "/ntp-daemon"]
 
