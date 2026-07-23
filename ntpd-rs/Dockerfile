@@ -32,8 +32,10 @@ COPY ntp.toml /ntp.toml
 
 COPY --chmod=755 --from=libcap /build/libcap/setcap /setcap
 
+USER 0
 RUN ["/setcap", "cap_sys_time=+ep", "/ntp-daemon"]
 
+USER nonroot:nonroot
 EXPOSE 123/udp
 ENTRYPOINT ["/ntp-daemon"]
 CMD ["-c", "/ntp.toml"]
