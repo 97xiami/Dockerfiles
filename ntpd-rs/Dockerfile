@@ -12,7 +12,7 @@ RUN apk add --no-cache ca-certificates git \
     && git remote add origin https://github.com/$REPO \
     && git fetch --depth=1 origin "$APP_COMMIT" \
     && git checkout FETCH_HEAD \
-    && sed -i "s/^debug = 2/strip = symbols\ncodegen-utils = 1/" Cargo.toml \
+    && sed -i "s/^debug = 2/strip = \"symbols\"\ncodegen-utils = 1/" Cargo.toml \
     && rm -rf .cargo \
     && cargo build --locked --release \
     && cp target/release/ntp-ctl /build/ntp-ctl \
