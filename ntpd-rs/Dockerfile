@@ -14,13 +14,28 @@ RUN apk add --no-cache ca-certificates git \
     && git checkout FETCH_HEAD \
     && sed -i "s/^debug = 2/strip = \"symbols\"\ncodegen-units = 1/" Cargo.toml \
     && rm -rf .cargo \
-    && cargo build --locked --release --bin ntp-daemon \
-    && cp target/release/ntp-daemon /build/ntp-daemon
+    && cargo build --locked --release \
+    && cp target/release/ntp-ctl /build/ntp-ctl \
+    && cp target/release/ntp-daemon /build/ntp-daemon \
+    && cp target/release/ntp-metrics-exporter /build/ntp-metrics-exporter
 
-FROM gcr.io/distroless/static-debian13:nonroot@sha256:f7f8f729987ad0fdf6b05eeeae94b26e6a0f613bdf46feea7fc40f7bd72953e6
-COPY --chmod=755 --chown=nonroot:nonroot --from=builder /build/ntp-daemon /ntp-daemon
+FROM alpine:3.24.1@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b
+COPY --from=builder /build/ntp-ctl /usr/local/bin/ntp-ctl
+COPY --from=builder /build/ntp-daemon /usr/local/bin/ntp-daemon
+COPY --from=builder /build/ntp-metrics-exporter /usr/local/bin/ntp-metrics-exporter
 COPY ntp.toml /ntp.toml
 
+RUN apk add --no-cache ca-certificates libcap \
+    && addgroup -g 65532 -S ntpd-rs \
+    && adduser -u 65532 -S -G ntpd-rs -H -D ntpd-rs \
+    && chown ntpd-rs:ntpd-rs /usr/local/bin/ntp-ctl /usr/local/bin/ntp-daemon /usr/local/bin/ntp-metrics-exporter \
+    && setcap cap_sys_time=+ep /usr/local/bin/ntp-daemon \
+    && mkdir /var/run/ntpd-rs \
+    && chown ntpd-rs:ntpd-rs /var/run/ntpd-rs \
+    && chmod 750 /var/run/ntpd-rs \
+    && rm -rf /var/cache/apk/*
+
+USER ntpd-rs
 EXPOSE 123/udp
-ENTRYPOINT ["/ntp-daemon"]
+ENTRYPOINT ["ntp-daemon"]
 CMD ["-c", "/ntp.toml"]
