@@ -7,35 +7,25 @@ ARG APP_VERSION="v1.9.0"
 ARG APP_COMMIT="46ec9bb4d5b6cb24f814f5543d85b9138afb4cba"
 
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
-RUN apk add --no-cache ca-certificates git \
+RUN apk add --no-cache ca-certificates git libcap \
     && git init \
     && git remote add origin https://github.com/$REPO \
     && git fetch --depth=1 origin "$APP_COMMIT" \
     && git checkout FETCH_HEAD \
     && sed -i "s/^debug = 2/strip = \"symbols\"\ncodegen-units = 1/" Cargo.toml \
     && rm -rf .cargo \
-    && cargo build --locked --release \
-    && cp target/release/ntp-ctl /build/ntp-ctl \
-    && cp target/release/ntp-daemon /build/ntp-daemon \
-    && cp target/release/ntp-metrics-exporter /build/ntp-metrics-exporter
+    && cargo build --locked --release --bin ntp-daemon \
+    && cp target/release/ntp-daemon /build/ntp-daemon
 
-FROM alpine:3.24.1@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b
-COPY --from=builder /build/ntp-ctl /usr/local/bin/ntp-ctl
+FROM FROM gcr.io/distroless/static-debian13:nonroot@sha256:f7f8f729987ad0fdf6b05eeeae94b26e6a0f613bdf46feea7fc40f7bd72953e6
 COPY --from=builder /build/ntp-daemon /usr/local/bin/ntp-daemon
-COPY --from=builder /build/ntp-metrics-exporter /usr/local/bin/ntp-metrics-exporter
 COPY ntp.toml /ntp.toml
 
-RUN apk add --no-cache ca-certificates libcap \
-    && addgroup -g 65532 -S ntpd-rs \
-    && adduser -u 65532 -S -G ntpd-rs -H -D ntpd-rs \
-    && chown ntpd-rs:ntpd-rs /usr/local/bin/ntp-ctl /usr/local/bin/ntp-daemon /usr/local/bin/ntp-metrics-exporter \
-    && setcap cap_sys_time=+ep /usr/local/bin/ntp-daemon \
-    && mkdir /var/run/ntpd-rs \
-    && chown ntpd-rs:ntpd-rs /var/run/ntpd-rs \
-    && chmod 750 /var/run/ntpd-rs \
-    && rm -rf /var/cache/apk/*
+COPY --from=builder /usr/sbin/setcap /usr/sbin/setcap
+COPY --from=builder /usr/lib/libcap.so.* /usr/lib/
 
-USER ntpd-rs
+RUN ["/usr/sbin/setcap", "cap_sys_time=+ep", "/ntp-daemon"]
+
 EXPOSE 123/udp
-ENTRYPOINT ["ntp-daemon"]
+ENTRYPOINT ["/ntp-daemon"]
 CMD ["-c", "/ntp.toml"]
