@@ -24,7 +24,7 @@ COPY ntp.toml /ntp.toml
 COPY --from=builder /usr/sbin/setcap /usr/sbin/setcap
 COPY --from=builder /usr/lib/libcap.so.* /usr/lib/
 
-RUN ["/usr/sbin/setcap", "cap_sys_time=+ep", "/ntp-daemon"]
+RUN ["setcap", "cap_sys_time=+ep", "/ntp-daemon"]
 
 EXPOSE 123/udp
 ENTRYPOINT ["/ntp-daemon"]
