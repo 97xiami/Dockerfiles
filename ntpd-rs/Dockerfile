@@ -22,5 +22,5 @@ COPY --from=builder /build/ntp-daemon /ntp-daemon
 COPY ntp.toml /ntp.toml
 
 EXPOSE 123/udp
-ENTRYPOINT ["./ntp-daemon"]
+ENTRYPOINT ["/ntp-daemon"]
 CMD ["-c", "/ntp.toml"]
