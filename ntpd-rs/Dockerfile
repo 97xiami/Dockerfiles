@@ -30,10 +30,9 @@ FROM gcr.io/distroless/static-debian13:nonroot@sha256:f7f8f729987ad0fdf6b05eeeae
 COPY --from=builder /build/ntp-daemon /ntp-daemon
 COPY ntp.toml /ntp.toml
 
-COPY --chmod=755 --from=libcap /build/libcap/setcap /setcap
-
 USER 0
-RUN ["/setcap", "cap_sys_time=+ep", "/ntp-daemon"]
+RUN --mount=type=bind,from=libcap,source=/build/libcap/setcap,target=/setcap \
+    ["/setcap", "cap_sys_time=+ep", "/ntp-daemon"]
 
 USER nonroot:nonroot
 EXPOSE 123/udp
