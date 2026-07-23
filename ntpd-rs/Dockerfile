@@ -27,7 +27,7 @@ RUN apk add --no-cache ca-certificates git libcap \
     && cp target/release/ntp-daemon /build/ntp-daemon
 
 FROM gcr.io/distroless/static-debian13:nonroot@sha256:f7f8f729987ad0fdf6b05eeeae94b26e6a0f613bdf46feea7fc40f7bd72953e6
-COPY --from=builder /build/ntp-daemon /usr/local/bin/ntp-daemon
+COPY --from=builder /build/ntp-daemon /ntp-daemon
 COPY ntp.toml /ntp.toml
 
 COPY --chmod=755 --from=libcap /build/libcap/setcap /setcap
