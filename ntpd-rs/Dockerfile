@@ -30,15 +30,15 @@ RUN apk add --no-cache ca-certificates git libcap \
     && cargo build --locked --release --bin ntp-daemon \
     && cp target/release/ntp-daemon /build/ntp-daemon
 
-FROM gcr.io/distroless/static-debian13:nonroot@sha256:f7f8f729987ad0fdf6b05eeeae94b26e6a0f613bdf46feea7fc40f7bd72953e6
-COPY --chmod=755 --chown=nonroot:nonroot --from=builder /build/ntp-daemon /ntp-daemon
-COPY --chmod=644 --chown=nonroot:nonroot ntp.toml /ntp.toml
+FROM scratch
+COPY --chmod=755 --chown=65534:65534 --from=builder /build/ntp-daemon /ntp-daemon
+COPY --chmod=644 --chown=65534:65534 ntp.toml /ntp.toml
 
 USER 0
 RUN --mount=type=bind,from=libcap,source=/build/setcap,target=/setcap \
     ["/setcap", "cap_sys_time=+ep", "/ntp-daemon"]
 
-USER nonroot:nonroot
+USER 65534
 EXPOSE 123/udp
 ENTRYPOINT ["/ntp-daemon"]
 CMD ["-c", "/ntp.toml"]
