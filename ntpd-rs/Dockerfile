@@ -31,8 +31,8 @@ RUN apk add --no-cache ca-certificates git libcap \
     && cp target/release/ntp-daemon /build/ntp-daemon
 
 FROM scratch
-COPY --chmod=755 --chown=65534:65534 --from=builder /build/ntp-daemon /ntp-daemon
-COPY --chmod=644 --chown=65534:65534 ntp.toml /ntp.toml
+COPY --chmod=755 --from=builder /build/ntp-daemon /ntp-daemon
+COPY --chmod=644 ntp.toml /ntp.toml
 
 USER 0
 RUN --mount=type=bind,from=libcap,source=/build/setcap,target=/setcap \
