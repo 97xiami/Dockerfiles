@@ -26,7 +26,7 @@ RUN apk add --no-cache git \
     && git fetch --depth=1 origin "$APP_COMMIT" \
     && git checkout FETCH_HEAD \
     && cd /build/webui \
-    && npm install -g pnpm \
+    && npm install -g pnpm@latest \
     && pnpm install --frozen-lockfile --ignore-scripts \
     && pnpm rebuild msw sharp unrs-resolver \
     && pnpm build
