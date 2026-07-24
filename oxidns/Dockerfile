@@ -35,6 +35,7 @@ FROM scratch
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=builder /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+COPY --from=builder /tmp /tmp
 COPY --from=builder /build/oxidns /oxidns
 COPY config.yaml /config.yaml
 COPY --from=webui /build/webui/out /webui
