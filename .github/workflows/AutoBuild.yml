@@ -42,7 +42,7 @@ jobs:
         file: ./${{ github.event.inputs.repo }}/Dockerfile
         platforms: linux/amd64
         push: true
-        tags: ${{ github.event.inputs.ver }}-amd64
+        tags: ${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-amd64
 
   build-arm64:
     runs-on: ubuntu-24.04-arm
@@ -74,7 +74,7 @@ jobs:
         file: ./${{ github.event.inputs.repo }}/Dockerfile
         platforms: linux/arm64
         push: true
-        tags: ${{ github.event.inputs.ver }}-arm64
+        tags: ${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-arm64
 
   merge-manifest:
     needs: [build-amd64, build-arm64]
