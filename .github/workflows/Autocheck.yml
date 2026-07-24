@@ -118,10 +118,10 @@ jobs:
           echo "更新${{ matrix.repo_dir }}版本: ${{ steps.compare.outputs.local_tag }} → ${{ steps.compare.outputs.latest_tag }}"
 
           # 写入新tag到Dockerfile
-          sed -i "s/^ARG APP_VERSION=\"${{ steps.compare.outputs.local_tag }}\"/ARG APP_VERSION=\"${{ steps.compare.outputs.latest_tag }}\"/" ${{ matrix.repo_dir }}/Dockerfile
+          sed -i "s/^ARG APP_VERSION=\"${{ steps.compare.outputs.local_tag }}\"/ARG APP_VERSION=\"${{ steps.compare.outputs.latest_tag }}\"/g" ${{ matrix.repo_dir }}/Dockerfile
 
           # 写入新commit id到Dockerfile
-          sed -i "s/^ARG APP_COMMIT=\"${{ steps.compare.outputs.local_commit }}\"/ARG APP_COMMIT=\"${{ steps.compare.outputs.latest_commit }}\"/" ${{ matrix.repo_dir }}/Dockerfile
+          sed -i "s/^ARG APP_COMMIT=\"${{ steps.compare.outputs.local_commit }}\"/ARG APP_COMMIT=\"${{ steps.compare.outputs.latest_commit }}\"/g" ${{ matrix.repo_dir }}/Dockerfile
 
           # 提交变更
           echo "提交版本更新"
