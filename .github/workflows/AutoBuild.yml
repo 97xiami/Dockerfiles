@@ -96,5 +96,7 @@ jobs:
             ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-amd64 \
             ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-arm64
           
-          # 验证合并后的清单
-          docker buildx imagetools inspect ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:latest
+          # 删除独立标签
+          docker manifest rm \
+            ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-amd64 \
+            ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-arm64
