@@ -1,0 +1,130 @@
+api:
+ http:
+   listen: 0.0.0.0:9199
+   webui:
+     root: ./webui
+
+log:
+  level: info
+  rotation:
+    type: never
+
+plugins:
+  - tag: subscription_download
+    type: download
+    args:
+      timeout: 60s
+      startup_if_missing: true
+      downloads:
+        - url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/reject-list.txt"
+          dir: ./data
+          filename: reject-list.txt
+        - url: "https://v6.gh-proxy.org/https://raw.githubusercontent.com/hagezi/dns-blocklists/refs/heads/main/domains/pro.txt"
+          dir: ./data
+          filename: pro.txt
+        - url: "https://v6.gh-proxy.org/https://raw.githubusercontent.com/Cats-Team/AdRules/refs/heads/main/mosdns_adrules.txt"
+          dir: ./data
+          filename: mosdns_adrules.txt
+
+  - tag: blacklist
+    type: domain_set
+    args:
+      files:
+        - ./data/reject-list.txt
+        - ./data/pro.txt
+        - ./data/mosdns_adrules.txt
+
+  - tag: reload_subscription
+    type: reload_provider
+    args:
+      - $blacklist
+
+  - tag: subscription_cron
+    type: cron
+    args:
+      timezone: "Asia/Shanghai"
+      jobs:
+        - name: refresh_rules
+          interval: 24h
+          executors:
+            - "$subscription_download"
+            - "$reload_subscription"
+
+  - tag: cache
+    type: cache
+    args:
+      size: 8192
+      short_circuit: true
+      lazy_cache_ttl: 120
+      cache_negative: true
+      max_negative_ttl: 300
+      negative_ttl_without_soa: 60
+      max_positive_ttl: 600
+      min_positive_ttl: 4
+      ecs_in_key: false
+      dump_file: "./data/dns-cache.dump"
+      dump_interval: 3600
+
+  - tag: forward_cn
+    type: forward
+    args:
+      concurrent: 3
+      upstreams:
+        - tag: dot_aliyun
+          addr: tls://dns.alidns.com:853
+          bootstrap: 223.5.5.5:53
+          enable_pipeline: true
+        - tag: dot_dnspod
+          addr: tls://dot.pub:853
+          bootstrap: 120.53.53.53:53
+          enable_pipeline: true
+        - tag: dot_360
+          addr: tls://dot.360.cn:853
+          bootstrap: 101.226.4.6:53
+          enable_pipeline: true
+      short_circuit: false
+
+  - tag: black_hole
+    type: black_hole
+    args:
+      ips:
+        - "0.0.0.0"
+        - "::"
+      short_circuit: true
+
+  - tag: ip_select
+    type: ip_selector
+    args:
+      selection_mode: best_within_budget
+      probe_methods: ["tcp:443", "tcp:80"]
+      probe_stagger: 200
+      probe_timeout: 600
+      max_wait: 1000
+      top_n: 1
+      dnssec_policy: reorder_only
+      max_parallel_probes: 256
+      cache:
+        enabled: true
+        size: 4096
+        ttl: 3600
+        failure_ttl: 60
+
+  - tag: main
+    type: sequence
+    args:
+      # 屏蔽广告
+      - matches: qname $blacklist
+        exec: $black_hole
+      # ip优选
+      - exec: $ip_select
+      # 查询缓存
+      - exec: $cache
+      # 未命中缓存
+      - matches: "!has_resp"
+        exec: $forward_cn
+
+  - tag: dns_server
+    type: udp_server
+    args:
+      entry: main
+      listen: :53
