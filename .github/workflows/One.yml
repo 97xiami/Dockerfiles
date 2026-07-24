@@ -1,14 +1,9 @@
 name: One
-run-name: "Docker Build: ${{ inputs.name }}"
+run-name: "Docker Build: ${{ inputs.name }}-${{ inputs.arch }}"
 
 on:
   workflow_dispatch:
     inputs:
-      ssh:
-        description: "ssh connect"
-        required: true
-        type: boolean
-        default: false
       name:
         description: "Dir Name"
         required: true
@@ -30,29 +25,16 @@ on:
         description: "Target Arch"
         required: true
         type: choice
-        default: "linux/amd64"
+        default: "ubuntu-24.04"
         options:
-          - "linux/amd64"
-          - "linux/arm64"
-          - "linux/amd64,linux/arm64"
-
-      tag:
-        description: "Target Tag"
-        required: true
-        type: choice
-        default: "test"
-        options:
-          - "latest"
-          - "test"
+          - "ubuntu-24.04"
+          - "ubuntu-24.04-arm"
 
 permissions: {}
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
+    runs-on: ${{ github.event.inputs.arch }}
     steps:
       - uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
         with:
@@ -63,15 +45,12 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           fetch-depth: 1
-          persist-credentials: false # Github Token仅用于拉取代码，完成后从本地删除
+          persist-credentials: true # Github Token仅用于拉取代码，完成后从本地删除
 
       - name: Hadolint Check
         uses: hadolint/hadolint-action@2332a7b74a6de0dda2e2221d575162eba76ba5e5 # v3.3.0
         with:
           dockerfile: ${{ github.event.inputs.name }}/Dockerfile
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@96fe6ef7f33517b61c61be40b68a1882f3264fb8 # v4.2.0
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
@@ -88,7 +67,6 @@ jobs:
         with:
           context: ./${{ github.event.inputs.name }}
           file: ./${{ github.event.inputs.name }}/Dockerfile
-          platforms: ${{ github.event.inputs.arch }}
           push: true
           tags: |
-            ${{ secrets.USER_NAME }}/${{ github.event.inputs.name }}:${{ github.event.inputs.tag }}
+            ${{ secrets.USER_NAME }}/${{ github.event.inputs.name }}:test
