@@ -20,13 +20,15 @@ ARG APP_VERSION="v1.5.1"
 ARG APP_COMMIT="5356dc7084b427f5a18cbf72572e4677e69d5b6e"
 
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
-RUN apk add --no-cache pnpm git \
+RUN apk add --no-cache git \
     && git init \
     && git remote add origin https://github.com/svenshi/oxidns.git \
     && git fetch --depth=1 origin "$APP_COMMIT" \
     && git checkout FETCH_HEAD \
     && cd /build/webui \
-    && pnpm install --frozen-lockfile \
+    && npm install -g pnpm \
+    && pnpm install --frozen-lockfile --ignore-scripts \
+    && pnpm rebuild msw sharp unrs-resolver \
     && pnpm build
 
 FROM scratch
