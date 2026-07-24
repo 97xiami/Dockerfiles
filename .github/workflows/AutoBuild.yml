@@ -97,4 +97,4 @@ jobs:
             ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-arm64
           
           # 验证合并后的清单
-          docker buildx imagetools inspect ${{ github.event.inputs.repo }}:latest
+          docker buildx imagetools inspect ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:latest
