@@ -32,14 +32,17 @@ jobs:
           #   repo_name: mayswind/AriaNg/releases/latest
             
           # 不加latest表示使用测试版本
-          # - repo_dir: mindustry
-          #   repo_name: Anuken/Mindustry/releases
+          - repo_dir: mindustry
+            repo_name: Anuken/Mindustry/releases
 
           - repo_dir: ntpd-rs
             repo_name: pendulum-project/ntpd-rs/releases/latest
 
           # - repo_dir: openlist
           #   repo_name: OpenListTeam/OpenList/releases/latest
+
+          - repo_dir: oxidns
+            repo_name: svenshi/oxidns/releases/latest
 
           # - repo_dir: qbittorrentee
           #   repo_name: c0re100/qBittorrent-Enhanced-Edition/releases/latest
