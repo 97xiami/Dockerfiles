@@ -42,7 +42,7 @@ jobs:
         file: ./${{ github.event.inputs.repo }}/Dockerfile
         platforms: linux/amd64
         push: true
-        tags: ${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-amd64
+        tags: ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-amd64
 
   build-arm64:
     runs-on: ubuntu-24.04-arm
@@ -74,7 +74,7 @@ jobs:
         file: ./${{ github.event.inputs.repo }}/Dockerfile
         platforms: linux/arm64
         push: true
-        tags: ${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-arm64
+        tags: ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-arm64
 
   merge-manifest:
     needs: [build-amd64, build-arm64]
@@ -93,8 +93,8 @@ jobs:
         run: |
           # 合并为多架构清单
           docker buildx imagetools create -t ${{ github.event.inputs.repo }}:latest \
-            ${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-amd64 \
-            ${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-arm64
+            ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-amd64 \
+            ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-arm64
           
           # 验证合并后的清单
           docker buildx imagetools inspect ${{ github.event.inputs.repo }}:latest
