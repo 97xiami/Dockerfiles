@@ -41,7 +41,6 @@ COPY config.yaml /config.yaml
 COPY --from=webui /build/webui/out /webui
 
 USER 65534
-EXPOSE 53/tcp
 EXPOSE 53/udp
 EXPOSE 9199/tcp
 ENTRYPOINT ["/oxidns"]
