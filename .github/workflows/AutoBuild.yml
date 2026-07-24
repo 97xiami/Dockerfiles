@@ -89,7 +89,7 @@ jobs:
           username: ${{ secrets.USER_NAME }}
           password: ${{ secrets.PASSWORD }}
       
-      - name: 合并为单标签多架构清单推送
+      - name: 合并为单标签多架构清单推送，删除独立标签
         run: |
           # 合并为多架构清单
           docker buildx imagetools create -t ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:latest \
