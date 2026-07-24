@@ -23,6 +23,7 @@ on:
           - "mindustry"
           - "ntpd-rs"
           - "openlist"
+          - "oxidns"
           - "qbittorrentee"
           - "samba"
       arch:
