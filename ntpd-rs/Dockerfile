@@ -20,7 +20,7 @@ ARG APP_VERSION="v1.9.0"
 ARG APP_COMMIT="46ec9bb4d5b6cb24f814f5543d85b9138afb4cba"
 
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
-RUN apk add --no-cache ca-certificates tzdata git upx \
+RUN apk add --no-cache ca-certificates git upx \
     && git init \
     && git remote add origin https://github.com/pendulum-project/ntpd-rs.git \
     && git fetch --depth=1 origin "$APP_COMMIT" \
@@ -32,8 +32,6 @@ RUN apk add --no-cache ca-certificates tzdata git upx \
 
 FROM scratch
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
-COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
-COPY --from=builder /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 COPY --from=builder /build/ntp-daemon /ntp-daemon
 COPY ntp.toml /ntp.toml
 
