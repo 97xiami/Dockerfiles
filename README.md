@@ -14,6 +14,8 @@ ntpd-rs: https://github.com/pendulum-project/ntpd-rs
 
 openlist: https://github.com/OpenListTeam/Openlist
 
+oxidn: https://github.com/svenshi/oxidns
+
 qBittorrentee: https://github.com/c0re100/qBittorrent-Enhanced-Edition
 
 samba: https://gitlab.com/samba-team/samba
