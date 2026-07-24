@@ -1,4 +1,5 @@
 # 只能写这一个参数，其它的不生效
 ignored:
+  - DL3003 # 忽略目录切换
   - DL3008 # 忽略apt install版本
   - DL3018 # 忽略apk add版本
