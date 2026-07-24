@@ -25,7 +25,7 @@ RUN apk add --no-cache ca-certificates git upx \
     && git remote add origin https://github.com/svenshi/oxidns.git \
     && git fetch --depth=1 origin "$APP_COMMIT" \
     && git checkout FETCH_HEAD \
-    && cd webui \
+    && cd /build/webui \
     && pnpm install --frozen-lockfile \
     && pnpm build
 
