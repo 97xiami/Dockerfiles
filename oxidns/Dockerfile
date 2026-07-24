@@ -20,7 +20,7 @@ ARG APP_VERSION="v1.5.1"
 ARG APP_COMMIT="5356dc7084b427f5a18cbf72572e4677e69d5b6e"
 
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
-RUN apk add --no-cache ca-certificates git upx \
+RUN apk add --no-cache pnpm git \
     && git init \
     && git remote add origin https://github.com/svenshi/oxidns.git \
     && git fetch --depth=1 origin "$APP_COMMIT" \
