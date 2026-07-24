@@ -25,7 +25,7 @@ RUN apk add --no-cache git \
     && git remote add origin https://github.com/svenshi/oxidns.git \
     && git fetch --depth=1 origin "$APP_COMMIT" \
     && git checkout FETCH_HEAD \
-    && cd /build/webui \
+    && cd webui \
     && npm install -g pnpm@latest \
     && pnpm install --frozen-lockfile --ignore-scripts \
     && pnpm rebuild msw sharp unrs-resolver \
@@ -34,7 +34,7 @@ RUN apk add --no-cache git \
 FROM scratch
 COPY --chmod=755 --from=builder /build/oxidns /oxidns
 COPY --chmod=644 config.yaml /config.yaml
-COPY --from=webui /build/out /webui
+COPY --from=webui /build/webui/out /webui
 
 USER 65534
 EXPOSE 53/tcp
