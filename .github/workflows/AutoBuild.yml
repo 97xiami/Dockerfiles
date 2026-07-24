@@ -92,7 +92,7 @@ jobs:
       - name: Create and push multi-arch manifest
         run: |
           # 合并为多架构清单
-          docker buildx imagetools create -t ${{ github.event.inputs.repo }}:latest \
+          docker buildx imagetools create -t ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:latest \
             ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-amd64 \
             ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-arm64
           
