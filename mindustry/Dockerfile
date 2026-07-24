@@ -7,6 +7,7 @@ RUN apt-get update && \
 
 WORKDIR /app
 ARG APP_VERSION="v159.7"
+ARG APP_COMMIT="c9686eb5d0ae5dd47ee02c40f99f7d5018ccbc8c"
 ADD https://github.com/Anuken/Mindustry/releases/download/${APP_VERSION}/server-release.jar /app/
 COPY start.sh /app/
 
