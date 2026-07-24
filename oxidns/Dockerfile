@@ -6,7 +6,7 @@ ARG APP_VERSION="v1.5.1"
 ARG APP_COMMIT="5356dc7084b427f5a18cbf72572e4677e69d5b6e"
 
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
-RUN apk add --no-cache ca-certificates git upx \
+RUN apk add --no-cache ca-certificates tzdata git upx \
     && git init \
     && git remote add origin https://github.com/svenshi/oxidns.git \
     && git fetch --depth=1 origin "$APP_COMMIT" \
@@ -32,8 +32,11 @@ RUN apk add --no-cache git \
     && pnpm build
 
 FROM scratch
-COPY --chmod=755 --from=builder /build/oxidns /oxidns
-COPY --chmod=644 config.yaml /config.yaml
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
+COPY --from=builder /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+COPY --from=builder /build/oxidns /oxidns
+COPY config.yaml /config.yaml
 COPY --from=webui /build/webui/out /webui
 
 USER 65534
