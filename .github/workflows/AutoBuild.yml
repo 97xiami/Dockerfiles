@@ -21,16 +21,12 @@ jobs:
             runner: ubuntu-24.04
           - arch: arm64
             runner: ubuntu-24.04-arm
-    permissions:
-      packages: write
-      id-token: write
-      attestations: write
     steps:
     - name: Checkout
       uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       with:
         fetch-depth: 1
-        persist-credentials: false # Github Token仅用于拉取代码，完成后从本地删除
+        persist-credentials: true # Github Token仅用于拉取代码，完成后从本地删除
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
@@ -54,9 +50,6 @@ jobs:
   merge-manifest:
     needs: build
     runs-on: ubuntu-24.04
-    permissions:
-      contents: read
-      packages: write
     steps:
       - name: 登录 DockerHub
         uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0 # v4.4.0
@@ -70,6 +63,37 @@ jobs:
           docker buildx imagetools create -t ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:latest \
             ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-amd64 \
             ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-arm64
-          
-          # 验证合并后的清单
-          docker buildx imagetools inspect ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:latest
+
+          docker buildx imagetools create -t ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ inputs.ver }} \
+            ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-amd64 \
+            ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-arm64
+
+  copy-to-ghcr:
+    needs: merge-manifest
+    runs-on: ubuntu-24.04
+    permissions:
+      packages: write
+    steps:
+      - name: 登录 DockerHub
+        uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0 # v4.4.0
+        with:
+          username: ${{ secrets.USER_NAME }}
+          password: ${{ secrets.PASSWORD }}
+
+      - name: 登录 GHCR.IO
+        uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0 # v4.4.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: 合并为单标签多架构清单推送
+        run: |
+          # 合并为多架构清单
+          docker buildx imagetools create -t ghcr.io/${{ github.repository_owner }}/${{ github.event.inputs.repo }}:latest \
+            ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-amd64 \
+            ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-arm64
+
+          docker buildx imagetools create -t ghcr.io/${{ github.repository_owner }}/${{ github.event.inputs.repo }}:${{ inputs.ver }} \
+            ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-amd64 \
+            ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-arm64
