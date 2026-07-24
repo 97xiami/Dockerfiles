@@ -12,8 +12,15 @@ on:
 permissions: {}
 
 jobs:
-  build-amd64:
-    runs-on: ubuntu-24.04
+  build:
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
     permissions:
       packages: write
       id-token: write
@@ -40,44 +47,12 @@ jobs:
       with:
         context: ./${{ github.event.inputs.repo }}
         file: ./${{ github.event.inputs.repo }}/Dockerfile
-        platforms: linux/amd64
+        platforms: linux/${{ matrix.arch }}
         push: true
-        tags: ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-amd64
-
-  build-arm64:
-    runs-on: ubuntu-24.04-arm
-    permissions:
-      packages: write
-      id-token: write
-      attestations: write
-    steps:
-    - name: Checkout
-      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      with:
-        fetch-depth: 1
-        persist-credentials: false # Github Token仅用于拉取代码，完成后从本地删除
-  
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
-  
-    - name: Login to DockerHub
-      uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0 # v4.4.0
-      with:
-        username: ${{ secrets.USER_NAME }}
-        password: ${{ secrets.PASSWORD }}
-  
-    - name: Build and push Docker image
-      id: push
-      uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
-      with:
-        context: ./${{ github.event.inputs.repo }}
-        file: ./${{ github.event.inputs.repo }}/Dockerfile
-        platforms: linux/arm64
-        push: true
-        tags: ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-arm64
+        tags: ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-${{ matrix.arch }}
 
   merge-manifest:
-    needs: [build-amd64, build-arm64]
+    needs: build
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -89,14 +64,12 @@ jobs:
           username: ${{ secrets.USER_NAME }}
           password: ${{ secrets.PASSWORD }}
       
-      - name: 合并为单标签多架构清单推送，删除独立标签
+      - name: 合并为单标签多架构清单推送
         run: |
           # 合并为多架构清单
           docker buildx imagetools create -t ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:latest \
             ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-amd64 \
             ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-arm64
           
-          # 删除独立标签
-          docker manifest rm \
-            ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-amd64 \
-            ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:${{ github.event.inputs.ver }}-arm64
+          # 验证合并后的清单
+          docker buildx imagetools inspect ${{ secrets.USER_NAME }}/${{ github.event.inputs.repo }}:latest
