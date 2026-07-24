@@ -31,6 +31,7 @@ RUN apk add --no-cache ca-certificates git upx \
     && upx -q --best --lzma target/release/ntp-daemon -o /build/ntp-daemon
 
 FROM scratch
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY --chmod=755 --from=builder /build/ntp-daemon /ntp-daemon
 COPY --chmod=644 ntp.toml /ntp.toml
 
