@@ -57,31 +57,36 @@ jobs:
         id: compare
         run: |
           # 获取最新版本号和commit id
-          if curl -sL --fail -o release.json "https://api.github.com/repos/${{ matrix.repo_name }}?per_page=1"; then
-            echo "✅ 获取API成功！"
+          latest_tag=$(curl -sL "https://api.github.com/repos/${{ matrix.repo_name }}?per_page=1" | jq  -r '[.. | .tag_name? | select(. !=null)] | .[0] // empty')
+          if [ -z "$latest_tag" ]; then
+           echo "❌ 获取${{ matrix.repo_dir }}最新版本号失败！"
+          else
+            echo "${{ matrix.repo_dir }}最新版本号: $latest_tag"
+          fi
 
-            if [ ! -s release.json ]; then
-              echo "❌ 文件为空"
+          repo1=$(echo "${{ matrix.repo_name }}" | sed 's|/releases/latest||;s|/releases||' )
+          if curl -sL --fail -o tag.json "https://api.github.com/repos/$repo1/commits/$latest_tag"; then
+            echo "✅ 获取API成功！"
+            if [ ! -s tag.json ]; then
+              echo "❌ tag.json 文件为空"
               exit 1
             fi
-
-            latest_tag=$(cat release.json | jq  -r '[.. | .tag_name? | select(. !=null)] | .[0] // empty')
-            if [ -z "$latest_tag" ]; then
-             echo "❌ 获取${{ matrix.repo_dir }}最新版本号失败！"
+            if [ "$(cat tag.json | jq -r '.verfication.verified')" == "true" ]; then
+              echo "✅ 签名验证通过！"
+              latest_commit=$(cat tag.json | jq -r 'select(.sha and (.sha | test("^[0-9a-f]{40}$"))) | .sha')
+              if [ -z "$latest_commit" ]; then
+               echo "❌ 获取${{ matrix.repo_dir }}最新commit id失败！"
+              else
+                echo "${{ matrix.repo_dir }}最新commit id: $latest_commit"
+              fi
             else
-              echo "${{ matrix.repo_dir }}最新版本号: $latest_tag"
-            fi
-
-            latest_commit=$(cat release.json | jq  -r '[.. | .target_commitish? | select(. !=null)] | .[0] // empty')
-            if [ -z "$latest_commit" ]; then
-             echo "❌ 获取${{ matrix.repo_dir }}最新commit id失败！"
-            else
-              echo "${{ matrix.repo_dir }}最新commit id: $latest_commit"
+              echo "❌ 签名签证失败！"
             fi
           else
             echo "❌ 获取API失败！"
-            exit 1
           fi
+
+          
 
           # 获取本地版本号
           local_tag=$(grep -oP 'ARG APP_VERSION="\K[^"]+' ${{ matrix.repo_dir }}/Dockerfile || echo "")
