@@ -60,6 +60,7 @@ jobs:
           latest_tag=$(curl -sL "https://api.github.com/repos/${{ matrix.repo_name }}?per_page=1" | jq  -r '[.. | .tag_name? | select(. !=null)] | .[0] // empty')
           if [ -z "$latest_tag" ]; then
            echo "❌ 获取${{ matrix.repo_dir }}最新版本号失败！"
+           exit 1
           else
             echo "${{ matrix.repo_dir }}最新版本号: $latest_tag"
           fi
@@ -71,25 +72,26 @@ jobs:
               echo "❌ tag.json 文件为空"
               exit 1
             fi
-            if [ "$(cat tag.json | jq -r '.verfication.verified')" == "true" ]; then
+            if [ "$(jq -r '.commit.verification.verified' tag.json )" == "true" ]; then
               echo "✅ 签名验证通过！"
-              latest_commit=$(cat tag.json | jq -r 'select(.sha and (.sha | test("^[0-9a-f]{40}$"))) | .sha')
-              if [ -z "$latest_commit" ]; then
-               echo "❌ 获取${{ matrix.repo_dir }}最新commit id失败！"
-              else
+              latest_commit=$(jq -r '.sha' tag.json)
+              if [[ "$latest_commit" =~ ^[0-9a-f]{40}$ ]]; then
                 echo "${{ matrix.repo_dir }}最新commit id: $latest_commit"
+              else
+                echo "❌ 获取${{ matrix.repo_dir }}最新commit id失败！无效SHA: $latest_commit"
+                exit 1
               fi
             else
               echo "❌ 签名签证失败！"
+              exit1
             fi
           else
             echo "❌ 获取API失败！"
+            exit1
           fi
 
-          
-
           # 获取本地版本号
-          local_tag=$(grep -oP 'ARG APP_VERSION="\K[^"]+' ${{ matrix.repo_dir }}/Dockerfile || echo "")
+          local_tag=$(grep -oP -m1 'ARG APP_VERSION="\K[^"]+' ${{ matrix.repo_dir }}/Dockerfile || echo "")
           if [ -z "$local_tag" ]; then
             echo "❌ 获取${{ matrix.repo_dir }}本地版本号失败！"
           else
@@ -97,7 +99,7 @@ jobs:
           fi
 
           # 获取本地commit id
-          local_commit=$(grep -oP 'ARG APP_COMMIT="\K[^"]+' ${{ matrix.repo_dir }}/Dockerfile || echo "")
+          local_commit=$(grep -oP -m1 'ARG APP_COMMIT="\K[^"]+' ${{ matrix.repo_dir }}/Dockerfile || echo "")
           if [ -z "$local_commit" ]; then
             echo "❌ 获取${{ matrix.repo_dir }}本地commit id失败！"
           else
