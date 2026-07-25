@@ -31,7 +31,7 @@ jobs:
           # 不加latest表示使用测试版本
           - dir: mindustry
             repo: Anuken/Mindustry
-             release_scope: releases
+            release_scope: releases
 
           - dir: ntpd-rs
             repo: pendulum-project/ntpd-rs
