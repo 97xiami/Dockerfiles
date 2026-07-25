@@ -6,13 +6,13 @@ ARG APP_VERSION="v1.5.1"
 ARG APP_COMMIT="5356dc7084b427f5a18cbf72572e4677e69d5b6e"
 
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
-RUN apk add --no-cache ca-certificates tzdata git upx \
+RUN apk add --no-cache ca-certificates tzdata git \
     && git init \
     && git remote add origin https://github.com/svenshi/oxidns.git \
     && git fetch --depth=1 origin "$APP_COMMIT" \
     && git checkout FETCH_HEAD \
     && cargo build --locked --release --no-default-features --features="standard" \
-    && upx -q --best --lzma target/release/oxidns -o /build/oxidns
+    && cp target/release/oxidns /build/oxidns
 
 FROM node:26.5.0-alpine3.24@sha256:e88a35be04478413b7c71c455cd9865de9b9360e1f43456be5951032d7ac1a66 AS webui
 WORKDIR /build
