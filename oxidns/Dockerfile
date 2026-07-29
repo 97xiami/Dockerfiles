@@ -36,11 +36,11 @@ COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certifi
 COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=builder /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 COPY --from=builder /tmp /tmp
-COPY --from=builder /build/oxidns /oxidns
-COPY config.yaml /config.yaml
-COPY --from=webui /build/webui/out /webui
+COPY --from=builder --chown=1000:1000 --chmod=500 /build/oxidns /oxidns
+COPY --chown=1000:1000 --chmod=400 config.yaml /config.yaml
+COPY --from=webui --chown=1000:1000 --chmod=400 /build/webui/out /webui
 
-USER 1000
+USER 1000:1000
 EXPOSE 53/udp
 EXPOSE 9199/tcp
 ENTRYPOINT ["/oxidns"]
