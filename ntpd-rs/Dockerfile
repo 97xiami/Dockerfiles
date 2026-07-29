@@ -28,9 +28,13 @@ RUN apk add --no-cache ca-certificates git \
     && sed -i "s/^debug = 2/strip = \"symbols\"\ncodegen-units = 1/" Cargo.toml \
     && rm -rf .cargo \
     && cargo build --locked --release --bin ntp-daemon \
-    && cp target/release/ntp-daemon /build/ntp-daemon
+    && cp target/release/ntp-daemon /build/ntp-daemon \
+    && mkdir /build/etc
 
 FROM scratch
+# 防止下一条COPY的chmod影响etc文件夹权限造成dns无法解析
+COPY --from=builder --chown=0:0 --chmod=755 /build/etc /etc
+COPY --from=builder --chmod=444 /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY --from=builder --chown=1000:1000 --chmod=500 build/ntp-daemon /ntp-daemon
 COPY --chown=1000:1000 --chmod=400 ntp.toml /ntp.toml
 
