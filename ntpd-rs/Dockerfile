@@ -39,7 +39,7 @@ USER 0
 RUN --mount=type=bind,from=libcap,source=/build/setcap,target=/setcap \
     ["/setcap", "cap_sys_time=+ep", "/ntp-daemon"]
 
-USER 1000
+USER 1000:1000
 EXPOSE 123/udp
 ENTRYPOINT ["/ntp-daemon"]
 CMD ["-c", "/ntp.toml"]
