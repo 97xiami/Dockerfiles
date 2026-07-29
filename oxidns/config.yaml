@@ -68,7 +68,7 @@ plugins:
   - tag: forward_cn
     type: forward
     args:
-      concurrent: 5
+      concurrent: 6
       upstreams:
          - tag: dot_aliyun1
           addr: tls://dns.alidns.com:853
