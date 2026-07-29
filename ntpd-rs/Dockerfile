@@ -32,7 +32,7 @@ RUN apk add --no-cache ca-certificates git \
 
 FROM scratch
 COPY --from=builder --chmod=644 /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
-COPY --from=builder --chown=1000:1000 --chmod=550 /build/ntp-daemon /ntp-daemon
+COPY --from=builder --chown=1000:1000 --chmod=755 /build/ntp-daemon /ntp-daemon
 COPY --chown=1000:1000 --chmod=400 ntp.toml /ntp.toml
 
 USER 0
