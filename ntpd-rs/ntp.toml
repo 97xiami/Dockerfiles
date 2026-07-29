@@ -2,6 +2,10 @@
 log-level = "info"
 
 [[source]]
+mode = "nts"
+address = "time.cloudflare.com"
+
+[[source]]
 mode = "server"
 address = "ntp.ntsc.ac.cn"
 
