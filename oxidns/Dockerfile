@@ -38,7 +38,7 @@ COPY --from=builder /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 COPY --from=builder /tmp /tmp
 COPY --from=builder --chown=1000:1000 --chmod=500 /build/oxidns /oxidns
 COPY --chown=1000:1000 --chmod=400 config.yaml /config.yaml
-COPY --from=webui --chown=1000:1000 --chmod=444 /build/webui/out /webui
+COPY --from=webui --chown=1000:1000 --chmod=644 /build/webui/out /webui
 
 USER 1000:1000
 EXPOSE 53/udp
