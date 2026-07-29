@@ -40,7 +40,7 @@ COPY --from=builder /build/oxidns /oxidns
 COPY config.yaml /config.yaml
 COPY --from=webui /build/webui/out /webui
 
-USER 65534
+USER 1000
 EXPOSE 53/udp
 EXPOSE 9199/tcp
 ENTRYPOINT ["/oxidns"]
