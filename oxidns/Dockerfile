@@ -2,8 +2,8 @@
 
 FROM rust:1.97.1-alpine@sha256:3c38f3f82c2f3d73da3b38e18d279393a04cb43ddded0e35088a8c3324d40900 AS builder
 WORKDIR /build
-ARG APP_VERSION="v1.5.1"
-ARG APP_COMMIT="5356dc7084b427f5a18cbf72572e4677e69d5b6e"
+ARG APP_VERSION="v1.5.2"
+ARG APP_COMMIT="8183d0fc20192c7d713718ffdde1c6b8b6f3ec91"
 
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 RUN apk add --no-cache ca-certificates tzdata git \
@@ -16,8 +16,8 @@ RUN apk add --no-cache ca-certificates tzdata git \
 
 FROM node:26.5.1-alpine3.24@sha256:233761595746769ebfdb6090f44fc7cdf818ae0ce62d2b37e0367723b9823e36 AS webui
 WORKDIR /build
-ARG APP_VERSION="v1.5.1"
-ARG APP_COMMIT="5356dc7084b427f5a18cbf72572e4677e69d5b6e"
+ARG APP_VERSION="v1.5.2"
+ARG APP_COMMIT="8183d0fc20192c7d713718ffdde1c6b8b6f3ec91"
 
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 RUN apk add --no-cache git \
