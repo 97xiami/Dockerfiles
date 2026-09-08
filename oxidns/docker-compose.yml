@@ -1,0 +1,33 @@
+services:
+  oxidns:
+    user: 1000:1000
+    image: xiami110/oxidns
+    container_name: oxidns
+    restart: always
+    read_only: true
+    security_opt:
+      - no-new-privileges=true
+    ulimits:
+      nofile:
+        soft: 10240
+        hard: 10240
+      core: 0
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "1G"
+    cap_drop: [ALL]
+    ports:
+      - 53:53/udp
+      - 9199:9199/tcp
+    volumes:
+      - type: bind
+        source: ./config.yaml
+        target: /config.yaml
+        read_only: true
+      - type: bind
+        source: ./data
+        target: /data
+    environment:
+      - TZ=Asia/Shanghai

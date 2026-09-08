@@ -1,8 +1,8 @@
 api:
- http:
-   listen: 0.0.0.0:9199
-   webui:
-     root: ./webui
+  http:
+    listen: 0.0.0.0:9199
+    webui:
+      root: ./webui
 
 log:
   level: info
@@ -19,7 +19,7 @@ plugins:
         - url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/reject-list.txt"
           dir: ./data
           filename: reject-list.txt
-        - url: "https://v6.gh-proxy.org/https://raw.githubusercontent.com/hagezi/dns-blocklists/refs/heads/main/domains/pro.txt"
+        - url: "https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/adblock/pro.txt"
           dir: ./data
           filename: pro.txt
         - url: "https://v6.gh-proxy.org/https://raw.githubusercontent.com/Cats-Team/AdRules/refs/heads/main/mosdns_adrules.txt"
@@ -55,7 +55,7 @@ plugins:
     args:
       size: 8192
       short_circuit: true
-      lazy_cache_ttl: 120
+      lazy_cache_ttl: 86400
       cache_negative: true
       max_negative_ttl: 300
       negative_ttl_without_soa: 60
@@ -70,19 +70,19 @@ plugins:
     args:
       concurrent: 6
       upstreams:
-         - tag: dot_aliyun1
+        - tag: dot_aliyun_1
           addr: tls://dns.alidns.com:853
           dial_addr: 223.5.5.5
           enable_pipeline: true
-        - tag: dot_aliyun2
+        - tag: dot_aliyun_2
           addr: tls://dns.alidns.com:853
           dial_addr: 223.6.6.6
           enable_pipeline: true
-        - tag: dot_dnspod1
+        - tag: dot_dnspod_1
           addr: tls://dot.pub:853
           dial_addr: 120.53.53.53
           enable_pipeline: true
-        - tag: dot_dnspod2
+        - tag: dot_dnspod_2
           addr: tls://dot.pub:853
           dial_addr: 1.12.12.12
           enable_pipeline: true
@@ -95,14 +95,6 @@ plugins:
           dial_addr: 111.7.73.60
           enable_pipeline: true
       short_circuit: false
-
-  - tag: black_hole
-    type: black_hole
-    args:
-      ips:
-        - "0.0.0.0"
-        - "::"
-      short_circuit: true
 
   - tag: ip_select
     type: ip_selector
@@ -126,7 +118,7 @@ plugins:
     args:
       # 屏蔽广告
       - matches: qname $blacklist
-        exec: $black_hole
+        exec: "black_hole 0.0.0.0 :: short_circuit=true"
       # ip优选
       - exec: $ip_select
       # 查询缓存
