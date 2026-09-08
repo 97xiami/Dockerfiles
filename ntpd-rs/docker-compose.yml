@@ -1,0 +1,27 @@
+services:
+  ntpd-rs:
+    user: 1000:1000
+    image: xiami110/ntpd-rs
+    container_name: ntpd-rs
+    restart: always
+    read_only: true
+    security_opt:
+      - no-new-privileges=true
+    ulimits:
+      nofile:
+        soft: 10240
+        hard: 10240
+      core: 0
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "1G"
+    dns:
+      - 223.5.5.5
+    cap_drop: [ALL]
+    cap_add:
+      - sys_time
+      - net_bind_service
+    ports:
+      - 123:123/udp
