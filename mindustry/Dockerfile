@@ -6,8 +6,8 @@ RUN apt-get update && \
     rm -rf /var/cache/apk/*
 
 WORKDIR /app
-ARG APP_VERSION="v160.2"
-ARG APP_COMMIT="89527f879b535b752376d9b935172be576320b59"
+ARG APP_VERSION="v160.3"
+ARG APP_COMMIT="254fd3e28d3adffcb69886f42fbdab1a9146df0e"
 ADD https://github.com/Anuken/Mindustry/releases/download/${APP_VERSION}/server-release.jar /app/
 COPY start.sh /app/
 
