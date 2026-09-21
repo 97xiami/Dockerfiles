@@ -14,7 +14,7 @@ RUN apk add --no-cache git make build-base bash linux-headers \
     && make -C libcap \
     && gcc -static -I libcap/include progs/setcap.c libcap/libcap.a -o setcap
 
-FROM rust:1.97.1-alpine@sha256:3c38f3f82c2f3d73da3b38e18d279393a04cb43ddded0e35088a8c3324d40900 AS builder
+FROM rust:1.98.0-alpine@sha256:a10e64dd139b7387337c7fbe8aca31b959b57b2fd4c8ae20a02cf1d6ea424dce AS builder
 WORKDIR /build
 ARG APP_VERSION="v1.9.0"
 ARG APP_COMMIT="46ec9bb4d5b6cb24f814f5543d85b9138afb4cba"
