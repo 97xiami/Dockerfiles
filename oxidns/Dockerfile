@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM rust:1.98.0-alpine@sha256:a10e64dd139b7387337c7fbe8aca31b959b57b2fd4c8ae20a02cf1d6ea424dce AS builder
+FROM rust:1.99.0-alpine@sha256:0cce0a5e0e8ba67b455257a3a02a1d99005f382748789d6464460028810f1627 AS builder
 WORKDIR /build
 ARG APP_VERSION="v1.6.1"
 ARG APP_COMMIT="f9019c6f823731f7bd090102aa31327dafdecbf4"
@@ -14,7 +14,7 @@ RUN apk add --no-cache ca-certificates tzdata git \
     && cargo build --locked --release --no-default-features --features="standard" \
     && cp target/release/oxidns /build/oxidns
 
-FROM node:26.8.1-alpine3.24@sha256:2d984a15c9b54fd0aeb608b8e0d0d83529eb34d2966db27a1fb4f1edc3d298a3 AS webui
+FROM node:26.10.0-alpine3.24@sha256:0b36e8c136b94cd4fcf02188228e76c31ad5872eef3fec8cbd2eee500cfd9e80 AS webui
 WORKDIR /build
 ARG APP_VERSION="v1.6.1"
 ARG APP_COMMIT="f9019c6f823731f7bd090102aa31327dafdecbf4"
