@@ -14,7 +14,7 @@ RUN apk add --no-cache ca-certificates tzdata git \
     && cargo build --locked --release --no-default-features --features="standard" \
     && cp target/release/oxidns /build/oxidns
 
-FROM node:26.10.0-alpine3.24@sha256:0b36e8c136b94cd4fcf02188228e76c31ad5872eef3fec8cbd2eee500cfd9e80 AS webui
+FROM node:26.12.1-alpine3.24@sha256:40cd011b55415bc894e45b02fdd5a5dfde056921b7d23a64c74f80497af48797 AS webui
 WORKDIR /build
 ARG APP_VERSION="v1.6.1"
 ARG APP_COMMIT="f9019c6f823731f7bd090102aa31327dafdecbf4"
