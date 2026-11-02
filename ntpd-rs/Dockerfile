@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM alpine:3.24.2@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6 AS libcap
+FROM alpine:3.24.3@sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a AS libcap
 WORKDIR /build
 ARG LIBCAP_VERSION="v1.2.78"
 ARG LIBCAP_COMMIT="06F4A09B9813579cbbfBC4138464f79870D8021d"
@@ -14,7 +14,7 @@ RUN apk add --no-cache git make build-base bash linux-headers \
     && make -C libcap \
     && gcc -static -I libcap/include progs/setcap.c libcap/libcap.a -o setcap
 
-FROM rust:1.98.1-alpine@sha256:7cc1c22d77d9432f7fe012a70e6d3e555af54c2a6832700ed7d553f1769ae89f AS builder
+FROM rust:1.99.0-alpine@sha256:0cce0a5e0e8ba67b455257a3a02a1d99005f382748789d6464460028810f1627 AS builder
 WORKDIR /build
 ARG APP_VERSION="v1.9.0"
 ARG APP_COMMIT="46ec9bb4d5b6cb24f814f5543d85b9138afb4cba"
